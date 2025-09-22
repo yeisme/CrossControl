@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VisitRecordWidget</class>
+ <widget class="QWidget" name="VisitRecordWidget">
+  <layout class="QVBoxLayout" name="verticalLayoutVisit">
+   <item>
+    <widget class="QLabel" name="labelVisitTitle">
+     <property name="text">
+      <string>来访记录</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QListWidget" name="listWidgetVisits"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnBackFromVisit">
+     <property name="text">
+      <string>返回主页</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

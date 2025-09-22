@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UnlockWidget</class>
+ <widget class="QWidget" name="UnlockWidget">
+  <layout class="QVBoxLayout" name="verticalLayoutUnlock">
+   <item>
+    <widget class="QLabel" name="labelUnlockTitle">
+     <property name="styleSheet">
+      <string>font-size: 20px; font-weight: bold;</string>
+     </property>
+     <property name="text">
+      <string>远程开锁</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelUnlockWarning">
+     <property name="styleSheet">
+      <string>font-size: 16px; color: #ff4444; margin: 20px 0;</string>
+     </property>
+     <property name="text">
+      <string>确认要远程开启门锁吗？</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnConfirmUnlock">
+     <property name="styleSheet">
+      <string>font-size: 18px; background-color: #00C851; color: white;</string>
+     </property>
+     <property name="text">
+      <string>确认开锁</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnCancelUnlock">
+     <property name="styleSheet">
+      <string>font-size: 18px;</string>
+     </property>
+     <property name="text">
+      <string>取消</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

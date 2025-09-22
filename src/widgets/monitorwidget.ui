@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MonitorWidget</class>
+ <widget class="QWidget" name="MonitorWidget">
+  <layout class="QVBoxLayout" name="verticalLayoutMonitor">
+   <item>
+    <widget class="QLabel" name="labelMonitorTitle">
+     <property name="text">
+      <string>监控画面</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelMonitorFeed">
+     <property name="styleSheet">
+      <string>background-color: #333; color: white; min-height: 300px;</string>
+     </property>
+     <property name="text">
+      <string>监控视频区域</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnBackFromMonitor">
+     <property name="text">
+      <string>返回主页</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

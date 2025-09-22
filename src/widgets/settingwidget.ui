@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SettingWidget</class>
+ <widget class="QWidget" name="SettingWidget">
+  <layout class="QVBoxLayout" name="verticalLayoutSetting">
+   <item>
+    <widget class="QLabel" name="labelSettingTitle">
+     <property name="text">
+      <string>系统设置</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QListWidget" name="listWidgetSettings"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnBackFromSetting">
+     <property name="text">
+      <string>返回主页</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

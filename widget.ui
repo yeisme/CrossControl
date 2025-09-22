@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SmartHomeControl</class>
+ <widget class="QStackedWidget" name="SmartHomeControl">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>800</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>智能家居中控</string>
+  </property>
+  <property name="currentIndex">
+   <number>0</number>
+  </property>
+  <widget class="QWidget" name="loginPage">
+   <layout class="QVBoxLayout" name="verticalLayoutLogin">
+    <item>
+     <spacer name="verticalSpacerLoginTop">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QLabel" name="labelLogo">
+      <property name="styleSheet">
+       <string>font-size: 24px; font-weight: bold;</string>
+      </property>
+      <property name="text">
+       <string>智能家居中控</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacerLogin1">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>80</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEditUsername">
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+      <property name="placeholderText">
+       <string>用户名</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEditPassword">
+      <property name="echoMode">
+       <enum>QLineEdit::EchoMode::Password</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+      <property name="placeholderText">
+       <string>密码</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButtonLogin">
+      <property name="text">
+       <string>登录</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacerLoginBottom">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="mainPage">
+   <layout class="QVBoxLayout" name="verticalLayoutMain">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayoutTop">
+      <item>
+       <widget class="QLabel" name="labelDateTime">
+        <property name="styleSheet">
+         <string>font-size: 16px;</string>
+        </property>
+        <property name="text">
+         <string>14:36 2025/08/19 星期二</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="labelWeather">
+        <property name="styleSheet">
+         <string>font-size: 14px; color: #555;</string>
+        </property>
+        <property name="text">
+         <string>29℃~34℃ 晴 空气质量：优质</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>460</width>
+         <height>693</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayoutFunctions">
+        <item row="0" column="0">
+         <widget class="QPushButton" name="btnMonitor">
+          <property name="minimumSize">
+           <size>
+            <width>180</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string>font-size: 18px;</string>
+          </property>
+          <property name="text">
+           <string>监控</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="btnUnlock">
+          <property name="minimumSize">
+           <size>
+            <width>180</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string>font-size: 18px;</string>
+          </property>
+          <property name="text">
+           <string>远程开锁</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="btnVisitRecord">
+          <property name="minimumSize">
+           <size>
+            <width>180</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string>font-size: 18px;</string>
+          </property>
+          <property name="text">
+           <string>来访记录</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="btnMessage">
+          <property name="minimumSize">
+           <size>
+            <width>180</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string>font-size: 18px;</string>
+          </property>
+          <property name="text">
+           <string>留言</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="btnSetting">
+          <property name="minimumSize">
+           <size>
+            <width>180</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string>font-size: 18px;</string>
+          </property>
+          <property name="text">
+           <string>系统设置</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="btnLogout">
+          <property name="minimumSize">
+           <size>
+            <width>180</width>
+            <height>120</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string>font-size: 18px; color: #ff4444;</string>
+          </property>
+          <property name="text">
+           <string>退出登录</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayoutBottom">
+      <item>
+       <widget class="QPushButton" name="btnHome">
+        <property name="styleSheet">
+         <string>font-size: 14px;</string>
+        </property>
+        <property name="text">
+         <string>首页</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnNotifications">
+        <property name="styleSheet">
+         <string>font-size: 14px;</string>
+        </property>
+        <property name="text">
+         <string>通知</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnQuickActions">
+        <property name="styleSheet">
+         <string>font-size: 14px;</string>
+        </property>
+        <property name="text">
+         <string>快捷操作</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnUser">
+        <property name="styleSheet">
+         <string>font-size: 14px;</string>
+        </property>
+        <property name="text">
+         <string>我的</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="monitorPage">
+   <layout class="QVBoxLayout" name="verticalLayoutMonitor">
+    <item>
+     <widget class="QLabel" name="labelMonitorTitle">
+      <property name="text">
+       <string>监控画面</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="labelMonitorFeed">
+      <property name="styleSheet">
+       <string>background-color: #333; color: white; min-height: 300px;</string>
+      </property>
+      <property name="text">
+       <string>监控视频区域</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnBackFromMonitor">
+      <property name="text">
+       <string>返回主页</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="visitRecordPage">
+   <layout class="QVBoxLayout" name="verticalLayoutVisit">
+    <item>
+     <widget class="QLabel" name="labelVisitTitle">
+      <property name="text">
+       <string>来访记录</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QListWidget" name="listWidgetVisits"/>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnBackFromVisit">
+      <property name="text">
+       <string>返回主页</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="messagePage">
+   <layout class="QVBoxLayout" name="verticalLayoutMessage">
+    <item>
+     <widget class="QLabel" name="labelMessageTitle">
+      <property name="text">
+       <string>留言板</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="textEditMessages">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEditNewMessage">
+      <property name="placeholderText">
+       <string>输入新留言...</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnSendMessage">
+      <property name="text">
+       <string>发送</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnBackFromMessage">
+      <property name="text">
+       <string>返回主页</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="settingPage">
+   <layout class="QVBoxLayout" name="verticalLayoutSetting">
+    <item>
+     <widget class="QLabel" name="labelSettingTitle">
+      <property name="text">
+       <string>系统设置</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QListWidget" name="listWidgetSettings"/>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnBackFromSetting">
+      <property name="text">
+       <string>返回主页</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="unlockPage">
+   <layout class="QVBoxLayout" name="verticalLayoutUnlock">
+    <item>
+     <widget class="QLabel" name="labelUnlockTitle">
+      <property name="styleSheet">
+       <string>font-size: 20px; font-weight: bold;</string>
+      </property>
+      <property name="text">
+       <string>远程开锁</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="labelUnlockWarning">
+      <property name="styleSheet">
+       <string>font-size: 16px; color: #ff4444; margin: 20px 0;</string>
+      </property>
+      <property name="text">
+       <string>确认要远程开启门锁吗？</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnConfirmUnlock">
+      <property name="styleSheet">
+       <string>font-size: 18px; background-color: #00C851; color: white;</string>
+      </property>
+      <property name="text">
+       <string>确认开锁</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnCancelUnlock">
+      <property name="styleSheet">
+       <string>font-size: 18px;</string>
+      </property>
+      <property name="text">
+       <string>取消</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

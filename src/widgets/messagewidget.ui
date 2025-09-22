@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MessageWidget</class>
+ <widget class="QWidget" name="MessageWidget">
+  <layout class="QVBoxLayout" name="verticalLayoutMessage">
+   <item>
+    <widget class="QLabel" name="labelMessageTitle">
+     <property name="text">
+      <string>留言板</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="textEditMessages">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="lineEditNewMessage">
+     <property name="placeholderText">
+      <string>输入新留言...</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnSendMessage">
+     <property name="text">
+      <string>发送</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btnBackFromMessage">
+     <property name="text">
+      <string>返回主页</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
