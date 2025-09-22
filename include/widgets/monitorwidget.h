@@ -1,4 +1,4 @@
-#ifndef MONITORWIDGET_H
+﻿#ifndef MONITORWIDGET_H
 #define MONITORWIDGET_H
 
 #include <QWidget>

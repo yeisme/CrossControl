@@ -1,4 +1,4 @@
-#include "visitrecordwidget.h"
+﻿#include "visitrecordwidget.h"
 #include "ui_visitrecordwidget.h"
 
 VisitRecordWidget::VisitRecordWidget(QWidget *parent) : QWidget(parent), ui(new Ui::VisitRecordWidget) {

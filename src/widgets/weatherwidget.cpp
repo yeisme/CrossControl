@@ -1,4 +1,4 @@
-#include "weatherwidget.h"
+﻿#include "weatherwidget.h"
 
 #include <QJsonArray>
 #include <QJsonDocument>

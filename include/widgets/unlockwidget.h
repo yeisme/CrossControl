@@ -1,4 +1,4 @@
-#ifndef UNLOCKWIDGET_H
+﻿#ifndef UNLOCKWIDGET_H
 #define UNLOCKWIDGET_H
 
 #include <QWidget>

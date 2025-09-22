@@ -1,4 +1,4 @@
-#ifndef WEATHERWIDGET_H
+﻿#ifndef WEATHERWIDGET_H
 #define WEATHERWIDGET_H
 
 #include <QWidget>

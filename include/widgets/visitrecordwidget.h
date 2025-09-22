@@ -1,4 +1,4 @@
-#ifndef VISITRECORDWIDGET_H
+﻿#ifndef VISITRECORDWIDGET_H
 #define VISITRECORDWIDGET_H
 
 #include <QWidget>

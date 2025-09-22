@@ -1,4 +1,4 @@
-#ifndef CROSSCONTROLWIDGET_H
+﻿#ifndef CROSSCONTROLWIDGET_H
 #define CROSSCONTROLWIDGET_H
 
 #include <QStackedWidget>

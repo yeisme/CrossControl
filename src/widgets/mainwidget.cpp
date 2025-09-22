@@ -1,4 +1,4 @@
-#include "mainwidget.h"
+﻿#include "mainwidget.h"
 
 #include "ui_mainwidget.h"
 #include "weatherwidget.h"

@@ -1,4 +1,4 @@
-#include "crosscontrolwidget.h"
+﻿#include "crosscontrolwidget.h"
 
 #include "ui_crosscontrolwidget.h"
 
