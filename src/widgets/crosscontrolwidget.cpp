@@ -2,7 +2,6 @@
 
 #include "ui_crosscontrolwidget.h"
 
-
 CrossControlWidget::CrossControlWidget(QWidget* parent)
     : QStackedWidget(parent), ui(new Ui::CrossControlWidget) {
     ui->setupUi(this);
@@ -23,7 +22,7 @@ CrossControlWidget::CrossControlWidget(QWidget* parent)
     this->addWidget(settingWidget);
     this->addWidget(unlockWidget);
 
-    // Connect signals
+    // Connect signals 跳转到各个页面
     connect(loginWidget,
             &LoginWidget::loginSuccess,
             this,
@@ -51,7 +50,7 @@ CrossControlWidget::CrossControlWidget(QWidget* parent)
     connect(
         mainWidget, &MainWidget::logout, this, &CrossControlWidget::onLogout);
 
-    // Back buttons
+    // Back buttons 返回到主页面
     connect(monitorWidget,
             &MonitorWidget::backToMain,
             this,

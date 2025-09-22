@@ -12,8 +12,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS CoreTools Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS CoreTools Widgets LinguistTools)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS CoreTools Widgets LinguistTools Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS CoreTools Widgets LinguistTools Network)
 
 set(TS_FILES CrossControl_yue_CN.ts)
 
@@ -45,6 +45,9 @@ set(PROJECT_SOURCES
     src/widgets/unlockwidget.cpp
     include/widgets/unlockwidget.h
     src/widgets/unlockwidget.ui
+    src/widgets/weatherwidget.cpp
+    include/widgets/weatherwidget.h
+    src/widgets/weatherwidget.ui
     ${TS_FILES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -59,7 +62,7 @@ else()
   qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-target_link_libraries(CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
 target_include_directories(CrossControl PRIVATE include/widgets)
 target_include_directories(CrossControl PRIVATE include)
 

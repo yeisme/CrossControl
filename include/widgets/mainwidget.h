@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include "weatherwidget.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWidget;
@@ -34,6 +36,7 @@ class MainWidget : public QWidget {
 
    private:
     Ui::MainWidget *ui;
+    WeatherWidget *weatherWidget;  // 新增天气组件
 };
 
 #endif  // MAINWIDGET_H

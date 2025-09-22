@@ -5,11 +5,11 @@
 
 #include "loginwidget.h"
 #include "mainwidget.h"
-#include "monitorwidget.h"
-#include "visitrecordwidget.h"
 #include "messagewidget.h"
+#include "monitorwidget.h"
 #include "settingwidget.h"
 #include "unlockwidget.h"
+#include "visitrecordwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -27,13 +27,13 @@ class CrossControlWidget : public QStackedWidget {
    private:
     Ui::CrossControlWidget *ui;
 
-    LoginWidget *loginWidget;
-    MainWidget *mainWidget;
-    MonitorWidget *monitorWidget;
-    VisitRecordWidget *visitRecordWidget;
-    MessageWidget *messageWidget;
-    SettingWidget *settingWidget;
-    UnlockWidget *unlockWidget;
+    LoginWidget *loginWidget;              // 登录界面
+    MainWidget *mainWidget;                // 主界面
+    MonitorWidget *monitorWidget;          // 监控界面
+    VisitRecordWidget *visitRecordWidget;  // 访客记录界面
+    MessageWidget *messageWidget;          // 消息界面
+    SettingWidget *settingWidget;          // 设置界面
+    UnlockWidget *unlockWidget;            // 解锁界面
 
    private slots:
     void onLoginSuccess();
