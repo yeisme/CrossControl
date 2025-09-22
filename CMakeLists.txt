@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.15)
 
 project(
   CrossControl
@@ -12,8 +12,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS CoreTools Widgets LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS CoreTools Widgets LinguistTools)
 
 set(TS_FILES CrossControl_yue_CN.ts)
 
@@ -49,21 +49,13 @@ set(PROJECT_SOURCES
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
   qt_add_executable(CrossControl MANUAL_FINALIZATION ${PROJECT_SOURCES})
-  # Define target properties for Android with Qt 6 as: set_property(TARGET
-  # CrossControl APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-  # ${CMAKE_CURRENT_SOURCE_DIR}/android) For more information, see
-  # https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-
   qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
   if(ANDROID)
     add_library(CrossControl SHARED ${PROJECT_SOURCES})
-    # Define properties for Android with Qt 5 after find_package() calls as:
-    # set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
   else()
     add_executable(CrossControl ${PROJECT_SOURCES})
   endif()
-
   qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
@@ -71,27 +63,57 @@ target_link_libraries(CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_include_directories(CrossControl PRIVATE include/widgets)
 target_include_directories(CrossControl PRIVATE include)
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1. If
-# you are developing for iOS or macOS you should consider setting an explicit,
-# fixed bundle identifier manually though.
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.CrossControl)
-endif()
 set_target_properties(
   CrossControl
-  PROPERTIES ${BUNDLE_ID_OPTION} MACOSX_BUNDLE_BUNDLE_VERSION
-             ${PROJECT_VERSION} MACOSX_BUNDLE_SHORT_VERSION_STRING
-             ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} MACOSX_BUNDLE
-             TRUE WIN32_EXECUTABLE
-             TRUE)
+  PROPERTIES 
+  WIN32_EXECUTABLE TRUE)
 
 include(GNUInstallDirs)
 install(
   TARGETS CrossControl
   BUNDLE DESTINATION .
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  COMPONENT Runtime)
 
 if(QT_VERSION_MAJOR EQUAL 6)
-  qt_finalize_executable(CrossControl)
+    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS ${Qt6_DIR}/../../../bin)
+    if(WINDEPLOYQT_EXECUTABLE)
+        install(CODE "
+            execute_process(COMMAND ${WINDEPLOYQT_EXECUTABLE} --dir ${CMAKE_BINARY_DIR}/windeployqt_output \${CMAKE_INSTALL_PREFIX}/bin/CrossControl.exe)
+        ")
+        install(DIRECTORY ${CMAKE_BINARY_DIR}/windeployqt_output/ DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime)
+    endif()
 endif()
+
+if(MINGW)
+    get_filename_component(MINGW_BIN_DIR ${CMAKE_CXX_COMPILER} DIRECTORY)
+    install(FILES
+        ${MINGW_BIN_DIR}/libc++.dll
+        ${MINGW_BIN_DIR}/libunwind.dll
+        ${MINGW_BIN_DIR}/libwinpthread-1.dll
+        DESTINATION ${CMAKE_INSTALL_BINDIR}
+        COMPONENT Runtime
+    )
+endif()
+
+# CPack配置
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
+set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
+set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_CONTACT "")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
+
+if(WIN32)
+  set(CPACK_GENERATOR "NSIS64;7Z")
+
+  # 明确指定要打包的组件 (确保包含Runtime组件)
+  set(CPACK_COMPONENTS_ALL Runtime)
+endif()
+
+# 确保系统运行时库被包含
+include(InstallRequiredSystemLibraries)
+include(CPack)

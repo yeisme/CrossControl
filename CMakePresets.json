@@ -1,0 +1,99 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "mingw-debug",
+            "displayName": "Debug",
+            "description": "Debug build configuration for Desktop Qt 6.8.3 llvm-mingw 64-bit",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/Desktop_Qt_6_8_3_llvm_mingw_64_bit-Debug",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_COLOR_DIAGNOSTICS": "ON",
+                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.3/llvm-mingw_64/",
+                "CMAKE_CXX_COMPILER": "C:/Qt/Tools/llvm-mingw1706_64/bin/clang++.exe",
+                "CMAKE_C_COMPILER": "C:/Qt/Tools/llvm-mingw1706_64/bin/clang.exe",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
+        {
+            "name": "mingw-release",
+            "displayName": "Release",
+            "description": "Release build configuration for Desktop Qt 6.8.3 llvm-mingw 64-bit",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/Desktop_Qt_6_8_3_llvm_mingw_64_bit-Release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_COLOR_DIAGNOSTICS": "ON",
+                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.3/llvm-mingw_64/",
+                "CMAKE_CXX_COMPILER": "C:/Qt/Tools/llvm-mingw1706_64/bin/clang++.exe",
+                "CMAKE_C_COMPILER": "C:/Qt/Tools/llvm-mingw1706_64/bin/clang.exe",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "mingw-debug-build",
+            "configurePreset": "mingw-debug",
+            "targets": [
+                "all"
+            ]
+        },
+        {
+            "name": "mingw-release-build",
+            "configurePreset": "mingw-release",
+            "targets": [
+                "all"
+            ]
+        }
+    ],
+    "packagePresets": [
+        {
+            "name": "mingw-release",
+            "configurePreset": "mingw-release",
+            "packageName": "CrossControl",
+            "packageDirectory": "../mingw-release",
+            "generators": [
+                "7Z",
+                "INNOSETUP"
+            ],
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "mingw-release-workflow",
+            "description": "",
+            "displayName": "",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "mingw-release"
+                },
+                {
+                    "type": "build",
+                    "name": "mingw-release-build"
+                },
+                {
+                    "type": "package",
+                    "name": "mingw-release"
+                }
+            ]
+        }
+    ]
+}
