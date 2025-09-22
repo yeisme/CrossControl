@@ -17,22 +17,33 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
 set(TS_FILES CrossControl_yue_CN.ts)
 
+include_directories(include)
+
 set(PROJECT_SOURCES
     src/main.cpp
     src/widgets/crosscontrolwidget.cpp
+    include/widgets/crosscontrolwidget.h
     src/widgets/crosscontrolwidget.ui
     src/widgets/loginwidget.cpp
+    include/widgets/loginwidget.h
     src/widgets/loginwidget.ui
     src/widgets/mainwidget.cpp
+    include/widgets/mainwidget.h
     src/widgets/mainwidget.ui
     src/widgets/monitorwidget.cpp
+    include/widgets/monitorwidget.h
     src/widgets/monitorwidget.ui
     src/widgets/visitrecordwidget.cpp
+    include/widgets/visitrecordwidget.h
     src/widgets/visitrecordwidget.ui
     src/widgets/messagewidget.cpp
+    include/widgets/messagewidget.h
     src/widgets/messagewidget.ui
     src/widgets/settingwidget.cpp
+    include/widgets/settingwidget.h
+    src/widgets/settingwidget.ui
     src/widgets/unlockwidget.cpp
+    include/widgets/unlockwidget.h
     src/widgets/unlockwidget.ui
     ${TS_FILES})
 
@@ -59,7 +70,6 @@ endif()
 target_link_libraries(CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_include_directories(CrossControl PRIVATE include/widgets)
 target_include_directories(CrossControl PRIVATE include)
-
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1. If
 # you are developing for iOS or macOS you should consider setting an explicit,
