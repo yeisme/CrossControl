@@ -2,18 +2,19 @@
     "version": 8,
     "configurePresets": [
         {
-            "name": "mingw-debug",
-            "displayName": "Debug",
-            "description": "Debug build configuration for Desktop Qt 6.8.3 llvm-mingw 64-bit",
+            "name": "msvc2022-debug",
+            "displayName": "Microsoft Visual Studio 2022 Debug",
+            "description": "Debug build configuration for Desktop Qt 6.8.3 msvc2022 64-bit",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/Desktop_Qt_6_8_3_llvm_mingw_64_bit-Debug",
+            "binaryDir": "${sourceDir}/build/Desktop_Qt_6_8_3_msvc2022_64_bit-Debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_COLOR_DIAGNOSTICS": "ON",
-                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.3/llvm-mingw_64/",
-                "CMAKE_CXX_COMPILER": "C:/Qt/Tools/llvm-mingw1706_64/bin/clang++.exe",
-                "CMAKE_C_COMPILER": "C:/Qt/Tools/llvm-mingw1706_64/bin/clang.exe",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.3/msvc2022_64/",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
             },
             "condition": {
                 "type": "equals",
@@ -22,18 +23,19 @@
             }
         },
         {
-            "name": "mingw-release",
-            "displayName": "Release",
-            "description": "Release build configuration for Desktop Qt 6.8.3 llvm-mingw 64-bit",
+            "name": "msvc2022-release",
+            "displayName": "Microsoft Visual Studio 2022 Release",
+            "description": "Release build configuration for Desktop Qt 6.8.3 msvc2022 64-bit",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/Desktop_Qt_6_8_3_llvm_mingw_64_bit-Release",
+            "binaryDir": "${sourceDir}/build/Desktop_Qt_6_8_3_msvc2022_64_bit-Release",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_COLOR_DIAGNOSTICS": "ON",
-                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.3/llvm-mingw_64/",
-                "CMAKE_CXX_COMPILER": "C:/Qt/Tools/llvm-mingw1706_64/bin/clang++.exe",
-                "CMAKE_C_COMPILER": "C:/Qt/Tools/llvm-mingw1706_64/bin/clang.exe",
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+                "CMAKE_PREFIX_PATH": "C:/Qt/6.8.3/msvc2022_64/",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe"
             },
             "condition": {
                 "type": "equals",
@@ -44,15 +46,15 @@
     ],
     "buildPresets": [
         {
-            "name": "mingw-debug-build",
-            "configurePreset": "mingw-debug",
+            "name": "msvc2022-debug-build",
+            "configurePreset": "msvc2022-debug",
             "targets": [
                 "all"
             ]
         },
         {
-            "name": "mingw-release-build",
-            "configurePreset": "mingw-release",
+            "name": "msvc2022-release-build",
+            "configurePreset": "msvc2022-release",
             "targets": [
                 "all"
             ]
@@ -60,10 +62,10 @@
     ],
     "packagePresets": [
         {
-            "name": "mingw-release",
-            "configurePreset": "mingw-release",
+            "name": "msvc2022-release",
+            "configurePreset": "msvc2022-release",
             "packageName": "CrossControl",
-            "packageDirectory": "../mingw-release",
+            "packageDirectory": "../msvc2022-release",
             "generators": [
                 "7Z",
                 "INNOSETUP"
@@ -77,21 +79,21 @@
     ],
     "workflowPresets": [
         {
-            "name": "mingw-release-workflow",
+            "name": "msvc2022-release-workflow",
             "description": "",
             "displayName": "",
             "steps": [
                 {
                     "type": "configure",
-                    "name": "mingw-release"
+                    "name": "msvc2022-release"
                 },
                 {
                     "type": "build",
-                    "name": "mingw-release-build"
+                    "name": "msvc2022-release-build"
                 },
                 {
                     "type": "package",
-                    "name": "mingw-release"
+                    "name": "msvc2022-release"
                 }
             ]
         }

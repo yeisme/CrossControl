@@ -12,8 +12,23 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS CoreTools Widgets LinguistTools Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS CoreTools Widgets LinguistTools Network)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS CoreTools Widgets
+                                                  LinguistTools Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS CoreTools Widgets
+                                                       LinguistTools Network)
+
+message(STATUS "CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
+
+if(DEFINED ENV{VCPKG_ROOT})
+  message(STATUS "Using VCPKG from environment variable: $ENV{VCPKG_ROOT}")
+  set(CMAKE_TOOLCHAIN_FILE
+      "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      CACHE STRING "")
+  set(OpenCV_ROOT "${VCPKG_ROOT}/installed/x64-windows/share/opencv4")
+  find_package(OpenCV REQUIRED)
+else()
+  message(STATUS "VCPKG_ROOT environment variable is not set.")
+endif()
 
 set(TS_FILES CrossControl_yue_CN.ts)
 
@@ -62,42 +77,41 @@ else()
   qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
-target_link_libraries(CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network)
+target_link_libraries(CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+                                           Qt${QT_VERSION_MAJOR}::Network)
 target_include_directories(CrossControl PRIVATE include/widgets)
 target_include_directories(CrossControl PRIVATE include)
 
-set_target_properties(
-  CrossControl
-  PROPERTIES 
-  WIN32_EXECUTABLE TRUE)
+set_target_properties(CrossControl PROPERTIES WIN32_EXECUTABLE TRUE)
 
 include(GNUInstallDirs)
 install(
   TARGETS CrossControl
   BUNDLE DESTINATION .
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  COMPONENT Runtime)
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime)
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS ${Qt6_DIR}/../../../bin)
-    if(WINDEPLOYQT_EXECUTABLE)
-        install(CODE "
+  find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS ${Qt6_DIR}/../../../bin)
+  if(WINDEPLOYQT_EXECUTABLE)
+    install(
+      CODE "
             execute_process(COMMAND ${WINDEPLOYQT_EXECUTABLE} --dir ${CMAKE_BINARY_DIR}/windeployqt_output \${CMAKE_INSTALL_PREFIX}/bin/CrossControl.exe)
         ")
-        install(DIRECTORY ${CMAKE_BINARY_DIR}/windeployqt_output/ DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime)
-    endif()
+    install(
+      DIRECTORY ${CMAKE_BINARY_DIR}/windeployqt_output/
+      DESTINATION ${CMAKE_INSTALL_BINDIR}
+      COMPONENT Runtime)
+  endif()
 endif()
 
 if(MINGW)
-    get_filename_component(MINGW_BIN_DIR ${CMAKE_CXX_COMPILER} DIRECTORY)
-    install(FILES
-        ${MINGW_BIN_DIR}/libc++.dll
-        ${MINGW_BIN_DIR}/libunwind.dll
-        ${MINGW_BIN_DIR}/libwinpthread-1.dll
-        DESTINATION ${CMAKE_INSTALL_BINDIR}
-        COMPONENT Runtime
-    )
+  get_filename_component(MINGW_BIN_DIR ${CMAKE_CXX_COMPILER} DIRECTORY)
+  install(
+    FILES ${MINGW_BIN_DIR}/libc++.dll ${MINGW_BIN_DIR}/libunwind.dll
+          ${MINGW_BIN_DIR}/libwinpthread-1.dll
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    COMPONENT Runtime)
 endif()
 
 # CPack配置
