@@ -42,4 +42,34 @@ target_link_libraries(CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
                                            Qt${QT_VERSION_MAJOR}::Network)
 target_include_directories(CrossControl PRIVATE include/widgets)
 
+# 确保可执行文件和共享库放置在特定于配置的 bin 目录中，以便在从 Visual Studio 启动时 EXE 可以找到 DLL。
+# 对多配置生成器（Visual Studio）使用生成器表达式 $<CONFIG>。
+if(CMAKE_CONFIGURATION_TYPES)
+  set(CONFIG_BIN_DIR "${CMAKE_BINARY_DIR}/$<CONFIG>/bin")
+  set(CONFIG_LIB_DIR "${CMAKE_BINARY_DIR}/$<CONFIG>/lib")
+else()
+  # single-config generators (Unix Makefiles, Ninja single-config)
+  set(CONFIG_BIN_DIR "${CMAKE_BINARY_DIR}/bin")
+  set(CONFIG_LIB_DIR "${CMAKE_BINARY_DIR}/lib")
+endif()
+
+# 应用输出目录，并且（对于MSVC）设置VS调试器工作目录，
+# 以便从Visual Studio运行时使用包含DLL的bin文件夹。
+foreach(_tgt IN ITEMS CrossControl HumanRecognition AudioVideo)
+  if(TARGET ${_tgt})
+    set_target_properties(${_tgt} PROPERTIES
+      RUNTIME_OUTPUT_DIRECTORY "${CONFIG_BIN_DIR}"
+      LIBRARY_OUTPUT_DIRECTORY "${CONFIG_BIN_DIR}"
+      ARCHIVE_OUTPUT_DIRECTORY "${CONFIG_LIB_DIR}"
+    )
+    if(MSVC)
+      # Visual Studio will substitute $<CONFIG> in the property at generation time
+      set_target_properties(${_tgt} PROPERTIES
+        VS_DEBUGGER_WORKING_DIRECTORY "${CONFIG_BIN_DIR}"
+      )
+    endif()
+  endif()
+endforeach()
+
+# Keep Windows subsystem flag for GUI app
 set_target_properties(CrossControl PROPERTIES WIN32_EXECUTABLE TRUE)
