@@ -13,12 +13,9 @@
 #ifndef AUDIOVIDEO_H
 #define AUDIOVIDEO_H
 
-#include <QAudioFormat>
-#include <QByteArray>
-#include <QImage>
+#include <QtCore/qglobal.h>
+
 #include <QObject>
-#include <QString>
-#include <QVideoFrame>
 
 #ifdef AudioVideo_EXPORTS
 #define AUDIOVIDEO_EXPORT Q_DECL_EXPORT
@@ -107,11 +104,11 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      * 获取视频帧并执行过滤、分析或视觉特效等处理。
      * 当前实现为占位符。
      *
-     * @param frame 要处理的QVideoFrame。
+     * @param frame 要处理的视频帧图像（QImage）。
      *
      * @note 此方法可用于实时视频处理管道。
      */
-    void processVideoFrame(const QVideoFrame &frame);
+    void processVideoFrame(const QImage &frame);
 
     /**
      * @brief 处理音频缓冲区以进行分析或特效。

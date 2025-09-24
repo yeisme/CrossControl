@@ -24,7 +24,7 @@
             "displayName": "Microsoft Visual Studio 2022 Debug",
             "inherits": "base",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/Desktop_Qt_6_8_3_msvc_64_bit-Debug",
+            "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "cl.exe",

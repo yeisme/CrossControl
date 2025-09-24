@@ -52,10 +52,7 @@ if(BUILD_AUDIO_VIDEO)
   else()
     add_library(AudioVideo STATIC ${AUDIO_VIDEO_SOURCES})
   endif()
-  target_link_libraries(
-    AudioVideo
-    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network
-            Qt${QT_VERSION_MAJOR}::Multimedia)
+  # 移除对 QtMultimedia 的依赖，使用 FFmpeg 进行音视频处理
   target_link_libraries(AudioVideo PRIVATE logging)
   target_include_directories(AudioVideo PRIVATE include/modules/AudioVideo)
   target_link_libraries(CrossControl PRIVATE AudioVideo)

@@ -15,7 +15,6 @@
 #include <QByteArray>
 #include <QImage>
 #include <QString>
-#include <QVideoFrame>
 
 #include "logging.h"
 
@@ -141,19 +140,19 @@ bool AudioVideo::captureAudio() {
  *
  * 目前，它通过将帧转换为图像并发出未更改的图像来模拟处理。
  *
- * @param frame 包含要处理的视频帧数据的QVideoFrame对象。
+ * @param frame 包含要处理的视频帧图像（QImage）。
  *
  * @note 此方法适用于实时视频处理管道。
  *       考虑实现各种滤镜、检测或转换。
  * @see videoFrameProcessed()信号
  */
-void AudioVideo::processVideoFrame(const QVideoFrame &frame) {
+void AudioVideo::processVideoFrame(const QImage &frame) {
     logging::LoggerManager::instance()
         .getLogger("AudioVideo")
         ->info("Processing video frame (placeholder)");
     // 占位符实现
-    // 通过转换为图像来模拟处理
-    QImage processedImage = frame.toImage();  // 占位符 - 无实际处理
+    // 直接传递图像（占位符 - 无实际处理）
+    const QImage &processedImage = frame;
     emit videoFrameProcessed(processedImage);
 }
 
