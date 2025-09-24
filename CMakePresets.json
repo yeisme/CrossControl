@@ -16,15 +16,17 @@
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
                 "CMAKE_COLOR_DIAGNOSTICS": "ON",
                 "CMAKE_PREFIX_PATH": "$env{QT6_DIR}",
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "CMAKE_CXX_STANDARD": "23",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+                "CMAKE_CXX_EXTENSIONS": "OFF"
             }
         },
         {
-            "name": "msvc2022-debug",
+            "name": "msvc-debug",
             "displayName": "Microsoft Visual Studio 2022 Debug",
             "inherits": "base",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/Desktop_Qt_6_8_3_msvc2022_64_bit-Debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_C_COMPILER": "cl.exe",
@@ -40,7 +42,7 @@
             }
         },
         {
-            "name": "msvc2022-release",
+            "name": "msvc-release",
             "displayName": "Microsoft Visual Studio 2022 Release",
             "inherits": "base",
             "generator": "Ninja",
@@ -121,6 +123,14 @@
     ],
     "buildPresets": [
         {
+            "name": "msvc-release",
+            "configurePreset": "msvc-release"
+        },
+        {
+            "name": "msvc-debug",
+            "configurePreset": "msvc-debug"
+        },
+        {
             "name": "gcc-release",
             "configurePreset": "gcc-release"
         },
@@ -139,15 +149,15 @@
     ],
     "testPresets": [
         {
-            "name": "msvc2022-release-test",
-            "configurePreset": "msvc2022-release",
+            "name": "msvc-release-test",
+            "configurePreset": "msvc-release",
             "output": {
                 "outputOnFailure": true
             }
         },
         {
-            "name": "msvc2022-debug-test",
-            "configurePreset": "msvc2022-debug",
+            "name": "msvc-debug-test",
+            "configurePreset": "msvc-debug",
             "output": {
                 "outputOnFailure": true
             }
@@ -201,9 +211,9 @@
             ]
         },
         {
-            "name": "msvc2022-release-package",
-            "configurePreset": "msvc2022-release",
-            "packageDirectory": "../msvc2022-release",
+            "name": "msvc-release-package",
+            "configurePreset": "msvc-release",
+            "packageDirectory": "../msvc-release",
             "generators": [
                 "ZIP",
                 "NSIS"
@@ -235,6 +245,25 @@
             ]
         },
         {
+            "name": "gcc-debug-workflow",
+            "description": "",
+            "displayName": "",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "gcc-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "gcc-debug"
+                },
+                {
+                    "type": "test",
+                    "name": "gcc-debug-test"
+                }
+            ]
+        },
+        {
             "name": "clang-release-workflow",
             "description": "",
             "displayName": "",
@@ -258,25 +287,63 @@
             ]
         },
         {
-            "name": "msvc2022-release-workflow",
+            "name": "clang-debug-workflow",
             "description": "",
             "displayName": "",
             "steps": [
                 {
                     "type": "configure",
-                    "name": "msvc2022-release"
+                    "name": "clang-debug"
                 },
                 {
                     "type": "build",
-                    "name": "msvc2022-release"
+                    "name": "clang-debug"
                 },
                 {
                     "type": "test",
-                    "name": "msvc2022-release-test"
+                    "name": "clang-debug-test"
+                }
+            ]
+        },
+        {
+            "name": "msvc-release-workflow",
+            "description": "",
+            "displayName": "",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "msvc-release"
+                },
+                {
+                    "type": "build",
+                    "name": "msvc-release"
+                },
+                {
+                    "type": "test",
+                    "name": "msvc-release-test"
                 },
                 {
                     "type": "package",
-                    "name": "msvc2022-release-package"
+                    "name": "msvc-release-package"
+                }
+            ]
+        },
+        {
+            "name": "msvc-debug-workflow",
+            "description": "",
+            "displayName": "",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "msvc-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "msvc-debug"
+                },
+                {
+                    "type": "test",
+                    "name": "msvc-debug-test"
                 }
             ]
         }
