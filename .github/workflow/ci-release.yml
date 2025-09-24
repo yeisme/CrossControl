@@ -2,9 +2,12 @@
 
 on:
   push:
-    branches: [main, develop]
+    branches: [master, develop]
   pull_request:
-    branches: [main, develop]
+    branches: [master, develop]
+  # 手动触发工作流
+  workflow_dispatch:
+    branches: [master, develop]
 
 jobs:
   # Linux 平台：GCC/Clang 构建（复用CMake workflow presets）
