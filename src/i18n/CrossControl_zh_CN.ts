@@ -39,7 +39,7 @@
         <translation>运行日志</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="61"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="62"/>
         <source>Logout</source>
         <translation>退出登录</translation>
     </message>
@@ -72,12 +72,12 @@
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../widgets/logwidget.cpp" line="72"/>
+        <location filename="../widgets/logwidget.cpp" line="75"/>
         <source>Save Logs</source>
         <translation>保存日志</translation>
     </message>
     <message>
-        <location filename="../widgets/logwidget.cpp" line="73"/>
+        <location filename="../widgets/logwidget.cpp" line="77"/>
         <source>HTML (*.html);;Text (*.txt)</source>
         <translation>HTML (*.html);;文本 (*.txt)</translation>
     </message>
@@ -293,12 +293,12 @@
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../widgets/unlockwidget.cpp" line="13"/>
+        <location filename="../widgets/unlockwidget.cpp" line="16"/>
         <source>Unlock Successful</source>
         <translation>开锁成功</translation>
     </message>
     <message>
-        <location filename="../widgets/unlockwidget.cpp" line="14"/>
+        <location filename="../widgets/unlockwidget.cpp" line="17"/>
         <source>The door has been remotely unlocked</source>
         <translation>门锁已远程开启</translation>
     </message>
@@ -334,32 +334,32 @@
         <translation>加载中...</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="41"/>
+        <location filename="../widgets/weatherwidget.cpp" line="50"/>
         <source>Failed to fetch weather</source>
         <translation>获取天气失败</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="61"/>
+        <location filename="../widgets/weatherwidget.cpp" line="71"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="63"/>
+        <location filename="../widgets/weatherwidget.cpp" line="74"/>
         <source>Air quality: Unknown</source>
         <translation>空气质量：未知</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="68"/>
+        <location filename="../widgets/weatherwidget.cpp" line="80"/>
         <source>No weather data</source>
         <translation>无天气数据</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="71"/>
+        <location filename="../widgets/weatherwidget.cpp" line="83"/>
         <source>Failed to parse weather data</source>
         <translation>解析天气数据失败</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="73"/>
+        <location filename="../widgets/weatherwidget.cpp" line="85"/>
         <source>Weather data error</source>
         <translation>天气数据异常</translation>
     </message>

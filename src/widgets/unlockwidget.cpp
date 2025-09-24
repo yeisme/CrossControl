@@ -1,15 +1,20 @@
 ﻿#include "unlockwidget.h"
 
 #include <QMessageBox>
+#include <QCoreApplication>
 
 #include "ui_unlockwidget.h"
 
-UnlockWidget::UnlockWidget(QWidget *parent) : QWidget(parent), ui(new Ui::UnlockWidget) { ui->setupUi(this); }
+UnlockWidget::UnlockWidget(QWidget *parent) : QWidget(parent), ui(new Ui::UnlockWidget) {
+    ui->setupUi(this);
+}
 
 UnlockWidget::~UnlockWidget() { delete ui; }
 
 void UnlockWidget::on_btnConfirmUnlock_clicked() {
-    QMessageBox::information(this, tr("Unlock Successful"), tr("The door has been remotely unlocked"));
+    QMessageBox::information(
+        this, QCoreApplication::translate("UnlockWidget", "Unlock Successful"),
+        QCoreApplication::translate("UnlockWidget", "The door has been remotely unlocked"));
     emit cancelUnlock();  // Back to main
 }
 

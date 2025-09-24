@@ -2,7 +2,8 @@
 
 #include "ui_visitrecordwidget.h"
 
-VisitRecordWidget::VisitRecordWidget(QWidget *parent) : QWidget(parent), ui(new Ui::VisitRecordWidget) {
+VisitRecordWidget::VisitRecordWidget(QWidget *parent)
+    : QWidget(parent), ui(new Ui::VisitRecordWidget) {
     ui->setupUi(this);
 }
 

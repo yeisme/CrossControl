@@ -6,4 +6,4 @@ AllowShortFunctionsOnASingleLine: All
 AllowShortBlocksOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: true
-ColumnLimit: 120
+ColumnLimit: 100

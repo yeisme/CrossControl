@@ -21,7 +21,9 @@
  * @param context
  * @param msg
  */
-static void qtMessageToSpdlog(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
+static void qtMessageToSpdlog(QtMsgType type,
+                              const QMessageLogContext &context,
+                              const QString &msg) {
     // 将 Qt 消息转发到 spdlog
     const std::string text = msg.toUtf8().constData();
     switch (type) {
@@ -45,17 +47,19 @@ static void qtMessageToSpdlog(QtMsgType type, const QMessageLogContext &context,
     }
 }
 
-// 为当前系统用户界面语言安装翻译器。如果加载并安装了翻译，则返回一个非空的 unique_ptr；否则返回 nullptr。
+// 为当前系统用户界面语言安装翻译器。如果加载并安装了翻译，则返回一个非空的 unique_ptr；否则返回
+// nullptr。
 static std::unique_ptr<QTranslator> installSystemTranslator(QCoreApplication &app) {
     auto translator = std::make_unique<QTranslator>();
     const QStringList uiLanguages = QLocale::system().uiLanguages();
     bool translatorLoaded = false;
     for (const QString &locale : uiLanguages) {
-        const QString baseName = "CrossControl_" + QLocale(locale).name();  // e.g. zh_CN 
+        const QString baseName = "CrossControl_" + QLocale(locale).name();  // e.g. zh_CN
 
         // Candidate directories; resource and typical on-disk locations
         const QString appDir = QCoreApplication::applicationDirPath();
-        const QStringList dirs = {":/i18n", appDir + "/i18n", appDir + "/../i18n", appDir + "/../../src/i18n"};
+        const QStringList dirs = {
+            ":/i18n", appDir + "/i18n", appDir + "/../i18n", appDir + "/../../src/i18n"};
 
         for (const QString &dir : dirs) {
             const QString path = dir + "/" + baseName + ".qm";

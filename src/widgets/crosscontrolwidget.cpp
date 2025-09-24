@@ -1,6 +1,7 @@
 ﻿// Reworked implementation: QWidget + left sidebar + right content stack
 #include "crosscontrolwidget.h"
 
+#include <QCoreApplication>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
@@ -43,22 +44,24 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
         return b;
     };
 
-    btnDashboard = makeBtn(tr("Dashboard"));
-    btnMonitor = makeBtn(tr("Monitor"));
-    btnUnlock = makeBtn(tr("Remote Unlock"));
-    btnVisitRecord = makeBtn(tr("Visit Records"));
-    btnMessage = makeBtn(tr("Messages"));
-    btnSetting = makeBtn(tr("System Settings"));
-    btnLogs = makeBtn(tr("Logs"));
+    btnDashboard = makeBtn(QCoreApplication::translate("CrossControlWidget", "Dashboard"));
+    btnMonitor = makeBtn(QCoreApplication::translate("CrossControlWidget", "Monitor"));
+    btnUnlock = makeBtn(QCoreApplication::translate("CrossControlWidget", "Remote Unlock"));
+    btnVisitRecord = makeBtn(QCoreApplication::translate("CrossControlWidget", "Visit Records"));
+    btnMessage = makeBtn(QCoreApplication::translate("CrossControlWidget", "Messages"));
+    btnSetting = makeBtn(QCoreApplication::translate("CrossControlWidget", "System Settings"));
+    btnLogs = makeBtn(QCoreApplication::translate("CrossControlWidget", "Logs"));
 
-    for (auto* b : {btnDashboard, btnMonitor, btnUnlock, btnVisitRecord, btnMessage, btnSetting, btnLogs}) {
+    for (auto* b :
+         {btnDashboard, btnMonitor, btnUnlock, btnVisitRecord, btnMessage, btnSetting, btnLogs}) {
         sideLayout->addWidget(b);
     }
 
     sideLayout->addStretch(1);
 
-    btnLogout = makeBtn(tr("Logout"));
-    btnLogout->setStyleSheet("text-align: left; padding: 6px 10px; font-size: 14px; color: #ff4444;");
+    btnLogout = makeBtn(QCoreApplication::translate("CrossControlWidget", "Logout"));
+    btnLogout->setStyleSheet(
+        "text-align: left; padding: 6px 10px; font-size: 14px; color: #ff4444;");
     sideLayout->addWidget(btnLogout);
 
     // 右侧内容堆栈
@@ -108,7 +111,8 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
 
     // 子页面返回主页面
     connect(monitorWidget, &MonitorWidget::backToMain, this, &CrossControlWidget::showMainPage);
-    connect(visitRecordWidget, &VisitRecordWidget::backToMain, this, &CrossControlWidget::showMainPage);
+    connect(
+        visitRecordWidget, &VisitRecordWidget::backToMain, this, &CrossControlWidget::showMainPage);
     connect(messageWidget, &MessageWidget::backToMain, this, &CrossControlWidget::showMainPage);
     connect(settingWidget, &SettingWidget::backToMain, this, &CrossControlWidget::showMainPage);
     connect(unlockWidget, &UnlockWidget::cancelUnlock, this, &CrossControlWidget::showMainPage);
@@ -129,7 +133,9 @@ void CrossControlWidget::onLogout() { rootStack->setCurrentWidget(loginWidget); 
 
 void CrossControlWidget::showMainPage() { contentStack->setCurrentWidget(mainWidget); }
 void CrossControlWidget::showMonitorPage() { contentStack->setCurrentWidget(monitorWidget); }
-void CrossControlWidget::showVisitRecordPage() { contentStack->setCurrentWidget(visitRecordWidget); }
+void CrossControlWidget::showVisitRecordPage() {
+    contentStack->setCurrentWidget(visitRecordWidget);
+}
 void CrossControlWidget::showMessagePage() { contentStack->setCurrentWidget(messageWidget); }
 void CrossControlWidget::showSettingPage() { contentStack->setCurrentWidget(settingWidget); }
 void CrossControlWidget::showUnlockPage() { contentStack->setCurrentWidget(unlockWidget); }

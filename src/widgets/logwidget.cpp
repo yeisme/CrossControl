@@ -1,5 +1,6 @@
 ﻿#include "logwidget.h"
 
+#include <QCoreApplication>
 #include <QDateTime>
 #include <QFile>
 #include <QFileDialog>
@@ -12,7 +13,6 @@
 
 #include "spdlog/sinks/qt_sinks.h"
 #include "spdlog/spdlog.h"
-#include <QCoreApplication>
 #include "ui_logwidget.h"
 
 namespace {}  // namespace
@@ -56,7 +56,9 @@ void LogWidget::on_btnBack_clicked() { emit backToMain(); }
 
 void LogWidget::on_chkEnable_stateChanged(int state) {
     m_enabled = (state != 0);
-    if (m_sink) m_sink->set_level(m_enabled ? static_cast<spdlog::level::level_enum>(m_minLevel) : spdlog::level::off);
+    if (m_sink)
+        m_sink->set_level(m_enabled ? static_cast<spdlog::level::level_enum>(m_minLevel)
+                                    : spdlog::level::off);
 }
 
 void LogWidget::on_cmbLevel_currentIndexChanged(int index) {
@@ -69,14 +71,22 @@ void LogWidget::on_btnClear_clicked() { ui->textEdit->clear(); }
 
 void LogWidget::on_btnSave_clicked() {
     const QString path = QFileDialog::getSaveFileName(
-        nullptr, QCoreApplication::translate("LogWidget", "Save Logs"), QString::fromLatin1("logs.html"),
+        nullptr,
+        QCoreApplication::translate("LogWidget", "Save Logs"),
+        QString::fromLatin1("logs.html"),
         QCoreApplication::translate("LogWidget", "HTML (*.html);;Text (*.txt)"));
     if (path.isEmpty()) return;
     if (path.toLower().endsWith(QString::fromLatin1(".html"))) {
         QFile f(path);
-        if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) { f.write(ui->textEdit->toHtml().toUtf8()); }
+        if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            f.write(ui->textEdit->toHtml().toUtf8());
+        }
     } else {
         QFile f(path);
-        if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) { f.write(ui->textEdit->toPlainText().toUtf8()); }
+        if (f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            f.write(ui->textEdit->toPlainText().toUtf8());
+        }
     }
+
+    spdlog::trace("Logs saved to {}", path.toStdString());
 }
