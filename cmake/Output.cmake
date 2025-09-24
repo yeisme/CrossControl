@@ -21,6 +21,10 @@ if(BUILD_AUDIO_VIDEO)
   list(APPEND _PROJECT_LOCAL_TARGETS AudioVideo)
 endif()
 
+if(BUILD_STORAGE)
+  list(APPEND _PROJECT_LOCAL_TARGETS Storage)
+endif()
+
 foreach(_tgt IN LISTS _PROJECT_LOCAL_TARGETS)
   if(TARGET ${_tgt})
     get_target_property(_is_imported ${_tgt} IMPORTED)
@@ -40,7 +44,7 @@ foreach(_tgt IN LISTS _PROJECT_LOCAL_TARGETS)
         set_target_properties(${_tgt}
                               PROPERTIES
                                 COMPILE_PDB_NAME "${_tgt}"
-                                COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/pdb")
+                                COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/pdb")
       endif()
     endif()
   endif()

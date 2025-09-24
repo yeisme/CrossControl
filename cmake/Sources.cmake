@@ -51,3 +51,10 @@ if(BUILD_AUDIO_VIDEO)
         include/modules/AudioVideo/audiovideo.h
     )
 endif()
+
+if(BUILD_STORAGE)
+    set(STORAGE_SOURCES
+        src/modules/Storage/storage.cpp
+        include/modules/Storage/storage.h
+    )
+endif()

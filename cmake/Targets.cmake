@@ -7,6 +7,7 @@ include(cmake/targets/Logging.cmake)
 # 模块独立为单文件，包含它们的配置/链接/头文件等
 include(cmake/targets/HumanRecognition.cmake)
 include(cmake/targets/AudioVideo.cmake)
+include(cmake/targets/Storage.cmake)
 
 target_link_libraries(
   CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets

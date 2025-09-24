@@ -15,6 +15,7 @@ set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS
 option(BUILD_HUMAN_RECOGNITION "Build Human Recognition module" ON)
 option(BUILD_AUDIO_VIDEO "Build Audio Video module" ON)
 option(BUILD_MQTT_CLIENT "Build MQTT Client module" ON)
+option(BUILD_STORAGE "Build Storage (data storage) module" ON)
 option(BUILD_SHARED_MODULES "Build modules as shared libraries" ON)
 option(BUILD_TINYORM "Build TinyORM ORM library" ON)
 
@@ -41,6 +42,8 @@ if(BUILD_TINYORM)
   set(_TINYORM_PACKAGE_OK OFF)
 
   if(USE_SYSTEM_TINYORM)
+    set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "${CMAKE_BINARY_DIR}/src/modules/TinyORM")
+    message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
     find_package(TinyORM QUIET CONFIG)
     if(TinyORM_FOUND)
       set(_TINYORM_PACKAGE_OK ON)
