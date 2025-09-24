@@ -45,6 +45,17 @@ jobs:
 
       - uses: lukka/get-cmake@latest
 
+      - name: Debug aqtinstall availability
+        run: |
+          python3 -m pip install --upgrade pip aqtinstall
+          echo "--- Python and aqt versions ---"
+          python3 --version
+          python3 -m pip show aqtinstall || true
+          echo "--- list available architectures for Qt 6.8.3 ---"
+          python3 -m aqt list-qt linux desktop 6.8.3 || true
+          echo "--- list available architectures (all) ---"
+          python3 -m aqt list-qt linux desktop --all || true
+
       - name: Set up Qt 6
         id: install-qt
         uses: jurplel/install-qt-action@v3
@@ -131,6 +142,25 @@ jobs:
             qtdeclarative
             qttools
             qtmultimedia
+
+      - name: Debug Qt installation (Windows)
+        if: always()
+        shell: pwsh
+        run: |
+          $prefix = "${{ steps.install-qt.outputs.install_prefix }}"
+          Write-Host "install-qt install_prefix: $prefix"
+          if (-not $prefix) { Write-Host "install_prefix is empty"; exit 0 }
+          Write-Host "Listing top-level of install prefix:"
+          Get-ChildItem -Path $prefix | ForEach-Object { Write-Host $_.FullName }
+          $cmakeDir = Join-Path $prefix "lib\cmake"
+          Write-Host "Checking lib\cmake contents: $cmakeDir"
+          if (Test-Path $cmakeDir) {
+            Get-ChildItem -Path $cmakeDir -Recurse -Depth 2 | ForEach-Object { Write-Host $_.FullName }
+          } else {
+            Write-Host "cmake dir does not exist: $cmakeDir"
+          }
+          $multimediaCfg = Join-Path $cmakeDir "Qt6Multimedia\Qt6MultimediaConfig.cmake"
+          if (Test-Path $multimediaCfg) { Write-Host "FOUND: Qt6MultimediaConfig.cmake -> $multimediaCfg" } else { Write-Host "MISSING: Qt6MultimediaConfig.cmake ($multimediaCfg)" }
 
       - name: Clone vcpkg (Windows)
         shell: pwsh
