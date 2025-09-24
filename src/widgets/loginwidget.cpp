@@ -1,5 +1,6 @@
 ﻿#include "loginwidget.h"
 
+#include <qcoreapplication.h>
 #include <qwindowdefs_win.h>
 
 #include <QAction>
@@ -72,7 +73,7 @@ LoginWidget::LoginWidget(QWidget *parent) : QWidget(parent), ui(new Ui::LoginWid
         QObject::connect(action, &QAction::toggled, le, [le](bool checked) {
             le->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
         });
-        action->setToolTip(tr("Show/Hide password"));
+        action->setToolTip(QCoreApplication::translate("LoginWidget", "Show/Hide password"));
     };
     setupPasswordToggle(ui->lineEditLoginPassword);
     setupPasswordToggle(ui->lineEditRegisterPassword);
@@ -105,8 +106,11 @@ void LoginWidget::on_pushButtonLogin_clicked() {
     if (!loadAccount(savedEmail, savedHash)) {
         // 弹窗提示未注册
         QMessageBox::warning(
-            this, tr("Login Failed"), tr("This email is not registered. Please register first."));
-        showLoginError(tr("Email not registered"));
+            this,
+            QCoreApplication::translate("LoginWidget", "Login Failed"),
+            QCoreApplication::translate("LoginWidget",
+                                        "This email is not registered. Please register first."));
+        showLoginError(QCoreApplication::translate("LoginWidget", "Email not registered"));
         return;
     }
 
@@ -135,14 +139,16 @@ void LoginWidget::on_pushButtonRegister_clicked() {
     const QString confirmPwd = confirm ? confirm->text() : QString();
 
     if (!isEmailValid(email) || !isPasswordValid(password)) {
-        showRegisterError(
-            tr("Please enter a valid email and a password with at least 8 characters"));
+        showRegisterError(QCoreApplication::translate(
+            "LoginWidget", "Please enter a valid email and a password with at least 8 characters"));
         return;
     }
 
     if (confirm && password != confirmPwd) {
-        QMessageBox::warning(this, tr("Registration Failed"), tr("Passwords do not match."));
-        showRegisterError(tr("Passwords do not match"));
+        QMessageBox::warning(this,
+                             QCoreApplication::translate("LoginWidget", "Registration Failed"),
+                             QCoreApplication::translate("LoginWidget", "Passwords do not match."));
+        showRegisterError(QCoreApplication::translate("LoginWidget", "Passwords do not match"));
         return;
     }
 
