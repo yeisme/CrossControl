@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: [master, develop]
+    branches: [master, develop, feature/*]
   pull_request:
     branches: [master, develop]
   # 手动触发工作流
@@ -76,22 +76,28 @@ jobs:
             qtdeclarative
             qttools
 
-      - name: Set up vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-          runVcpkgInstall: false
+      - name: Clone vcpkg (Linux)
+        run: |
+          if [ ! -d "${{ github.workspace }}/vcpkg" ]; then
+            git clone --depth 1 https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/vcpkg"
+          else
+            echo "vcpkg already exists, skipping clone"
+          fi
 
-      - name: Bootstrap vcpkg
+      - name: Bootstrap vcpkg (Linux)
         shell: bash
         run: |
-          cd ${{ github.workspace }}/vcpkg
-          ./bootstrap-vcpkg.sh
+          chmod +x "${{ github.workspace }}/vcpkg/bootstrap-vcpkg.sh"
+          "${{ github.workspace }}/vcpkg/bootstrap-vcpkg.sh"
 
-      - name: Install vcpkg packages
+      - name: Install vcpkg packages (global mode, Linux)
         shell: bash
         run: |
-          ${{ github.workspace }}/vcpkg/vcpkg install fmt spdlog
+          VCPKG_BIN="${{ github.workspace }}/vcpkg/vcpkg"
+          echo "Installing fmt and spdlog (global mode) via $VCPKG_BIN"
+          $VCPKG_BIN install fmt:x64-linux spdlog:x64-linux --recurse
+        env:
+          VCPKG_ROOT: ${{ github.workspace }}/vcpkg
 
       - name: Run CMake workflow (use lukka/run-cmake@v10)
         uses: lukka/run-cmake@v10
@@ -142,21 +148,31 @@ jobs:
             qtdeclarative
             qttools
 
-      - name: Set up vcpkg
-        uses: lukka/run-vcpkg@v11
-        with:
-          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-          runVcpkgInstall: false
-
-      - name: Bootstrap vcpkg
+      - name: Clone vcpkg (Windows)
         shell: pwsh
-        run: ${{ github.workspace }}/vcpkg/bootstrap-vcpkg.bat
+        run: |
+          $vcpkgDir = "${{ github.workspace }}\vcpkg"
+          if (-not (Test-Path $vcpkgDir)) {
+            git clone --depth 1 https://github.com/microsoft/vcpkg.git $vcpkgDir
+          } else {
+            Write-Host "vcpkg already exists, skipping clone"
+          }
 
-      - name: Install vcpkg packages
+      - name: Bootstrap vcpkg (Windows)
+        shell: pwsh
+        run: |
+          $bootstrap = "${{ github.workspace }}\vcpkg\bootstrap-vcpkg.bat"
+          Write-Host "Running bootstrap: $bootstrap"
+          & $bootstrap
+
+      - name: Install vcpkg packages (global mode, Windows)
         shell: pwsh
         run: |
           $vcpkg = "${{ github.workspace }}\vcpkg\vcpkg.exe"
-          & $vcpkg install fmt:x64-windows spdlog:x64-windows
+          Write-Host "Installing fmt and spdlog (global mode) via $vcpkg"
+          & $vcpkg install fmt:x64-windows spdlog:x64-windows --recurse
+        env:
+          VCPKG_ROOT: ${{ github.workspace }}\vcpkg
 
       - name: Run CMake workflow (use lukka/run-cmake@v10)
         uses: lukka/run-cmake@v10
