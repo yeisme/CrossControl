@@ -21,9 +21,9 @@
      <property name="styleSheet">
       <string>font-size: 24px; font-weight: bold;</string>
      </property>
-     <property name="text">
-      <string>智能家居中控</string>
-     </property>
+    <property name="text">
+     <string>Smart Home Control</string>
+    </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
@@ -47,9 +47,9 @@
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
-     <property name="placeholderText">
-      <string>用户名</string>
-     </property>
+    <property name="placeholderText">
+     <string>Username</string>
+    </property>
     </widget>
    </item>
    <item>
@@ -60,16 +60,16 @@
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
-     <property name="placeholderText">
-      <string>密码</string>
-     </property>
+    <property name="placeholderText">
+     <string>Password</string>
+    </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="pushButtonLogin">
-     <property name="text">
-      <string>登录</string>
-     </property>
+    <property name="text">
+     <string>Login</string>
+    </property>
     </widget>
    </item>
    <item>

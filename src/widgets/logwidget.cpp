@@ -12,6 +12,7 @@
 
 #include "spdlog/sinks/qt_sinks.h"
 #include "spdlog/spdlog.h"
+#include <QCoreApplication>
 #include "ui_logwidget.h"
 
 namespace {}  // namespace
@@ -68,7 +69,8 @@ void LogWidget::on_btnClear_clicked() { ui->textEdit->clear(); }
 
 void LogWidget::on_btnSave_clicked() {
     const QString path = QFileDialog::getSaveFileName(
-        nullptr, tr("保存日志"), QString::fromLatin1("logs.html"), tr("HTML (*.html);;Text (*.txt)"));
+        nullptr, QCoreApplication::translate("LogWidget", "Save Logs"), QString::fromLatin1("logs.html"),
+        QCoreApplication::translate("LogWidget", "HTML (*.html);;Text (*.txt)"));
     if (path.isEmpty()) return;
     if (path.toLower().endsWith(QString::fromLatin1(".html"))) {
         QFile f(path);

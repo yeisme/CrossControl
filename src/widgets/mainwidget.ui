@@ -10,9 +10,9 @@
        <property name="styleSheet">
         <string>font-size: 16px;</string>
        </property>
-       <property name="text">
-        <string>14:36 2025/08/19 星期二</string>
-       </property>
+  <property name="text">
+   <string>14:36 2025/08/19 Tuesday</string>
+  </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
@@ -23,9 +23,9 @@
        <property name="styleSheet">
         <string>font-size: 14px; color: #555;</string>
        </property>
-       <property name="text">
-        <string>29℃~34℃ 晴 空气质量：优质</string>
-       </property>
+  <property name="text">
+   <string>29℃~34℃ Sunny Air quality: Good</string>
+  </property>
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
@@ -60,7 +60,7 @@
           <string>font-size: 18px;</string>
          </property>
          <property name="text">
-          <string>监控</string>
+          <string>Monitor</string>
          </property>
         </widget>
        </item>
@@ -76,7 +76,7 @@
           <string>font-size: 18px;</string>
          </property>
          <property name="text">
-          <string>远程开锁</string>
+          <string>Remote Unlock</string>
          </property>
         </widget>
        </item>
@@ -92,7 +92,7 @@
           <string>font-size: 18px;</string>
          </property>
          <property name="text">
-          <string>来访记录</string>
+          <string>Visit Records</string>
          </property>
         </widget>
        </item>
@@ -108,7 +108,7 @@
           <string>font-size: 18px;</string>
          </property>
          <property name="text">
-          <string>留言</string>
+          <string>Messages</string>
          </property>
         </widget>
        </item>
@@ -124,7 +124,7 @@
           <string>font-size: 18px;</string>
          </property>
          <property name="text">
-          <string>系统设置</string>
+          <string>System Settings</string>
          </property>
         </widget>
        </item>
@@ -140,7 +140,7 @@
           <string>font-size: 18px; color: #ff4444;</string>
          </property>
          <property name="text">
-          <string>退出登录</string>
+          <string>Logout</string>
          </property>
         </widget>
        </item>
@@ -155,59 +155,16 @@
       <property name="styleSheet">
        <string>font-size: 18px;</string>
       </property>
-      <property name="text">
-       <string>运行日志</string>
-      </property>
+  <property name="text">
+   <string>Logs</string>
+  </property>
      </widget>
     </item>
       </layout>
      </widget>
     </widget>
    </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayoutBottom">
-     <item>
-      <widget class="QPushButton" name="btnHome">
-       <property name="styleSheet">
-        <string>font-size: 14px;</string>
-       </property>
-       <property name="text">
-        <string>首页</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btnNotifications">
-       <property name="styleSheet">
-        <string>font-size: 14px;</string>
-       </property>
-       <property name="text">
-        <string>通知</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btnQuickActions">
-       <property name="styleSheet">
-        <string>font-size: 14px;</string>
-       </property>
-       <property name="text">
-        <string>快捷操作</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btnUser">
-       <property name="styleSheet">
-        <string>font-size: 14px;</string>
-       </property>
-       <property name="text">
-        <string>我的</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
+   
   </layout>
  </widget>
  <resources/>

@@ -9,15 +9,11 @@
 
 #include "ui_weatherwidget.h"
 
-WeatherWidget::WeatherWidget(QWidget *parent)
-    : QWidget(parent), ui(new Ui::WeatherWidget) {
+WeatherWidget::WeatherWidget(QWidget *parent) : QWidget(parent), ui(new Ui::WeatherWidget) {
     ui->setupUi(this);
     networkManager = new QNetworkAccessManager(this);
     // 完成请求执行展示
-    connect(networkManager,
-            &QNetworkAccessManager::finished,
-            this,
-            &WeatherWidget::onWeatherDataReceived);
+    connect(networkManager, &QNetworkAccessManager::finished, this, &WeatherWidget::onWeatherDataReceived);
 
     // 定时更新天气，每小时更新一次
     QTimer *timer = new QTimer(this);
@@ -41,7 +37,7 @@ void WeatherWidget::onWeatherDataReceived(QNetworkReply *reply) {
         QString jsonString = QString::fromUtf8(data);
         parseWeatherData(jsonString);
     } else {
-        ui->labelWeather->setText("获取天气失败");
+    ui->labelWeather->setText(tr("Failed to fetch weather"));
     }
     reply->deleteLater();
 }
@@ -61,22 +57,17 @@ void WeatherWidget::parseWeatherData(const QString &data) {
                 if (!descArray.isEmpty()) {
                     weatherDesc = descArray[0].toObject()["value"].toString();
                 } else {
-                    weatherDesc = "未知";
+                    weatherDesc = tr("Unknown");
                 }
-                QString airQuality =
-                    "空气质量：未知";  // wttr.in 可能不提供空气质量，这里简化
+                QString airQuality = tr("Air quality: Unknown");  // wttr.in 可能不提供空气质量，这里简化
 
-                QString weatherText =
-                    QString("%1℃~%2℃ %3 %4")
-                        .arg(tempMin, tempMax, weatherDesc, airQuality);
+                QString weatherText = QString("%1℃~%2℃ %3 %4").arg(tempMin, tempMax, weatherDesc, airQuality);
                 ui->labelWeather->setText(weatherText);
             } else {
-                ui->labelWeather->setText("无天气数据");
+                ui->labelWeather->setText(tr("No weather data"));
             }
         } else {
-            ui->labelWeather->setText("解析天气数据失败");
+            ui->labelWeather->setText(tr("Failed to parse weather data"));
         }
-    } catch (...) {
-        ui->labelWeather->setText("天气数据异常");
-    }
+    } catch (...) { ui->labelWeather->setText(tr("Weather data error")); }
 }

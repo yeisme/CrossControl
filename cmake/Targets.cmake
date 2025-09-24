@@ -1,14 +1,26 @@
 # Targets
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
   qt_add_executable(CrossControl MANUAL_FINALIZATION ${PROJECT_SOURCES})
-  qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+  # Generate QM files from TS, scanning only actual project sources to avoid autogen cycles
+  qt_create_translation(QM_FILES ${TS_FILES} ${PROJECT_SOURCES})
+  # Make sure translation files are generated when building 'all'
+  if(QM_FILES)
+    add_custom_target(translations ALL DEPENDS ${QM_FILES})
+    # Ensure the executable build waits for translations before running POST_BUILD copy
+    add_dependencies(CrossControl translations)
+  endif()
 else()
   if(ANDROID)
     add_library(CrossControl SHARED ${PROJECT_SOURCES})
   else()
     add_executable(CrossControl ${PROJECT_SOURCES})
   endif()
-  qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+  # Qt5 translation generation with only project sources
+  qt5_create_translation(QM_FILES ${PROJECT_SOURCES} ${TS_FILES})
+  if(QM_FILES)
+    add_custom_target(translations ALL DEPENDS ${QM_FILES})
+    add_dependencies(CrossControl translations)
+  endif()
 endif()
 
 # Module libraries
@@ -77,3 +89,10 @@ endforeach()
 
 # Keep Windows subsystem flag for GUI app
 set_target_properties(CrossControl PROPERTIES WIN32_EXECUTABLE TRUE)
+
+# Copy translation QM files next to executable under i18n/ for runtime lookup
+add_custom_command(TARGET CrossControl POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:CrossControl>/i18n"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QM_FILES} "$<TARGET_FILE_DIR:CrossControl>/i18n"
+  COMMENT "Copying translation files to runtime i18n directory"
+)

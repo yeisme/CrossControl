@@ -1,5 +1,6 @@
 # Source Files
-set(TS_FILES CrossControl_yue_CN.ts)
+set(TS_FILES
+    src/i18n/CrossControl_zh_CN.ts)
 
 set(PROJECT_SOURCES
     src/main.cpp

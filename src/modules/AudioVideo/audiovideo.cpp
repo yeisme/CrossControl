@@ -27,11 +27,9 @@
  *
  * @param parent 指向父QObject的指针，默认为nullptr。
  */
-AudioVideo::AudioVideo(QObject *parent)
-    : QObject(parent), m_isRecording(false)
-{
+AudioVideo::AudioVideo(QObject *parent) : QObject(parent), m_isRecording(false) {
     // 占位符初始化
-        spdlog::info("AudioVideo module initialized (placeholder)");
+    spdlog::info("AudioVideo module initialized (placeholder)");
 }
 
 /**
@@ -52,8 +50,7 @@ AudioVideo::AudioVideo(QObject *parent)
  * @see recordingStarted()信号
  * @see stopRecording()
  */
-bool AudioVideo::startRecording(const QString &outputPath)
-{
+bool AudioVideo::startRecording(const QString &outputPath) {
     // 占位符实现
     spdlog::info("Starting recording to: {} (placeholder)", outputPath.toStdString());
     m_currentOutputPath = outputPath;
@@ -75,8 +72,7 @@ bool AudioVideo::startRecording(const QString &outputPath)
  * @see recordingStopped()信号
  * @see startRecording()
  */
-void AudioVideo::stopRecording()
-{
+void AudioVideo::stopRecording() {
     // 占位符实现
     spdlog::info("Stopping recording (placeholder)");
     m_isRecording = false;
@@ -99,8 +95,7 @@ void AudioVideo::stopRecording()
  * @note 真实的视频播放需要适当的视频编解码器和渲染表面。
  *       考虑支持各种视频格式并实现播放控制。
  */
-bool AudioVideo::playVideo(const QString &filePath)
-{
+bool AudioVideo::playVideo(const QString &filePath) {
     // 占位符实现
     spdlog::info("Playing video: {} (placeholder)", filePath.toStdString());
     return true;
@@ -121,8 +116,7 @@ bool AudioVideo::playVideo(const QString &filePath)
  * @note 音频捕获需要适当的设备权限和格式协商。
  *       处理没有可用输入设备的情况。
  */
-bool AudioVideo::captureAudio()
-{
+bool AudioVideo::captureAudio() {
     // 占位符实现
     spdlog::info("Capturing audio (placeholder)");
     return true;
@@ -147,7 +141,7 @@ void AudioVideo::processVideoFrame(const QVideoFrame &frame) {
     spdlog::info("Processing video frame (placeholder)");
     // 占位符实现
     // 通过转换为图像来模拟处理
-    QImage processedImage = frame.toImage(); // 占位符 - 无实际处理
+    QImage processedImage = frame.toImage();  // 占位符 - 无实际处理
     emit videoFrameProcessed(processedImage);
 }
 
@@ -170,6 +164,6 @@ void AudioVideo::processAudioBuffer(const QByteArray &buffer) {
     spdlog::info("Processing audio buffer (placeholder)");
     // 占位符实现
     // 模拟处理 - 实际上，这将应用音频效果/滤波
-    QByteArray processedBuffer = buffer; // 占位符 - 无实际处理
+    QByteArray processedBuffer = buffer;  // 占位符 - 无实际处理
     emit audioBufferProcessed(processedBuffer);
 }

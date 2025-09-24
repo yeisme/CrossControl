@@ -12,8 +12,9 @@
 
 #include "humanrecognition.h"
 
-#include "spdlog/spdlog.h"
 #include <QRect>
+
+#include "spdlog/spdlog.h"
 
 /**
  * @brief 构造函数实现。
@@ -23,8 +24,7 @@
  *
  * @param parent 指向父QObject的指针，默认为nullptr。
  */
-HumanRecognition::HumanRecognition(QObject *parent)
-    : QObject(parent), m_isInitialized(false) {
+HumanRecognition::HumanRecognition(QObject *parent) : QObject(parent), m_isInitialized(false) {
     // 占位符初始化
     spdlog::info("HumanRecognition module initialized (placeholder)");
     m_isInitialized = true;

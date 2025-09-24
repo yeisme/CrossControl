@@ -21,7 +21,6 @@ endif()
 # Core formatting / logging libraries used across the project
 find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED) # 使用 spdlog 作为日志库，比 QDebug 快且功能丰富
-find_package(glaze CONFIG REQUIRED) # 使用这个库，方便多种格式序列化，必须 C++23
 
 # Optional module-specific dependencies
 if(BUILD_HUMAN_RECOGNITION)

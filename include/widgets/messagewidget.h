@@ -14,18 +14,18 @@ QT_END_NAMESPACE
 class MessageWidget : public QWidget {
     Q_OBJECT
 
-public:
+   public:
     explicit MessageWidget(QWidget* parent = nullptr);
     ~MessageWidget();
 
-signals:
+   signals:
     void backToMain();
 
-private slots:
+   private slots:
     void on_btnSendMessage_clicked();
     void on_btnBackFromMessage_clicked();
 
-private:
+   private:
     Ui::MessageWidget* ui;
 };
 

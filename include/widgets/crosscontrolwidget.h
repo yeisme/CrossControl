@@ -1,45 +1,60 @@
 ﻿#ifndef CROSSCONTROLWIDGET_H
 #define CROSSCONTROLWIDGET_H
 
-#include <QStackedWidget>
+#include <QWidget>
+
+class QStackedWidget;
+class QPushButton;
 
 #include "loginwidget.h"
+#include "logwidget.h"
 #include "mainwidget.h"
 #include "messagewidget.h"
 #include "monitorwidget.h"
 #include "settingwidget.h"
 #include "unlockwidget.h"
 #include "visitrecordwidget.h"
-#include "logwidget.h"
 
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class CrossControlWidget;
-}
-QT_END_NAMESPACE
-
-class CrossControlWidget : public QStackedWidget {
+class CrossControlWidget : public QWidget {
     Q_OBJECT
 
    public:
-    CrossControlWidget(QWidget *parent = nullptr);
-    ~CrossControlWidget();
+    explicit CrossControlWidget(QWidget *parent = nullptr);
+    ~CrossControlWidget() override;
 
    private:
-    Ui::CrossControlWidget *ui;
+    // 顶层堆栈：登录页 / 应用主体
+    QStackedWidget *rootStack{nullptr};
 
-    LoginWidget *loginWidget;              // 登录界面
-    MainWidget *mainWidget;                // 主界面
-    MonitorWidget *monitorWidget;          // 监控界面
-    VisitRecordWidget *visitRecordWidget;  // 访客记录界面
-    MessageWidget *messageWidget;          // 消息界面
-    SettingWidget *settingWidget;          // 设置界面
-    UnlockWidget *unlockWidget;            // 解锁界面
-    LogWidget *logWidget;                  // 日志界面（新）
+    // 应用主体：左侧边栏 + 右侧内容堆栈
+    QWidget *appPage{nullptr};
+    QWidget *sideBar{nullptr};
+    QStackedWidget *contentStack{nullptr};
+
+    // 侧边栏按钮
+    QPushButton *btnDashboard{nullptr};
+    QPushButton *btnMonitor{nullptr};
+    QPushButton *btnUnlock{nullptr};
+    QPushButton *btnVisitRecord{nullptr};
+    QPushButton *btnMessage{nullptr};
+    QPushButton *btnSetting{nullptr};
+    QPushButton *btnLogs{nullptr};
+    QPushButton *btnLogout{nullptr};
+
+    // 各页面
+    LoginWidget *loginWidget{nullptr};              // 登录页面
+    MainWidget *mainWidget{nullptr};                // Dashboard 主页面
+    MonitorWidget *monitorWidget{nullptr};          // 监控页面
+    VisitRecordWidget *visitRecordWidget{nullptr};  // 访客记录
+    MessageWidget *messageWidget{nullptr};          // 消息
+    SettingWidget *settingWidget{nullptr};          // 设置
+    UnlockWidget *unlockWidget{nullptr};            // 解锁
+    LogWidget *logWidget{nullptr};                  // 日志
 
    private slots:
     void onLoginSuccess();
     void onLogout();
+
     void showMainPage();
     void showMonitorPage();
     void showVisitRecordPage();

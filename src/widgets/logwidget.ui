@@ -7,9 +7,9 @@
     <layout class="QHBoxLayout" name="toolbarLayout">
      <item>
       <widget class="QCheckBox" name="chkEnable">
-       <property name="text">
-        <string>启用日志显示</string>
-       </property>
+    <property name="text">
+     <string>Enable Logs</string>
+    </property>
        <property name="checked">
         <bool>true</bool>
        </property>
@@ -17,9 +17,9 @@
      </item>
      <item>
       <widget class="QLabel" name="lblLevel">
-       <property name="text">
-        <string>最小级别</string>
-       </property>
+    <property name="text">
+     <string>Minimum Level</string>
+    </property>
       </widget>
      </item>
      <item>
@@ -40,23 +40,23 @@
      </item>
      <item>
       <widget class="QPushButton" name="btnClear">
-       <property name="text">
-        <string>清空</string>
-       </property>
+    <property name="text">
+     <string>Clear</string>
+    </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btnSave">
-       <property name="text">
-        <string>保存</string>
-       </property>
+    <property name="text">
+     <string>Save</string>
+    </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btnBack">
-       <property name="text">
-        <string>返回</string>
-       </property>
+    <property name="text">
+     <string>Back</string>
+    </property>
       </widget>
      </item>
     </layout>

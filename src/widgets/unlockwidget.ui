@@ -8,9 +8,9 @@
      <property name="styleSheet">
       <string>font-size: 20px; font-weight: bold;</string>
      </property>
-     <property name="text">
-      <string>远程开锁</string>
-     </property>
+    <property name="text">
+     <string>Remote Unlock</string>
+    </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
@@ -21,9 +21,9 @@
      <property name="styleSheet">
       <string>font-size: 16px; color: #ff4444; margin: 20px 0;</string>
      </property>
-     <property name="text">
-      <string>确认要远程开启门锁吗？</string>
-     </property>
+    <property name="text">
+     <string>Confirm to remotely unlock the door?</string>
+    </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
@@ -34,9 +34,9 @@
      <property name="styleSheet">
       <string>font-size: 18px; background-color: #00C851; color: white;</string>
      </property>
-     <property name="text">
-      <string>确认开锁</string>
-     </property>
+    <property name="text">
+     <string>Confirm Unlock</string>
+    </property>
     </widget>
    </item>
    <item>
@@ -44,9 +44,9 @@
      <property name="styleSheet">
       <string>font-size: 18px;</string>
      </property>
-     <property name="text">
-      <string>取消</string>
-     </property>
+    <property name="text">
+     <string>Cancel</string>
+    </property>
     </widget>
    </item>
   </layout>

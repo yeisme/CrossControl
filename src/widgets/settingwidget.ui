@@ -5,9 +5,9 @@
   <layout class="QVBoxLayout" name="verticalLayoutSetting">
    <item>
     <widget class="QLabel" name="labelSettingTitle">
-     <property name="text">
-      <string>系统设置</string>
-     </property>
+    <property name="text">
+     <string>System Settings</string>
+    </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
@@ -18,9 +18,9 @@
    </item>
    <item>
     <widget class="QPushButton" name="btnBackFromSetting">
-     <property name="text">
-      <string>返回主页</string>
-     </property>
+    <property name="text">
+     <string>Back to Main</string>
+    </property>
     </widget>
    </item>
   </layout>

@@ -10,18 +10,18 @@
     <height>50</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Weather Widget</string>
-  </property>
+    <property name="windowTitle">
+     <string>Weather Widget</string>
+    </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QLabel" name="labelWeather">
      <property name="styleSheet">
       <string>font-size: 14px; color: #555;</string>
      </property>
-     <property name="text">
-      <string>加载中...</string>
-     </property>
+    <property name="text">
+     <string>Loading...</string>
+    </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>

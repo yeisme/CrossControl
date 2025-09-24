@@ -1,10 +1,10 @@
 ﻿#ifndef WEATHERWIDGET_H
 #define WEATHERWIDGET_H
 
-#include <QWidget>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrl>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -15,18 +15,18 @@ QT_END_NAMESPACE
 class WeatherWidget : public QWidget {
     Q_OBJECT
 
-public:
+   public:
     WeatherWidget(QWidget *parent = nullptr);
     ~WeatherWidget();
 
-private slots:
+   private slots:
     void onWeatherDataReceived(QNetworkReply *reply);
     void updateWeather();
 
-private:
+   private:
     Ui::WeatherWidget *ui;
     QNetworkAccessManager *networkManager;
     void parseWeatherData(const QString &data);
 };
 
-#endif // WEATHERWIDGET_H
+#endif  // WEATHERWIDGET_H

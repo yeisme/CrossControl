@@ -5,9 +5,9 @@
   <layout class="QVBoxLayout" name="verticalLayoutVisit">
    <item>
     <widget class="QLabel" name="labelVisitTitle">
-     <property name="text">
-      <string>来访记录</string>
-     </property>
+    <property name="text">
+     <string>Visit Records</string>
+    </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
@@ -18,9 +18,9 @@
    </item>
    <item>
     <widget class="QPushButton" name="btnBackFromVisit">
-     <property name="text">
-      <string>返回主页</string>
-     </property>
+    <property name="text">
+     <string>Back to Main</string>
+    </property>
     </widget>
    </item>
   </layout>

@@ -5,9 +5,9 @@
   <layout class="QVBoxLayout" name="verticalLayoutMessage">
    <item>
     <widget class="QLabel" name="labelMessageTitle">
-     <property name="text">
-      <string>留言板</string>
-     </property>
+    <property name="text">
+     <string>Message Board</string>
+    </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
@@ -22,23 +22,23 @@
    </item>
    <item>
     <widget class="QLineEdit" name="lineEditNewMessage">
-     <property name="placeholderText">
-      <string>输入新留言...</string>
-     </property>
+    <property name="placeholderText">
+     <string>Enter a new message...</string>
+    </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="btnSendMessage">
-     <property name="text">
-      <string>发送</string>
-     </property>
+    <property name="text">
+     <string>Send</string>
+    </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="btnBackFromMessage">
-     <property name="text">
-      <string>返回主页</string>
-     </property>
+    <property name="text">
+     <string>Back to Main</string>
+    </property>
     </widget>
    </item>
   </layout>
