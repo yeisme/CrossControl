@@ -21,6 +21,10 @@ jobs:
             "clang-debug-workflow",
             "clang-release-workflow",
           ]
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -54,7 +58,10 @@ jobs:
             clang++ --version  # 验证版本
           fi
 
+      - uses: lukka/get-cmake@latest
+
       - name: Set up Qt 6
+        id: install-qt
         uses: jurplel/install-qt-action@v3
         with:
           version: "6.8.3"
@@ -62,16 +69,18 @@ jobs:
           arch: "gcc_64"
           cache: true
 
-      - name: Set up vcpkg
-        uses: microsoft/vcpkg-action@v1
+      - name: Set up vcpkg (download + bootstrap, no install)
+        uses: lukka/run-vcpkg@v11
         with:
-          vcpkg-ref: master
-          install: "your-dependencies-here" # 替换为实际依赖
-          cache: true
+          # keep vcpkg sources in the repository workspace
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          # do not run `vcpkg install` here; let CMake (via toolchain) perform installs
+          runVcpkgInstall: false
 
-      - name: Run CMake workflow (全部流程由预设定义)
-        run: |
-          cmake --workflow --preset ${{ matrix.workflow-preset }}
+      - name: Run CMake workflow (use lukka/run-cmake@v10)
+        uses: lukka/run-cmake@v10
+        with:
+          workflowPreset: ${{ matrix.workflow-preset }}
         env:
           QT6_DIR: ${{ steps.install-qt.outputs.install_prefix }}
           VCPKG_ROOT: ${{ github.workspace }}/vcpkg
@@ -105,6 +114,7 @@ jobs:
           vs-version: "latest" # 使用最新VS，默认支持C++23
 
       - name: Set up Qt 6
+        id: install-qt
         uses: jurplel/install-qt-action@v3
         with:
           version: "6.8.3"
@@ -112,18 +122,24 @@ jobs:
           arch: "win64_msvc2022_64"
           cache: true
 
-      - name: Set up vcpkg
-        uses: microsoft/vcpkg-action@v1
+      - name: Set up vcpkg (download + bootstrap, no install)
+        uses: lukka/run-vcpkg@v11
         with:
-          vcpkg-ref: master
-          install: |
-            fmt
-            spdlog
-          cache: true
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+          runVcpkgInstall: false
 
-      - name: Run CMake workflow (全部流程由预设定义)
+      - name: Install required vcpkg packages (explicit)
+        if: always()
         run: |
-          cmake --workflow --preset ${{ matrix.workflow-preset }}
+          # Install fmt and spdlog explicitly to match previous behavior.
+          # Use the Windows triplet (x64-windows) used by CI.
+          $vcpkg = "${{ github.workspace }}\vcpkg\vcpkg.exe"
+          & $vcpkg install fmt:x64-windows spdlog:x64-windows
+
+      - name: Run CMake workflow (use lukka/run-cmake@v10)
+        uses: lukka/run-cmake@v10
+        with:
+          workflowPreset: ${{ matrix.workflow-preset }}
         env:
           QT6_DIR: ${{ steps.install-qt.outputs.install_prefix }}
           VCPKG_ROOT: ${{ github.workspace }}/vcpkg
