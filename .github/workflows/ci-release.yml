@@ -16,13 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        workflow-preset:
-          [
-            "gcc-debug-workflow",
-            "gcc-release-workflow",
-            "clang-debug-workflow",
-            "clang-release-workflow",
-          ]
+        workflow-preset: ["gcc-release-workflow", "clang-release-workflow"]
     permissions:
       contents: read
       packages: write
@@ -42,7 +36,7 @@ jobs:
 
           # 根据工作流判断编译器类型
           if [[ "${{ matrix.workflow-preset }}" == *"gcc"* ]]; then
-            # 安装GCC 14（支持C++23）- 使用正确的PPA
+            # 安装GCC 14
             sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa -y
             sudo apt-get update
             sudo apt-get install -y gcc-14 g++-14
@@ -50,13 +44,13 @@ jobs:
             sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
             g++ --version  # 验证版本
           else
-            # 安装Clang 18（支持C++23）
+            # 安装Clang 20
             wget https://apt.llvm.org/llvm.sh
             chmod +x llvm.sh
-            sudo ./llvm.sh 18
-            sudo apt-get install -y libc++-18-dev libc++abi-18-dev
-            sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-18 100
-            sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-18 100
+            sudo ./llvm.sh 20
+            sudo apt-get install -y libc++-20-dev libc++abi-20-dev
+            sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-20 100
+            sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-20 100
             clang++ --version  # 验证版本
           fi
 
@@ -72,9 +66,9 @@ jobs:
           cache: true
           # 明确指定需要的Qt组件，解决qt_base找不到的问题
           components: >-
-            qtbase
-            qtdeclarative
-            qttools
+            qtbase          # 包含Core/Widgets/Network
+            qttools         # 包含LinguistTools
+            qtmultimedia    # 包含Multimedia
 
       - name: Clone vcpkg (Linux)
         run: |
@@ -122,7 +116,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        workflow-preset: ["msvc-debug-workflow", "msvc-release-workflow"]
+        workflow-preset: ["msvc-release-workflow"]
 
     steps:
       - name: Checkout code
