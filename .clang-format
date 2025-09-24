@@ -1,0 +1,9 @@
+﻿BasedOnStyle: Google
+BinPackParameters: false
+BinPackArguments: false
+IndentWidth: 4
+AllowShortFunctionsOnASingleLine: All
+AllowShortBlocksOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: true
+AllowShortLoopsOnASingleLine: true
+ColumnLimit: 120

@@ -13,10 +13,11 @@
 #include "audiovideo.h"
 
 #include <QByteArray>
-#include <QDebug>
 #include <QImage>
 #include <QString>
 #include <QVideoFrame>
+
+#include "spdlog/spdlog.h"
 
 /**
  * @brief 构造函数实现。
@@ -30,7 +31,7 @@ AudioVideo::AudioVideo(QObject *parent)
     : QObject(parent), m_isRecording(false)
 {
     // 占位符初始化
-    qDebug() << "AudioVideo module initialized (placeholder)";
+        spdlog::info("AudioVideo module initialized (placeholder)");
 }
 
 /**
@@ -54,7 +55,7 @@ AudioVideo::AudioVideo(QObject *parent)
 bool AudioVideo::startRecording(const QString &outputPath)
 {
     // 占位符实现
-    qDebug() << "Starting recording to:" << outputPath << "(placeholder)";
+    spdlog::info("Starting recording to: {} (placeholder)", outputPath.toStdString());
     m_currentOutputPath = outputPath;
     m_isRecording = true;
     emit recordingStarted();
@@ -77,7 +78,7 @@ bool AudioVideo::startRecording(const QString &outputPath)
 void AudioVideo::stopRecording()
 {
     // 占位符实现
-    qDebug() << "Stopping recording (placeholder)";
+    spdlog::info("Stopping recording (placeholder)");
     m_isRecording = false;
     emit recordingStopped();
 }
@@ -101,7 +102,7 @@ void AudioVideo::stopRecording()
 bool AudioVideo::playVideo(const QString &filePath)
 {
     // 占位符实现
-    qDebug() << "Playing video:" << filePath << "(placeholder)";
+    spdlog::info("Playing video: {} (placeholder)", filePath.toStdString());
     return true;
 }
 
@@ -123,7 +124,7 @@ bool AudioVideo::playVideo(const QString &filePath)
 bool AudioVideo::captureAudio()
 {
     // 占位符实现
-    qDebug() << "Capturing audio (placeholder)";
+    spdlog::info("Capturing audio (placeholder)");
     return true;
 }
 
@@ -142,10 +143,9 @@ bool AudioVideo::captureAudio()
  *       考虑实现各种滤镜、检测或转换。
  * @see videoFrameProcessed()信号
  */
-void AudioVideo::processVideoFrame(const QVideoFrame &frame)
-{
+void AudioVideo::processVideoFrame(const QVideoFrame &frame) {
+    spdlog::info("Processing video frame (placeholder)");
     // 占位符实现
-    qDebug() << "Processing video frame (placeholder)";
     // 通过转换为图像来模拟处理
     QImage processedImage = frame.toImage(); // 占位符 - 无实际处理
     emit videoFrameProcessed(processedImage);
@@ -166,11 +166,10 @@ void AudioVideo::processVideoFrame(const QVideoFrame &frame)
  *       考虑实现音频滤镜、FFT分析或压缩。
  * @see audioBufferProcessed()信号
  */
-void AudioVideo::processAudioBuffer(const QByteArray &buffer)
-{
+void AudioVideo::processAudioBuffer(const QByteArray &buffer) {
+    spdlog::info("Processing audio buffer (placeholder)");
     // 占位符实现
-    qDebug() << "Processing audio buffer (placeholder)";
-    // 模拟处理 - 实际上，这将应用音频效果/滤镜
+    // 模拟处理 - 实际上，这将应用音频效果/滤波
     QByteArray processedBuffer = buffer; // 占位符 - 无实际处理
     emit audioBufferProcessed(processedBuffer);
 }

@@ -24,6 +24,7 @@ class MainWidget : public QWidget {
     void showVisitRecord();
     void showMessage();
     void showSetting();
+    void showLogs();
     void logout();
 
    private slots:
@@ -32,6 +33,7 @@ class MainWidget : public QWidget {
     void on_btnVisitRecord_clicked();
     void on_btnMessage_clicked();
     void on_btnSetting_clicked();
+    void on_btnLogs_clicked();
     void on_btnLogout_clicked();
 
    private:

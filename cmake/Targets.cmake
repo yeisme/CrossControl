@@ -20,6 +20,7 @@ if(BUILD_HUMAN_RECOGNITION)
   endif()
   target_link_libraries(HumanRecognition PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
                                                  Qt${QT_VERSION_MAJOR}::Network)
+  target_link_libraries(HumanRecognition PRIVATE spdlog::spdlog fmt::fmt)
   target_include_directories(HumanRecognition
                              PRIVATE include/modules/HumanRecognition)
   target_link_libraries(CrossControl PRIVATE HumanRecognition)
@@ -31,15 +32,18 @@ if(BUILD_AUDIO_VIDEO)
   else()
     add_library(AudioVideo STATIC ${AUDIO_VIDEO_SOURCES})
   endif()
-  target_link_libraries(AudioVideo PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-                                           Qt${QT_VERSION_MAJOR}::Network
-                                           Qt${QT_VERSION_MAJOR}::Multimedia)
+  target_link_libraries(
+    AudioVideo
+    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network
+            Qt${QT_VERSION_MAJOR}::Multimedia)
+  target_link_libraries(AudioVideo PRIVATE spdlog::spdlog fmt::fmt)
   target_include_directories(AudioVideo PRIVATE include/modules/AudioVideo)
   target_link_libraries(CrossControl PRIVATE AudioVideo)
 endif()
 
 target_link_libraries(CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-                                           Qt${QT_VERSION_MAJOR}::Network)
+                                           Qt${QT_VERSION_MAJOR}::Network
+                                           spdlog::spdlog fmt::fmt)
 target_include_directories(CrossControl PRIVATE include/widgets)
 
 # 确保可执行文件和共享库放置在特定于配置的 bin 目录中，以便在从 Visual Studio 启动时 EXE 可以找到 DLL。
@@ -53,20 +57,20 @@ else()
   set(CONFIG_LIB_DIR "${CMAKE_BINARY_DIR}/lib")
 endif()
 
-# 应用输出目录，并且（对于MSVC）设置VS调试器工作目录，
-# 以便从Visual Studio运行时使用包含DLL的bin文件夹。
+# 应用输出目录，并且（对于MSVC）设置VS调试器工作目录， 以便从Visual Studio运行时使用包含DLL的bin文件夹。
 foreach(_tgt IN ITEMS CrossControl HumanRecognition AudioVideo)
   if(TARGET ${_tgt})
-    set_target_properties(${_tgt} PROPERTIES
-      RUNTIME_OUTPUT_DIRECTORY "${CONFIG_BIN_DIR}"
-      LIBRARY_OUTPUT_DIRECTORY "${CONFIG_BIN_DIR}"
-      ARCHIVE_OUTPUT_DIRECTORY "${CONFIG_LIB_DIR}"
+    set_target_properties(
+      ${_tgt}
+      PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CONFIG_BIN_DIR}" # 运行时（可执行文件和DLL）
+                 LIBRARY_OUTPUT_DIRECTORY "${CONFIG_BIN_DIR}" # 共享库（.so/.dylib）
+                 ARCHIVE_OUTPUT_DIRECTORY "${CONFIG_LIB_DIR}" # 静态库 (.lib/.a)
     )
     if(MSVC)
-      # Visual Studio will substitute $<CONFIG> in the property at generation time
-      set_target_properties(${_tgt} PROPERTIES
-        VS_DEBUGGER_WORKING_DIRECTORY "${CONFIG_BIN_DIR}"
-      )
+      # Visual Studio will substitute $<CONFIG> in the property at generation
+      # time
+      set_target_properties(${_tgt} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
+                                               "${CONFIG_BIN_DIR}")
     endif()
   endif()
 endforeach()

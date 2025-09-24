@@ -1,8 +1,8 @@
 # Dependencies
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS CoreTools Widgets
-                                                  LinguistTools Network Multimedia)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS CoreTools Widgets
-                                                       LinguistTools Network Multimedia)
+find_package(QT NAMES Qt6 Qt5 REQUIRED
+             COMPONENTS CoreTools Widgets LinguistTools Network Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED
+             COMPONENTS CoreTools Widgets LinguistTools Network Multimedia)
 
 message(STATUS "CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
 
@@ -13,7 +13,21 @@ if(DEFINED ENV{VCPKG_ROOT})
       CACHE STRING "")
 
   set(OpenCV_ROOT "${VCPKG_ROOT}/installed/x64-windows/share/opencv4")
-  find_package(OpenCV REQUIRED)
+
 else()
   message(STATUS "VCPKG_ROOT environment variable is not set.")
+endif()
+
+# Core formatting / logging libraries used across the project
+find_package(fmt CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED) # 使用 spdlog 作为日志库，比 QDebug 快且功能丰富
+find_package(glaze CONFIG REQUIRED) # 使用这个库，方便多种格式序列化，必须 C++23
+
+# Optional module-specific dependencies
+if(BUILD_HUMAN_RECOGNITION)
+  find_package(OpenCV REQUIRED)
+endif()
+
+if(BUILD_MQTT_CLIENT)
+  find_package(PahoMqttCpp CONFIG REQUIRED) # Paho MQTT C++ client (or choose another MQTT client)
 endif()

@@ -24,6 +24,9 @@ set(PROJECT_SOURCES
     src/widgets/settingwidget.cpp
     include/widgets/settingwidget.h
     src/widgets/settingwidget.ui
+    src/widgets/logwidget.cpp
+    include/widgets/logwidget.h
+    src/widgets/logwidget.ui
     src/widgets/unlockwidget.cpp
     include/widgets/unlockwidget.h
     src/widgets/unlockwidget.ui

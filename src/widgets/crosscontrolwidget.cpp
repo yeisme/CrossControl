@@ -13,6 +13,7 @@ CrossControlWidget::CrossControlWidget(QWidget* parent)
     messageWidget = new MessageWidget();
     settingWidget = new SettingWidget();
     unlockWidget = new UnlockWidget();
+        logWidget = new LogWidget();
 
     this->addWidget(loginWidget);
     this->addWidget(mainWidget);
@@ -21,6 +22,7 @@ CrossControlWidget::CrossControlWidget(QWidget* parent)
     this->addWidget(messageWidget);
     this->addWidget(settingWidget);
     this->addWidget(unlockWidget);
+        this->addWidget(logWidget);
 
     // Connect signals 跳转到各个页面
     connect(loginWidget,
@@ -47,6 +49,10 @@ CrossControlWidget::CrossControlWidget(QWidget* parent)
             &MainWidget::showSetting,
             this,
             &CrossControlWidget::showSettingPage);
+    connect(mainWidget,
+            &MainWidget::showLogs,
+            this,
+            &CrossControlWidget::showLogPage);
     connect(
         mainWidget, &MainWidget::logout, this, &CrossControlWidget::onLogout);
 
@@ -71,6 +77,10 @@ CrossControlWidget::CrossControlWidget(QWidget* parent)
             &UnlockWidget::cancelUnlock,
             this,
             &CrossControlWidget::showMainPage);
+    connect(logWidget,
+            &LogWidget::backToMain,
+            this,
+            &CrossControlWidget::showMainPage);
 }
 
 CrossControlWidget::~CrossControlWidget() {
@@ -82,6 +92,7 @@ CrossControlWidget::~CrossControlWidget() {
     delete messageWidget;
     delete settingWidget;
     delete unlockWidget;
+        delete logWidget;
 }
 
 void CrossControlWidget::onLoginSuccess() { setCurrentWidget(mainWidget); }
@@ -101,3 +112,5 @@ void CrossControlWidget::showMessagePage() { setCurrentWidget(messageWidget); }
 void CrossControlWidget::showSettingPage() { setCurrentWidget(settingWidget); }
 
 void CrossControlWidget::showUnlockPage() { setCurrentWidget(unlockWidget); }
+
+void CrossControlWidget::showLogPage() { setCurrentWidget(logWidget); }

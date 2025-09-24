@@ -10,6 +10,7 @@
 #include "settingwidget.h"
 #include "unlockwidget.h"
 #include "visitrecordwidget.h"
+#include "logwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -34,6 +35,7 @@ class CrossControlWidget : public QStackedWidget {
     MessageWidget *messageWidget;          // 消息界面
     SettingWidget *settingWidget;          // 设置界面
     UnlockWidget *unlockWidget;            // 解锁界面
+    LogWidget *logWidget;                  // 日志界面（新）
 
    private slots:
     void onLoginSuccess();
@@ -44,6 +46,7 @@ class CrossControlWidget : public QStackedWidget {
     void showMessagePage();
     void showSettingPage();
     void showUnlockPage();
+    void showLogPage();
 };
 
 #endif  // CROSSCONTROLWIDGET_H

@@ -24,4 +24,6 @@ void MainWidget::on_btnMessage_clicked() { emit showMessage(); }
 
 void MainWidget::on_btnSetting_clicked() { emit showSetting(); }
 
+void MainWidget::on_btnLogs_clicked() { emit showLogs(); }
+
 void MainWidget::on_btnLogout_clicked() { emit logout(); }
