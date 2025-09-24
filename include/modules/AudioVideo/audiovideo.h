@@ -23,6 +23,11 @@
 #define AUDIOVIDEO_EXPORT Q_DECL_IMPORT
 #endif
 
+// 前向声明以最小化 Qt 头文件依赖
+class QString;
+class QByteArray;
+class QImage;
+
 /**
  * @class AudioVideo
  * @brief 音频和视频处理功能的类。

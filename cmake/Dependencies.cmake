@@ -30,3 +30,5 @@ endif()
 if(BUILD_MQTT_CLIENT)
   find_package(PahoMqttCpp CONFIG REQUIRED) # Paho MQTT C++ client (or choose another MQTT client)
 endif()
+
+# TinyORM 作为子项目时，其自身会处理 Qt/其他依赖的查找，无需在此重复。

@@ -1,0 +1,11 @@
+﻿if(BUILD_AUDIO_VIDEO)
+  if(BUILD_SHARED_MODULES)
+    add_library(AudioVideo SHARED ${AUDIO_VIDEO_SOURCES})
+  else()
+    add_library(AudioVideo STATIC ${AUDIO_VIDEO_SOURCES})
+  endif()
+  # 移除对 QtMultimedia 的依赖，使用 FFmpeg 进行音视频处理
+  target_link_libraries(AudioVideo PRIVATE logging)
+  target_include_directories(AudioVideo PRIVATE include/modules/AudioVideo)
+  target_link_libraries(CrossControl PRIVATE AudioVideo)
+endif()

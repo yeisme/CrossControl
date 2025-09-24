@@ -1,0 +1,3 @@
+[submodule "src/modules/TinyORM"]
+	path = src/modules/TinyORM
+	url = https://github.com/silverqx/TinyORM.git
