@@ -1,5 +1,6 @@
 ﻿#include "mainwidget.h"
 
+#include "logging.h"
 #include "ui_mainwidget.h"
 #include "weatherwidget.h"
 
@@ -12,7 +13,9 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent), ui(new Ui::MainWidget
 
     // 作为 Dashboard 展示，隐藏功能网格区域（按钮已迁移到侧边栏）
     if (ui->scrollArea) ui->scrollArea->setVisible(false);
+
+    LogM::instance().init();  // 初始化日志系统
+    logging::useAsDefault("CrossControl");
 }
 
 MainWidget::~MainWidget() { delete ui; }
-// 已迁移交互至侧边栏，此处不再处理按钮点击

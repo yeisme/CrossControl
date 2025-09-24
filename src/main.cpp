@@ -13,39 +13,7 @@
 
 #include "crosscontrolwidget.h"
 #include "spdlog/spdlog.h"
-
-/**
- * @brief Redirect Qt log messages to spdlog
- *
- * @param type
- * @param context
- * @param msg
- */
-static void qtMessageToSpdlog(QtMsgType type,
-                              const QMessageLogContext &context,
-                              const QString &msg) {
-    // 将 Qt 消息转发到 spdlog
-    const std::string text = msg.toUtf8().constData();
-    switch (type) {
-        case QtDebugMsg:
-            spdlog::debug(text);
-            break;
-        case QtInfoMsg:
-            spdlog::info(text);
-            break;
-        case QtWarningMsg:
-            spdlog::warn(text);
-            break;
-        case QtCriticalMsg:
-            spdlog::error(text);
-            break;
-        case QtFatalMsg:
-            spdlog::critical(text);
-            // Ensure the message is flushed before aborting.
-            spdlog::shutdown();  // 确保在中止之前刷新消息
-            abort();             // 中止程序
-    }
-}
+#include "logging.h"
 
 // 为当前系统用户界面语言安装翻译器。如果加载并安装了翻译，则返回一个非空的 unique_ptr；否则返回
 // nullptr。
@@ -86,10 +54,11 @@ int main(int argc, char *argv[]) {
     // 保持翻译器在应用程序的生命周期内有效
     const auto translatorHolder = installSystemTranslator(a);
 
-    // 将 Qt 的内部信息重定向到 spdlog，以便捕获现有的 qDebug() 调用。
-    qInstallMessageHandler(qtMessageToSpdlog);
+    // 初始化统一日志，并将 Qt 消息重定向到 spdlog
+    logging::LoggerManager::instance().init();
+    qInstallMessageHandler(logging::LoggerManager::qtMessageHandler);
 
-    spdlog::info("Application starting");
+    logging::LoggerManager::instance().getLogger("App")->info("Application starting");
 
     CrossControlWidget mainWindow;
     mainWindow.setWindowTitle("CrossControl");
@@ -97,7 +66,7 @@ int main(int argc, char *argv[]) {
     mainWindow.show();
     const int rc = a.exec();
 
-    spdlog::info("Application exiting");
+    logging::LoggerManager::instance().getLogger("App")->info("Application exiting");
     spdlog::shutdown();
     return rc;
 }

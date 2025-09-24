@@ -1,16 +1,13 @@
 ﻿#ifndef LOGWIDGET_H
 #define LOGWIDGET_H
 
+#include <spdlog/common.h>
+#include <spdlog/logger.h>
+
 #include <QWidget>
-#include <memory>
 
-#include "spdlog/sinks/qt_sinks.h"
-
-namespace spdlog {
-namespace sinks {
-class sink;
-}
-}  // namespace spdlog
+constexpr bool DEFAULT_LOG_ENABLED = true;
+constexpr int MAX_LOG_LINES = 1000;  // QTextEdit 最多保留的日志行数
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -40,16 +37,13 @@ class LogWidget : public QWidget {
     void on_btnSave_clicked();
 
    private:
-    void installSink();
-    void uninstallSink();
     void applyColors();
 
    private:
     Ui::LogWidget* ui;
-    std::shared_ptr<spdlog::sinks::qt_color_sink_mt> m_sink;  // Qt 彩色 sink
-    bool m_enabled{true};
-    int m_minLevel{0};  // spdlog::level::trace
-    int m_maxLines{500};
+    bool m_enabled{DEFAULT_LOG_ENABLED};
+    int m_minLevel{spdlog::level::debug};
+    int m_maxLines{MAX_LOG_LINES};
 };
 
 #endif  // LOGWIDGET_H

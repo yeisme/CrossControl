@@ -14,8 +14,6 @@
 
 #include <QRect>
 
-#include "spdlog/spdlog.h"
-
 /**
  * @brief 构造函数实现。
  *
@@ -26,7 +24,7 @@
  */
 HumanRecognition::HumanRecognition(QObject *parent) : QObject(parent), m_isInitialized(false) {
     // 占位符初始化
-    spdlog::info("HumanRecognition module initialized (placeholder)");
+    MCLog.info("HumanRecognition module initialized (placeholder)");
     m_isInitialized = true;
 }
 
@@ -51,7 +49,7 @@ HumanRecognition::HumanRecognition(QObject *parent) : QObject(parent), m_isIniti
  */
 bool HumanRecognition::detectHumans(const QImage &image) {
     // 占位符实现
-    spdlog::info("Detecting humans in image (placeholder)");
+    MCLog.info("Detecting humans in image (placeholder)");
     // 通过发出带有示例边界框的信号来模拟检测
     emit humanDetected(QRect(10, 10, 100, 100));  // 示例边界框
     return true;
@@ -77,7 +75,7 @@ bool HumanRecognition::detectHumans(const QImage &image) {
  */
 QString HumanRecognition::recognizePerson(const QImage &faceImage) {
     // 占位符实现
-    spdlog::info("Recognizing person from face image (placeholder)");
+    MCLog.info("Recognizing person from face image (placeholder)");
     // 模拟识别过程
     QString personName = "Unknown Person";  // 占位符结果
     emit recognitionCompleted(personName);
@@ -103,7 +101,7 @@ QString HumanRecognition::recognizePerson(const QImage &faceImage) {
  */
 void HumanRecognition::trainModel(const QString &datasetPath) {
     // 占位符实现
-    spdlog::info("Training model with dataset: {} (placeholder)", datasetPath.toStdString());
+    MCLog.info("Training model with dataset at: {} (placeholder)", datasetPath.toStdString());
     // 在真实实现中，这将:
     // 1. 从datasetPath加载图像
     // 2. 提取面部特征

@@ -1,0 +1,151 @@
+﻿#include "logging.h"
+
+#include <QTextEdit>
+#include <algorithm>
+
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/spdlog.h"
+
+namespace logging {
+
+LoggerManager& LoggerManager::instance() {
+    static LoggerManager inst;  // 这里使用静态函数，全局唯一实例
+    return inst;
+}
+
+void LoggerManager::ensureDefaultLogger_() {
+    // 确保存在默认 logger；无论是否新建，都统一设置级别与格式
+    if (!spdlog::default_logger()) {
+        spdlog::set_default_logger(spdlog::stdout_color_mt("CrossControl"));
+    }
+    spdlog::set_level(spdlog::level::trace);
+    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%n] %v");
+}
+
+void LoggerManager::init() { ensureDefaultLogger_(); }
+
+void LoggerManager::installQtSinkToAll_() {
+    if (!qt_sink_) return;
+    // 安装到默认 logger
+    auto& sinks = spdlog::default_logger()->sinks();
+    if (std::find(sinks.begin(), sinks.end(), qt_sink_) == sinks.end()) {
+        sinks.push_back(qt_sink_);
+    }
+    // 安装到所有已存在的具名 logger
+    loggers_.erase(
+        std::remove_if(loggers_.begin(), loggers_.end(), [](auto& w) { return w.expired(); }),
+        loggers_.end());
+    for (auto& w : loggers_) {
+        if (auto lg = w.lock()) {
+            auto& s = lg->sinks();
+            if (std::find(s.begin(), s.end(), qt_sink_) == s.end()) { s.push_back(qt_sink_); }
+        }
+    }
+}
+
+void LoggerManager::uninstallQtSinkFromAll_() {
+    if (!qt_sink_) return;
+    auto& sinks = spdlog::default_logger()->sinks();
+    sinks.erase(std::remove(sinks.begin(), sinks.end(), qt_sink_), sinks.end());
+    loggers_.erase(
+        std::remove_if(loggers_.begin(), loggers_.end(), [](auto& w) { return w.expired(); }),
+        loggers_.end());
+    for (auto& w : loggers_) {
+        if (auto lg = w.lock()) {
+            auto& s = lg->sinks();
+            s.erase(std::remove(s.begin(), s.end(), qt_sink_), s.end());
+        }
+    }
+}
+
+void LoggerManager::attachQtSink(QTextEdit* edit, int maxLines, const std::string& pattern) {
+    ensureDefaultLogger_();
+    // 替换已有 sink：先卸载旧的
+    uninstallQtSinkFromAll_();
+    qt_sink_ = std::make_shared<spdlog::sinks::qt_color_sink_mt>(edit, maxLines);
+    qt_sink_->set_pattern(pattern);
+    qt_sink_->set_level(enabled_ ? spdlog::level::trace : spdlog::level::off);
+    installQtSinkToAll_();
+}
+
+void LoggerManager::detachQtSink(QTextEdit*) {
+    if (!qt_sink_) return;
+    // 统一只允许一个 Qt sink，调用即移除当前 sink
+    uninstallQtSinkFromAll_();
+    qt_sink_.reset();
+}
+
+void LoggerManager::setEnabled(bool enabled) {
+    enabled_ = enabled;
+    if (qt_sink_) { qt_sink_->set_level(enabled ? spdlog::level::trace : spdlog::level::off); }
+}
+
+void LoggerManager::setLevel(spdlog::level::level_enum level) {
+    if (qt_sink_) qt_sink_->set_level(level);
+}
+
+void LoggerManager::setPattern(const std::string& pattern) {
+    if (qt_sink_) qt_sink_->set_pattern(pattern);
+}
+
+std::shared_ptr<spdlog::logger> LoggerManager::getLogger(const std::string& name) {
+    ensureDefaultLogger_();
+    auto lg = spdlog::get(name);
+    if (!lg) {
+        // 让具名 logger 复用默认 logger 的 sinks
+        auto& dsinks = spdlog::default_logger()->sinks();
+        lg = std::make_shared<spdlog::logger>(name, dsinks.begin(), dsinks.end());
+        lg->set_level(spdlog::level::trace);
+        lg->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
+        spdlog::register_logger(lg);
+        loggers_.push_back(lg);
+    }
+    return lg;
+}
+
+void LoggerManager::qtMessageHandler(QtMsgType type,
+                                     const QMessageLogContext& /*context*/,
+                                     const QString& msg) {
+    const std::string text = msg.toUtf8().constData();
+    switch (type) {
+        case QtDebugMsg:
+            spdlog::debug(text);
+            break;
+        case QtInfoMsg:
+            spdlog::info(text);
+            break;
+        case QtWarningMsg:
+            spdlog::warn(text);
+            break;
+        case QtCriticalMsg:
+            spdlog::error(text);
+            break;
+        case QtFatalMsg:
+            spdlog::critical(text);
+            spdlog::shutdown();
+            abort();
+    }
+}
+
+/**
+ * @brief 获取具名 logger 的引用
+ *
+ * @param name
+ * @return Logger&
+ */
+Logger& logger(const std::string& name) {
+    auto lg = LoggerManager::instance().getLogger(name);
+    return *lg;
+}
+
+/**
+ * @brief 将具名 logger 设为全局默认 logger，之后可以直接用 spdlog::info 等全局函数
+ *
+ * @param name
+ */
+void useAsDefault(const std::string& name) {
+    auto lg = LoggerManager::instance().getLogger(name);
+    spdlog::set_default_logger(std::move(lg));
+}
+
+}  // namespace logging

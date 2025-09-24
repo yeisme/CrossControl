@@ -17,7 +17,7 @@
 #include <QString>
 #include <QVideoFrame>
 
-#include "spdlog/spdlog.h"
+#include "logging.h"
 
 /**
  * @brief 构造函数实现。
@@ -29,7 +29,9 @@
  */
 AudioVideo::AudioVideo(QObject *parent) : QObject(parent), m_isRecording(false) {
     // 占位符初始化
-    spdlog::info("AudioVideo module initialized (placeholder)");
+    logging::LoggerManager::instance()
+        .getLogger("AudioVideo")
+        ->info("AudioVideo module initialized (placeholder)");
 }
 
 /**
@@ -52,7 +54,9 @@ AudioVideo::AudioVideo(QObject *parent) : QObject(parent), m_isRecording(false) 
  */
 bool AudioVideo::startRecording(const QString &outputPath) {
     // 占位符实现
-    spdlog::info("Starting recording to: {} (placeholder)", outputPath.toStdString());
+    logging::LoggerManager::instance()
+        .getLogger("AudioVideo")
+        ->info("Starting recording to: {} (placeholder)", outputPath.toStdString());
     m_currentOutputPath = outputPath;
     m_isRecording = true;
     emit recordingStarted();
@@ -74,7 +78,9 @@ bool AudioVideo::startRecording(const QString &outputPath) {
  */
 void AudioVideo::stopRecording() {
     // 占位符实现
-    spdlog::info("Stopping recording (placeholder)");
+    logging::LoggerManager::instance()
+        .getLogger("AudioVideo")
+        ->info("Stopping recording (placeholder)");
     m_isRecording = false;
     emit recordingStopped();
 }
@@ -97,7 +103,9 @@ void AudioVideo::stopRecording() {
  */
 bool AudioVideo::playVideo(const QString &filePath) {
     // 占位符实现
-    spdlog::info("Playing video: {} (placeholder)", filePath.toStdString());
+    logging::LoggerManager::instance()
+        .getLogger("AudioVideo")
+        ->info("Playing video: {} (placeholder)", filePath.toStdString());
     return true;
 }
 
@@ -118,7 +126,9 @@ bool AudioVideo::playVideo(const QString &filePath) {
  */
 bool AudioVideo::captureAudio() {
     // 占位符实现
-    spdlog::info("Capturing audio (placeholder)");
+    logging::LoggerManager::instance()
+        .getLogger("AudioVideo")
+        ->info("Capturing audio (placeholder)");
     return true;
 }
 
@@ -138,7 +148,9 @@ bool AudioVideo::captureAudio() {
  * @see videoFrameProcessed()信号
  */
 void AudioVideo::processVideoFrame(const QVideoFrame &frame) {
-    spdlog::info("Processing video frame (placeholder)");
+    logging::LoggerManager::instance()
+        .getLogger("AudioVideo")
+        ->info("Processing video frame (placeholder)");
     // 占位符实现
     // 通过转换为图像来模拟处理
     QImage processedImage = frame.toImage();  // 占位符 - 无实际处理
@@ -161,7 +173,9 @@ void AudioVideo::processVideoFrame(const QVideoFrame &frame) {
  * @see audioBufferProcessed()信号
  */
 void AudioVideo::processAudioBuffer(const QByteArray &buffer) {
-    spdlog::info("Processing audio buffer (placeholder)");
+    logging::LoggerManager::instance()
+        .getLogger("AudioVideo")
+        ->info("Processing audio buffer (placeholder)");
     // 占位符实现
     // 模拟处理 - 实际上，这将应用音频效果/滤波
     QByteArray processedBuffer = buffer;  // 占位符 - 无实际处理

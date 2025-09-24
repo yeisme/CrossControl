@@ -1,12 +1,14 @@
 # Targets
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
   qt_add_executable(CrossControl MANUAL_FINALIZATION ${PROJECT_SOURCES})
-  # Generate QM files from TS, scanning only actual project sources to avoid autogen cycles
+  # Generate QM files from TS, scanning only actual project sources to avoid
+  # autogen cycles
   qt_create_translation(QM_FILES ${TS_FILES} ${PROJECT_SOURCES})
   # Make sure translation files are generated when building 'all'
   if(QM_FILES)
     add_custom_target(translations ALL DEPENDS ${QM_FILES})
-    # Ensure the executable build waits for translations before running POST_BUILD copy
+    # Ensure the executable build waits for translations before running
+    # POST_BUILD copy
     add_dependencies(CrossControl translations)
   endif()
 else()
@@ -23,6 +25,12 @@ else()
   endif()
 endif()
 
+# global logging library
+add_library(logging STATIC src/logging/logging.cpp)
+target_include_directories(logging PUBLIC include/logging)
+target_link_libraries(logging PUBLIC spdlog::spdlog fmt::fmt
+                                     Qt${QT_VERSION_MAJOR}::Widgets)
+
 # Module libraries
 if(BUILD_HUMAN_RECOGNITION)
   if(BUILD_SHARED_MODULES)
@@ -32,7 +40,7 @@ if(BUILD_HUMAN_RECOGNITION)
   endif()
   target_link_libraries(HumanRecognition PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
                                                  Qt${QT_VERSION_MAJOR}::Network)
-  target_link_libraries(HumanRecognition PRIVATE spdlog::spdlog fmt::fmt)
+  target_link_libraries(HumanRecognition PRIVATE logging)
   target_include_directories(HumanRecognition
                              PRIVATE include/modules/HumanRecognition)
   target_link_libraries(CrossControl PRIVATE HumanRecognition)
@@ -48,15 +56,15 @@ if(BUILD_AUDIO_VIDEO)
     AudioVideo
     PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network
             Qt${QT_VERSION_MAJOR}::Multimedia)
-  target_link_libraries(AudioVideo PRIVATE spdlog::spdlog fmt::fmt)
+  target_link_libraries(AudioVideo PRIVATE logging)
   target_include_directories(AudioVideo PRIVATE include/modules/AudioVideo)
   target_link_libraries(CrossControl PRIVATE AudioVideo)
 endif()
 
-target_link_libraries(CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-                                           Qt${QT_VERSION_MAJOR}::Network
-                                           spdlog::spdlog fmt::fmt)
-target_include_directories(CrossControl PRIVATE include/widgets)
+target_link_libraries(
+  CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
+                       Qt${QT_VERSION_MAJOR}::Network logging)
+target_include_directories(CrossControl PRIVATE include/widgets include/logging)
 
 # 确保可执行文件和共享库放置在特定于配置的 bin 目录中，以便在从 Visual Studio 启动时 EXE 可以找到 DLL。
 # 对多配置生成器（Visual Studio）使用生成器表达式 $<CONFIG>。
@@ -91,8 +99,11 @@ endforeach()
 set_target_properties(CrossControl PROPERTIES WIN32_EXECUTABLE TRUE)
 
 # Copy translation QM files next to executable under i18n/ for runtime lookup
-add_custom_command(TARGET CrossControl POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E make_directory "$<TARGET_FILE_DIR:CrossControl>/i18n"
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QM_FILES} "$<TARGET_FILE_DIR:CrossControl>/i18n"
-  COMMENT "Copying translation files to runtime i18n directory"
-)
+add_custom_command(
+  TARGET CrossControl
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E make_directory
+          "$<TARGET_FILE_DIR:CrossControl>/i18n"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QM_FILES}
+          "$<TARGET_FILE_DIR:CrossControl>/i18n"
+  COMMENT "Copying translation files to runtime i18n directory")

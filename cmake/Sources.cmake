@@ -34,6 +34,7 @@ set(PROJECT_SOURCES
     src/widgets/weatherwidget.cpp
     include/widgets/weatherwidget.h
     src/widgets/weatherwidget.ui
+    include/logging/logging.h
     ${TS_FILES})
 
 # Module source files (for extensibility)

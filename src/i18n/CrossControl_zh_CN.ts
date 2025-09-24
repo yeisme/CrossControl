@@ -72,12 +72,12 @@
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../widgets/logwidget.cpp" line="75"/>
+        <location filename="../widgets/logwidget.cpp" line="91"/>
         <source>Save Logs</source>
         <translation>保存日志</translation>
     </message>
     <message>
-        <location filename="../widgets/logwidget.cpp" line="77"/>
+        <location filename="../widgets/logwidget.cpp" line="93"/>
         <source>HTML (*.html);;Text (*.txt)</source>
         <translation>HTML (*.html);;文本 (*.txt)</translation>
     </message>

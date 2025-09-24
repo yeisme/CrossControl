@@ -18,11 +18,23 @@
 #include <QRect>
 #include <QString>
 
+#include "logging.h"
+
 #ifdef HumanRecognition_EXPORTS
 #define HUMANRECOGNITION_EXPORT Q_DECL_EXPORT
 #else
 #define HUMANRECOGNITION_EXPORT Q_DECL_IMPORT
 #endif
+
+static constexpr const char *LogModuleName = "HumanRecognition";
+
+/**
+ * @brief 日志记录器的引用。
+ *
+ * 此引用用于记录HumanRecognition模块中的日志消息。这里需要使用 inline 保证
+ * 日志记录器在头文件中的唯一性。需要 C++17 支持。
+ */
+inline auto MCLog = *logging::LoggerManager::instance().getLogger(LogModuleName);
 
 /**
  * @class HumanRecognition
