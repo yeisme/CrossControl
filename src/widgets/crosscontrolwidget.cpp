@@ -14,10 +14,12 @@
 #include <QVBoxLayout>
 
 #include "logging.h"
+#include "spdlog/spdlog.h"
 
 CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     LogM::instance().init();  // 初始化日志系统
     logging::useAsDefault("CrossControl");
+    spdlog::debug("CrossControlWidget constructed");
 
     // 顶层：rootStack（登录页 / 应用主体）
     rootStack = new QStackedWidget(this);

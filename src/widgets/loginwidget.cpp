@@ -16,6 +16,7 @@
 #include <QSettings>
 #include <QVariant>
 
+#include "spdlog/spdlog.h"
 #include "ui_loginwidget.h"
 
 LoginWidget::LoginWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LoginWidget) {
@@ -101,6 +102,7 @@ LoginWidget::LoginWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LoginWid
 
     updateLoginButtonState();
     updateRegisterButtonState();
+    spdlog::debug("LoginWidget initialized");
 }
 
 LoginWidget::~LoginWidget() {
@@ -143,8 +145,11 @@ void LoginWidget::on_pushButtonLogin_clicked() {
         clearLoginError();
         emit loginSuccess();
     } else {
-        QMessageBox::warning(this, tr("Login Failed"), tr("Incorrect password. Please try again."));
-        showLoginError(tr("Incorrect password"));
+        QMessageBox::warning(
+            this,
+            QCoreApplication::translate("LoginWidget", "Login Failed"),
+            QCoreApplication::translate("LoginWidget", "Incorrect password. Please try again."));
+        showLoginError(QCoreApplication::translate("LoginWidget", "Incorrect password"));
     }
 }
 

@@ -4,9 +4,11 @@
 #include <QMessageBox>
 
 #include "ui_unlockwidget.h"
+#include "spdlog/spdlog.h"
 
 UnlockWidget::UnlockWidget(QWidget* parent) : QWidget(parent), ui(new Ui::UnlockWidget) {
     ui->setupUi(this);
+    spdlog::debug("UnlockWidget constructed");
 }
 
 UnlockWidget::~UnlockWidget() {

@@ -2,6 +2,7 @@
 
 #include "ui_mainwidget.h"
 #include "weatherwidget.h"
+#include "spdlog/spdlog.h"
 
 /**
  * @brief Construct a new Main Widget:: Main Widget object
@@ -18,6 +19,7 @@ MainWidget::MainWidget(QWidget* parent) : QWidget(parent), ui(new Ui::MainWidget
 
     // 作为 Dashboard 展示，隐藏功能网格区域（按钮已迁移到侧边栏）
     if (ui->scrollArea) ui->scrollArea->setVisible(false);
+    spdlog::debug("MainWidget constructed");
 }
 
 MainWidget::~MainWidget() {

@@ -1,6 +1,8 @@
 ﻿
 #include "messagewidget.h"
 
+#include <qcoreapplication.h>
+
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QFileInfo>
@@ -17,6 +19,7 @@
 #include <QVariant>
 
 #include "modules/Storage/storage.h"
+#include "spdlog/spdlog.h"
 #include "ui_messagewidget.h"
 
 using namespace storage;
@@ -43,8 +46,10 @@ MessageWidget::MessageWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Mess
     if (!dbOk) {
         QMessageBox::critical(
             this,
-            tr("Database Error"),
-            tr("Failed to initialize database. Message saving will be disabled."));
+            QCoreApplication::translate("MessageWidget", "Database Error"),
+            QCoreApplication::translate(
+                "MessageWidget",
+                "Failed to initialize database. Message saving will be disabled."));
         if (ui->btnSendMessage) ui->btnSendMessage->setEnabled(false);
         if (ui->btnDeleteMessage) ui->btnDeleteMessage->setEnabled(false);
         return;
@@ -53,24 +58,27 @@ MessageWidget::MessageWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Mess
     if (!Storage::db().isOpen()) {
         QMessageBox::critical(
             this,
-            tr("Database Error"),
-            tr("Database opened but not available (not open). Message saving will be disabled."));
+            QCoreApplication::translate("MessageWidget", "Database Error"),
+            QCoreApplication::translate(
+                "MessageWidget",
+                "Database opened but not available (not open). Message saving will be disabled."));
         if (ui->btnSendMessage) ui->btnSendMessage->setEnabled(false);
         if (ui->btnDeleteMessage) ui->btnDeleteMessage->setEnabled(false);
         return;
     }
 
     // Diagnostic logs: drivers, db validity and file path/permissions
-    qWarning() << "Available QSql drivers:" << QSqlDatabase::drivers();
-    qWarning() << "DB isValid:" << Storage::db().isValid() << " isOpen:" << Storage::db().isOpen();
-    qWarning() << "DB driver name:" << Storage::db().driverName()
-               << " file:" << Storage::db().databaseName();
+    spdlog::debug("Available QSql drivers: {}", QSqlDatabase::drivers().join(",").toStdString());
+    spdlog::debug("DB isValid: {} isOpen: {}", Storage::db().isValid(), Storage::db().isOpen());
+    spdlog::debug("DB driver name: {} file: {}",
+                  Storage::db().driverName().toStdString(),
+                  Storage::db().databaseName().toStdString());
     QFileInfo dbfi(Storage::db().databaseName());
     if (dbfi.exists()) {
-        qWarning() << "DB file exists size(bytes):" << dbfi.size()
-                   << " writable:" << dbfi.isWritable();
+        spdlog::debug(
+            "DB file exists size(bytes): {} writable: {}", dbfi.size(), dbfi.isWritable());
     } else {
-        qWarning() << "DB file does not exist yet:" << dbfi.absoluteFilePath();
+        spdlog::warn("DB file does not exist yet: {}", dbfi.absoluteFilePath().toStdString());
     }
 
     // Ensure messages table exists (extra columns for visitor info)
@@ -82,7 +90,7 @@ MessageWidget::MessageWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Mess
         "created_at TEXT NOT NULL"
         ");";
     if (!q.exec(createSql)) {
-        qWarning() << "Failed to create messages table:" << q.lastError().text();
+        spdlog::warn("Failed to create messages table: {}", q.lastError().text().toStdString());
     }
 
     // Migration: ensure optional visitor columns exist (for older DBs)
@@ -108,7 +116,8 @@ MessageWidget::MessageWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Mess
             const QString alter = QString("ALTER TABLE messages ADD COLUMN %1 %2;")
                                       .arg(QString::fromUtf8(c.name), QString::fromUtf8(c.def));
             if (!q.exec(alter)) {
-                qWarning() << "Failed to add column" << c.name << ":" << q.lastError().text();
+                spdlog::warn(
+                    "Failed to add column {}: {}", c.name, q.lastError().text().toStdString());
             }
         }
     }
@@ -117,6 +126,7 @@ MessageWidget::MessageWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Mess
     const QString selectSql =
         "SELECT id, created_at, visitor_name, visitor_phone, visitor_email, content FROM messages "
         "ORDER BY created_at ASC";
+    int loaded = 0;
     if (q.exec(selectSql)) {
         while (q.next()) {
             const int id = q.value(0).toInt();
@@ -175,16 +185,20 @@ MessageWidget::MessageWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Mess
             item->setSizeHint(w->sizeHint());
             // Install event filter so clicks on the widget select the list item
             w->installEventFilter(this);
+            ++loaded;
         }
     } else {
-        qWarning() << "Failed to load messages:" << q.lastError().text();
+        spdlog::warn("Failed to load messages: {}", q.lastError().text().toStdString());
     }
+    spdlog::debug("Loaded {} messages into UI", loaded);
 
-    // Connect delete button
+    // Connect delete button (use UniqueConnection to avoid double-connect when
+    // setupUi's connectSlotsByName already auto-connects on_btnDeleteMessage_clicked)
     connect(ui->btnDeleteMessage,
             &QPushButton::clicked,
             this,
-            &MessageWidget::on_btnDeleteMessage_clicked);
+            &MessageWidget::on_btnDeleteMessage_clicked,
+            Qt::UniqueConnection);
     // Highlight selected item: when selection changes, update widget background
     connect(ui->listWidgetMessages,
             &QListWidget::currentItemChanged,
@@ -213,8 +227,11 @@ void MessageWidget::on_btnSendMessage_clicked() {
     // Confirmation dialog
     const QString preview = QString("Visitor: %1\nPhone: %2\nEmail: %3\n\nMessage:\n%4")
                                 .arg(visitor, phone, email, message);
-    const auto ret = QMessageBox::question(
-        this, tr("Confirm Send"), preview, QMessageBox::Yes | QMessageBox::No);
+    const auto ret =
+        QMessageBox::question(this,
+                              QCoreApplication::translate("MessageWidget", "Confirm Send"),
+                              preview,
+                              QMessageBox::Yes | QMessageBox::No);
     if (ret != QMessageBox::Yes) return;
 
     const QString now = QDateTime::currentDateTime().toString(Qt::ISODate);
@@ -228,7 +245,7 @@ void MessageWidget::on_btnSendMessage_clicked() {
     q.bindValue(":content", message);
     q.bindValue(":created_at", now);
     if (!q.exec()) {
-        qWarning() << "Failed to insert message:" << q.lastError().text();
+        spdlog::warn("Failed to insert message: {}", q.lastError().text().toStdString());
         QMessageBox::warning(
             this,
             tr("Error"),
@@ -302,22 +319,26 @@ void MessageWidget::on_btnSendMessage_clicked() {
 void MessageWidget::on_btnDeleteMessage_clicked() {
     auto* item = ui->listWidgetMessages->currentItem();
     if (!item) {
-        QMessageBox::information(this, tr("Delete"), tr("Please select a message to delete."));
+        QMessageBox::information(
+            this,
+            QCoreApplication::translate("MessageWidget", "Delete"),
+            QCoreApplication::translate("MessageWidget", "Please select a message to delete."));
         return;
     }
 
     const int id = item->data(Qt::UserRole).toInt();
-    const auto ret = QMessageBox::question(this,
-                                           tr("Confirm Delete"),
-                                           tr("Delete selected message?"),
-                                           QMessageBox::Yes | QMessageBox::No);
+    const auto ret = QMessageBox::question(
+        this,
+        QCoreApplication::translate("MessageWidget", "Confirm Delete"),
+        QCoreApplication::translate("MessageWidget", "Delete selected message?"),
+        QMessageBox::Yes | QMessageBox::No);
     if (ret != QMessageBox::Yes) return;
 
     QSqlQuery q(Storage::db());
     q.prepare("DELETE FROM messages WHERE id = :id");
     q.bindValue(":id", id);
     if (!q.exec()) {
-        qWarning() << "Failed to delete message:" << q.lastError().text();
+        spdlog::warn("Failed to delete message: {}", q.lastError().text().toStdString());
         QMessageBox::warning(this, tr("Error"), tr("Failed to delete message from database."));
         return;
     }

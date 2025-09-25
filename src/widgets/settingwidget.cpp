@@ -3,6 +3,7 @@
 #include <qcoreapplication.h>
 
 #include "ui_settingwidget.h"
+#include "spdlog/spdlog.h"
 
 SettingWidget::SettingWidget(QWidget* parent) : QWidget(parent), ui(new Ui::SettingWidget) {
     ui->setupUi(this);
@@ -26,6 +27,7 @@ SettingWidget::SettingWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Sett
         placeholder2->setEnabled(false);
         addSettingRow(QCoreApplication::translate("SettingWidget", "Accounts"), placeholder2);
     }
+    spdlog::debug("SettingWidget initialized");
 }
 
 SettingWidget::~SettingWidget() {

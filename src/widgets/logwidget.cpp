@@ -28,6 +28,7 @@ LogWidget::LogWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LogWidget) {
     logging::LoggerManager::instance().setLevel(static_cast<spdlog::level::level_enum>(m_minLevel));
     spdlog::info("Log panel attached. Current min level: {}",
                  ui->cmbLevel->currentText().toStdString());
+    spdlog::debug("LogWidget initialized, enabled={} minLevel={}", m_enabled, m_minLevel);
 }
 
 LogWidget::~LogWidget() {
@@ -59,6 +60,7 @@ void LogWidget::on_chkEnable_stateChanged(int state) {
             static_cast<spdlog::level::level_enum>(m_minLevel));
     }
     spdlog::info("Log panel {}", m_enabled ? "enabled" : "disabled");
+    spdlog::debug("LogWidget: enabled changed to {}", m_enabled);
 }
 
 /**
@@ -73,6 +75,7 @@ void LogWidget::on_cmbLevel_currentIndexChanged(int index) {
         logging::LoggerManager::instance().setLevel(
             static_cast<spdlog::level::level_enum>(m_minLevel));
     spdlog::info("Log level changed to {}", ui->cmbLevel->currentText().toStdString());
+    spdlog::debug("LogWidget: level index {}" , index);
 }
 
 /**
@@ -109,4 +112,5 @@ void LogWidget::on_btnSave_clicked() {
     }
 
     spdlog::trace("Logs saved to {}", path.toStdString());
+    spdlog::debug("LogWidget: saved logs to {}", path.toStdString());
 }

@@ -1,10 +1,12 @@
 ﻿#include "visitrecordwidget.h"
 
 #include "ui_visitrecordwidget.h"
+#include "spdlog/spdlog.h"
 
 VisitRecordWidget::VisitRecordWidget(QWidget* parent)
     : QWidget(parent), ui(new Ui::VisitRecordWidget) {
     ui->setupUi(this);
+    spdlog::debug("VisitRecordWidget constructed");
 }
 
 VisitRecordWidget::~VisitRecordWidget() {

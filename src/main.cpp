@@ -61,7 +61,9 @@ int main(int argc, char* argv[]) {
     logging::LoggerManager::instance().init();
     qInstallMessageHandler(logging::LoggerManager::qtMessageHandler);
 
-    logging::LoggerManager::instance().getLogger("App")->info("Application starting");
+    logging::useAsDefault("App");
+
+    spdlog::info("Application started");
 
     CrossControlWidget mainWindow;
     mainWindow.setWindowTitle("CrossControl");
@@ -87,7 +89,7 @@ int main(int argc, char* argv[]) {
     mainWindow.show();
     const int rc = a.exec();
 
-    logging::LoggerManager::instance().getLogger("App")->info("Application exiting");
+    spdlog::info("Application exiting");
     spdlog::shutdown();
     return rc;
 }

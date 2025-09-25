@@ -9,6 +9,7 @@
 #include <QTimer>
 
 #include "ui_weatherwidget.h"
+#include "spdlog/spdlog.h"
 
 WeatherWidget::WeatherWidget(QWidget* parent) : QWidget(parent), ui(new Ui::WeatherWidget) {
     ui->setupUi(this);
@@ -18,6 +19,8 @@ WeatherWidget::WeatherWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Weat
             &QNetworkAccessManager::finished,
             this,
             &WeatherWidget::onWeatherDataReceived);
+
+    spdlog::debug("WeatherWidget constructed, starting periodic updates");
 
     // 定时更新天气，每小时更新一次
     QTimer* timer = new QTimer(this);
@@ -39,6 +42,7 @@ WeatherWidget::~WeatherWidget() {
 void WeatherWidget::updateWeather() {
     // 使用 wttr.in API 获取广州的天气（可以根据需要修改城市）
     QNetworkRequest request(QUrl("https://wttr.in/Guangzhou?format=j1"));
+    spdlog::debug("WeatherWidget: requesting weather from {}", request.url().toString().toStdString());
     networkManager->get(request);
 }
 
@@ -50,6 +54,7 @@ void WeatherWidget::onWeatherDataReceived(QNetworkReply* reply) {
     } else {
         ui->labelWeather->setText(
             QCoreApplication::translate("WeatherWidget", "Failed to fetch weather"));
+        spdlog::warn("WeatherWidget: network error: {}", reply->errorString().toStdString());
     }
     reply->deleteLater();
 }
