@@ -50,10 +50,18 @@ QMessageBox QLabel { color: #334155; }
 
 QCheckBox::indicator, QRadioButton::indicator { width: 16px; height: 16px; }
 QCheckBox::indicator { border: 1px solid #94a3b8; border-radius: 4px; background: #ffffff; }
+
 QCheckBox::indicator:checked { background: #2563eb; border-color: #2563eb; }
 QRadioButton::indicator { border: 2px solid #94a3b8; border-radius: 9px; background: #ffffff; }
 QRadioButton::indicator:checked { background: #2563eb; border: 4px solid #ffffff; }
 
-.status-success { color: #16a34a; }
-.status-error { color: #dc2626; }
-.status-warning { color: #d97706; }
+/* Override: soften status colors for light theme */
+.status-success { color: #2f6f4f; } /* muted green */
+.status-error { color: #b33b3b; }   /* muted red */
+.status-warning { color: #b36f2a; } /* muted amber */
+
+/* Log page: use light gray background to avoid similarity with warning amber */
+QWidget#LogWidget { background: #f3f4f6; }
+QTextEdit#textEdit { background: #f3f4f6; color: #334155; }
+QTextEdit#textEdit ::selection { background: #cfe3ff; color: #0f172a; }
+

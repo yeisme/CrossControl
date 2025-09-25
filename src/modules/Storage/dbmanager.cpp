@@ -1,7 +1,5 @@
 ﻿#include "dbmanager.h"
 
-#include "logging.h"
-#include "spdlog/spdlog.h"
 #include <QDir>
 #include <QFileInfo>
 #include <QSqlError>
@@ -9,7 +7,11 @@
 #include <QStandardPaths>
 #include <QUuid>
 
+#include "logging.h"
+
 namespace storage {
+
+auto l = logging::Logger("DbManager");
 
 DbManager& DbManager::instance() {
     static DbManager inst;
@@ -38,7 +40,7 @@ bool DbManager::init(const DbConfig& cfg, bool force) noexcept {
         m_db.setDatabaseName(cfg.database);
 
         if (!m_db.open()) {
-            spdlog::warn("Failed to open database: {}", m_db.lastError().text().toStdString());
+            l.warn("Failed to open database: {}", m_db.lastError().text().toStdString());
 
             // If using SQLite, try fallback to AppDataLocation (writable)
             if (cfg.driver.compare("QSQLITE", Qt::CaseInsensitive) == 0) {
@@ -48,7 +50,7 @@ bool DbManager::init(const DbConfig& cfg, bool force) noexcept {
                     QDir dir(appDataDir);
                     if (!dir.exists()) dir.mkpath(".");
                     const QString fallbackPath = dir.filePath(QFileInfo(cfg.database).fileName());
-                    spdlog::warn("Attempting fallback DB path: {}", fallbackPath.toStdString());
+                    l.warn("Attempting fallback DB path: {}", fallbackPath.toStdString());
 
                     // remove the failed connection and add a new one for fallback
                     QSqlDatabase::removeDatabase(m_connectionName);
@@ -57,10 +59,11 @@ bool DbManager::init(const DbConfig& cfg, bool force) noexcept {
                     m_db = QSqlDatabase::addDatabase(cfg.driver, m_connectionName);
                     m_db.setDatabaseName(fallbackPath);
                     if (m_db.open()) {
-                        spdlog::warn("Opened fallback DB: {}", fallbackPath.toStdString());
+                        l.warn("Opened fallback DB: {}", fallbackPath.toStdString());
                         m_cfg.database = fallbackPath;
                     } else {
-                        spdlog::warn("Fallback DB open also failed: {}", m_db.lastError().text().toStdString());
+                        l.warn("Fallback DB open also failed: {}",
+                               m_db.lastError().text().toStdString());
                         QSqlDatabase::removeDatabase(m_connectionName);
                         m_connectionName.clear();
                         return false;
@@ -81,16 +84,16 @@ bool DbManager::init(const DbConfig& cfg, bool force) noexcept {
         if (cfg.driver.compare("QSQLITE", Qt::CaseInsensitive) == 0 && cfg.foreignKeys) {
             QSqlQuery q(m_db);
             if (!q.exec("PRAGMA foreign_keys = ON;")) {
-                spdlog::warn("Failed to enable foreign_keys: {}", q.lastError().text().toStdString());
+                l.warn("Failed to enable foreign_keys: {}", q.lastError().text().toStdString());
             }
         }
 
         m_cfg = cfg;
         m_initialized = true;
         return true;
-    } catch (const std::exception& e) {
-        spdlog::warn("DB init exception: {}", e.what());
-    } catch (...) { spdlog::warn("DB init unknown exception"); }
+    } catch (const std::exception& e) { l.warn("DB init exception: {}", e.what()); } catch (...) {
+        l.warn("DB init unknown exception");
+    }
     return false;
 }
 

@@ -4,42 +4,50 @@
 <context>
     <name>CrossControlWidget</name>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="66"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="68"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="210"/>
         <source>Dashboard</source>
         <translation>仪表盘</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="69"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="71"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="211"/>
         <source>Monitor</source>
         <translation>监控</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="72"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="74"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="212"/>
         <source>Remote Unlock</source>
         <translation>远程开锁</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="75"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="77"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="213"/>
         <source>Visit Records</source>
         <translation>来访记录</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="78"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="80"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="214"/>
         <source>Messages</source>
         <translation>留言</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="81"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="83"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="215"/>
         <source>System Settings</source>
         <translation>系统设置</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="84"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="86"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="216"/>
         <source>Logs</source>
         <translation>运行日志</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="95"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="97"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="217"/>
         <source>Logout</source>
         <translation>退出登录</translation>
     </message>
@@ -345,13 +353,13 @@
         <translation>返回主页</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="232"/>
+        <location filename="../widgets/messagewidget.cpp" line="234"/>
         <source>Confirm Send</source>
         <translation>确认发送</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="251"/>
-        <location filename="../widgets/messagewidget.cpp" line="342"/>
+        <location filename="../widgets/messagewidget.cpp" line="253"/>
+        <location filename="../widgets/messagewidget.cpp" line="344"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
@@ -380,46 +388,46 @@
         <translation>数据库已打开但不可用（未打开）。留言保存将被禁用。</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="149"/>
-        <location filename="../widgets/messagewidget.cpp" line="278"/>
+        <location filename="../widgets/messagewidget.cpp" line="150"/>
+        <location filename="../widgets/messagewidget.cpp" line="280"/>
         <source>(Anonymous)</source>
         <translation>(匿名)</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="166"/>
-        <location filename="../widgets/messagewidget.cpp" line="293"/>
-        <location filename="../widgets/messagewidget.cpp" line="294"/>
+        <location filename="../widgets/messagewidget.cpp" line="168"/>
+        <location filename="../widgets/messagewidget.cpp" line="295"/>
+        <location filename="../widgets/messagewidget.cpp" line="296"/>
         <source>-</source>
         <translation>-</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="252"/>
+        <location filename="../widgets/messagewidget.cpp" line="254"/>
         <source>Failed to save message to database:
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="324"/>
+        <location filename="../widgets/messagewidget.cpp" line="326"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="325"/>
+        <location filename="../widgets/messagewidget.cpp" line="327"/>
         <source>Please select a message to delete.</source>
         <translation>请选择要删除的留言。</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="332"/>
+        <location filename="../widgets/messagewidget.cpp" line="334"/>
         <source>Confirm Delete</source>
         <translation>确认删除</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="333"/>
+        <location filename="../widgets/messagewidget.cpp" line="335"/>
         <source>Delete selected message?</source>
         <translation>确认删除选中的留言吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="342"/>
+        <location filename="../widgets/messagewidget.cpp" line="344"/>
         <source>Failed to delete message from database.</source>
         <translation>从数据库中删除留言失败。</translation>
     </message>
@@ -460,34 +468,64 @@
         <translation>返回主页</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="15"/>
+        <location filename="../widgets/settingwidget.cpp" line="17"/>
+        <location filename="../widgets/settingwidget.cpp" line="78"/>
         <source>Toggle Light/Dark Theme</source>
         <translation>切换主题（明/暗）</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="17"/>
+        <location filename="../widgets/settingwidget.cpp" line="19"/>
+        <location filename="../widgets/settingwidget.cpp" line="82"/>
         <source>Theme</source>
         <translation>主题</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="21"/>
+        <location filename="../widgets/settingwidget.cpp" line="23"/>
+        <location filename="../widgets/settingwidget.cpp" line="87"/>
         <source>Configure Storage</source>
         <translation>配置存储</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="23"/>
+        <location filename="../widgets/settingwidget.cpp" line="26"/>
+        <location filename="../widgets/settingwidget.cpp" line="90"/>
         <source>Storage</source>
         <translation>存储</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="26"/>
+        <location filename="../widgets/settingwidget.cpp" line="29"/>
+        <location filename="../widgets/settingwidget.cpp" line="95"/>
         <source>Manage Accounts</source>
         <translation>管理账户</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="28"/>
+        <location filename="../widgets/settingwidget.cpp" line="32"/>
+        <location filename="../widgets/settingwidget.cpp" line="98"/>
         <source>Accounts</source>
         <translation>账户</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="37"/>
+        <location filename="../widgets/settingwidget.cpp" line="106"/>
+        <source>Automatic</source>
+        <translation>自动</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="38"/>
+        <location filename="../widgets/settingwidget.cpp" line="107"/>
+        <source>中文</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="39"/>
+        <location filename="../widgets/settingwidget.cpp" line="108"/>
+        <source>English</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="55"/>
+        <location filename="../widgets/settingwidget.cpp" line="114"/>
+        <source>Language</source>
+        <translation>语言</translation>
     </message>
 </context>
 <context>

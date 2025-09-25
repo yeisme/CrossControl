@@ -146,7 +146,9 @@ MessageWidget::MessageWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Mess
             // Top row: name and time
             QHBoxLayout* top = new QHBoxLayout();
             QLabel* lblName = new QLabel();
-            lblName->setText(name.isEmpty() ? tr("(Anonymous)") : name);
+            lblName->setText(name.isEmpty()
+                                 ? QCoreApplication::translate("MessageWidget", "(Anonymous)")
+                                 : name);
             QFont bold = lblName->font();
             bold.setBold(true);
             lblName->setFont(bold);
@@ -163,7 +165,7 @@ MessageWidget::MessageWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Mess
 
             // Middle row: phone and email
             QLabel* lblContact = new QLabel(QString("%1 | %2").arg(
-                phone.isEmpty() ? tr("-") : phone, email.isEmpty() ? tr("-") : email));
+                phone.isEmpty() ? QCoreApplication::translate("MessageWidget", "-") : phone, email.isEmpty() ? QCoreApplication::translate("MessageWidget", "-") : email));
             lblContact->setWordWrap(false);
             QFont contactFont = lblContact->font();
             contactFont.setPointSizeF(contactFont.pointSizeF() - 0.5);
@@ -248,8 +250,8 @@ void MessageWidget::on_btnSendMessage_clicked() {
         spdlog::warn("Failed to insert message: {}", q.lastError().text().toStdString());
         QMessageBox::warning(
             this,
-            tr("Error"),
-            tr("Failed to save message to database:\n%1").arg(q.lastError().text()));
+            QCoreApplication::translate("MessageWidget", "Error"),
+            QCoreApplication::translate("MessageWidget", "Failed to save message to database:\n%1").arg(q.lastError().text()));
         return;
     }
 
@@ -275,7 +277,7 @@ void MessageWidget::on_btnSendMessage_clicked() {
     v->setSpacing(4);
 
     QHBoxLayout* top = new QHBoxLayout();
-    QLabel* lblName = new QLabel(visitor.isEmpty() ? tr("(Anonymous)") : visitor);
+    QLabel* lblName = new QLabel(visitor.isEmpty() ? QCoreApplication::translate("MessageWidget", "(Anonymous)") : visitor);
     QFont bold = lblName->font();
     bold.setBold(true);
     lblName->setFont(bold);
@@ -290,8 +292,8 @@ void MessageWidget::on_btnSendMessage_clicked() {
 
     v->addLayout(top);
 
-    QLabel* lblContact = new QLabel(QString("%1 | %2").arg(phone.isEmpty() ? tr("-") : phone,
-                                                           email.isEmpty() ? tr("-") : email));
+    QLabel* lblContact = new QLabel(QString("%1 | %2").arg(phone.isEmpty() ? QCoreApplication::translate("MessageWidget", "-") : phone,
+                                                           email.isEmpty() ? QCoreApplication::translate("MessageWidget", "-") : email));
     QFont contactFont = lblContact->font();
     contactFont.setPointSizeF(contactFont.pointSizeF() - 0.5);
     lblContact->setFont(contactFont);
@@ -339,7 +341,7 @@ void MessageWidget::on_btnDeleteMessage_clicked() {
     q.bindValue(":id", id);
     if (!q.exec()) {
         spdlog::warn("Failed to delete message: {}", q.lastError().text().toStdString());
-        QMessageBox::warning(this, tr("Error"), tr("Failed to delete message from database."));
+        QMessageBox::warning(this, QCoreApplication::translate("MessageWidget", "Error"), QCoreApplication::translate("MessageWidget", "Failed to delete message from database."));
         return;
     }
 

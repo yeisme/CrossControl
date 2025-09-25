@@ -2,8 +2,8 @@
 
 #include <qcoreapplication.h>
 
-#include "ui_settingwidget.h"
 #include "spdlog/spdlog.h"
+#include "ui_settingwidget.h"
 
 SettingWidget::SettingWidget(QWidget* parent) : QWidget(parent), ui(new Ui::SettingWidget) {
     ui->setupUi(this);
