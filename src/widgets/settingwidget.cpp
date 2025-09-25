@@ -28,11 +28,17 @@ SettingWidget::SettingWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Sett
     }
 }
 
-SettingWidget::~SettingWidget() { delete ui; }
+SettingWidget::~SettingWidget() {
+    delete ui;
+}
 
-void SettingWidget::on_btnBackFromSetting_clicked() { emit backToMain(); }
+void SettingWidget::on_btnBackFromSetting_clicked() {
+    emit backToMain();
+}
 
-void SettingWidget::on_btnToggleTheme_clicked() { emit toggleThemeRequested(); }
+void SettingWidget::on_btnToggleTheme_clicked() {
+    emit toggleThemeRequested();
+}
 
 QWidget* SettingWidget::addSettingRow(const QString& title, QWidget* control) {
     auto* listLayout = findChild<QVBoxLayout*>(QStringLiteral("layoutSettingsList"));

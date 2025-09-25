@@ -16,17 +16,17 @@ class WeatherWidget : public QWidget {
     Q_OBJECT
 
    public:
-    WeatherWidget(QWidget *parent = nullptr);
+    WeatherWidget(QWidget* parent = nullptr);
     ~WeatherWidget();
 
    private slots:
-    void onWeatherDataReceived(QNetworkReply *reply);
+    void onWeatherDataReceived(QNetworkReply* reply);
     void updateWeather();
 
    private:
-    Ui::WeatherWidget *ui;
-    QNetworkAccessManager *networkManager;
-    void parseWeatherData(const QString &data);
+    Ui::WeatherWidget* ui;
+    QNetworkAccessManager* networkManager;
+    void parseWeatherData(const QString& data);
 };
 
 #endif  // WEATHERWIDGET_H

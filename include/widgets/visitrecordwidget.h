@@ -13,7 +13,7 @@ class VisitRecordWidget : public QWidget {
     Q_OBJECT
 
    public:
-    VisitRecordWidget(QWidget *parent = nullptr);
+    VisitRecordWidget(QWidget* parent = nullptr);
     ~VisitRecordWidget();
 
    signals:
@@ -23,7 +23,7 @@ class VisitRecordWidget : public QWidget {
     void on_btnBackFromVisit_clicked();
 
    private:
-    Ui::VisitRecordWidget *ui;
+    Ui::VisitRecordWidget* ui;
 };
 
 #endif  // VISITRECORDWIDGET_H

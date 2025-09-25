@@ -5,25 +5,26 @@
 #include <QFileInfo>
 #include <QSqlError>
 #include <QSqlQuery>
-#include <QUuid>
 #include <QStandardPaths>
+#include <QUuid>
 
 namespace storage {
 
-DbManager &DbManager::instance() {
+DbManager& DbManager::instance() {
     static DbManager inst;
     return inst;
 }
 
-bool DbManager::init(const DbConfig &cfg, bool force) noexcept {
+bool DbManager::init(const DbConfig& cfg, bool force) noexcept {
     if (m_initialized && !force) return true;
 
     try {
         // If a previous connection exists, close it first when forcing
         if (m_initialized && force) close();
 
-    // Build a unique connection name to avoid clashing with others
-    m_connectionName = QStringLiteral("crosscontrol_connection_%1").arg(QUuid::createUuid().toString());
+        // Build a unique connection name to avoid clashing with others
+        m_connectionName =
+            QStringLiteral("crosscontrol_connection_%1").arg(QUuid::createUuid().toString());
 
         // Ensure parent folder for file-based DB exists
         if (cfg.driver.compare("QSQLITE", Qt::CaseInsensitive) == 0) {
@@ -40,7 +41,8 @@ bool DbManager::init(const DbConfig &cfg, bool force) noexcept {
 
             // If using SQLite, try fallback to AppDataLocation (writable)
             if (cfg.driver.compare("QSQLITE", Qt::CaseInsensitive) == 0) {
-                const QString appDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+                const QString appDataDir =
+                    QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
                 if (!appDataDir.isEmpty()) {
                     QDir dir(appDataDir);
                     if (!dir.exists()) dir.mkpath(".");
@@ -49,7 +51,8 @@ bool DbManager::init(const DbConfig &cfg, bool force) noexcept {
 
                     // remove the failed connection and add a new one for fallback
                     QSqlDatabase::removeDatabase(m_connectionName);
-                    m_connectionName = QStringLiteral("crosscontrol_connection_%1").arg(QUuid::createUuid().toString());
+                    m_connectionName = QStringLiteral("crosscontrol_connection_%1")
+                                           .arg(QUuid::createUuid().toString());
                     m_db = QSqlDatabase::addDatabase(cfg.driver, m_connectionName);
                     m_db.setDatabaseName(fallbackPath);
                     if (m_db.open()) {
@@ -84,13 +87,13 @@ bool DbManager::init(const DbConfig &cfg, bool force) noexcept {
         m_cfg = cfg;
         m_initialized = true;
         return true;
-    } catch (const std::exception &e) {
+    } catch (const std::exception& e) {
         qWarning() << "DB init exception:" << e.what();
     } catch (...) { qWarning() << "DB init unknown exception"; }
     return false;
 }
 
-QSqlDatabase &DbManager::db() {
+QSqlDatabase& DbManager::db() {
     if (!m_initialized) throw std::runtime_error("DbManager not initialized");
     return m_db;
 }
@@ -101,8 +104,7 @@ void DbManager::close() {
     try {
         if (m_db.isOpen()) m_db.close();
         if (!m_connectionName.isEmpty()) QSqlDatabase::removeDatabase(m_connectionName);
-    } catch (...) {
-    }
+    } catch (...) {}
     m_connectionName.clear();
     m_initialized = false;
 }

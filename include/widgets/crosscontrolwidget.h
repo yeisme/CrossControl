@@ -19,37 +19,37 @@ class CrossControlWidget : public QWidget {
     Q_OBJECT
 
    public:
-    explicit CrossControlWidget(QWidget *parent = nullptr);
+    explicit CrossControlWidget(QWidget* parent = nullptr);
     ~CrossControlWidget() override;
 
    private:
     // 顶层堆栈：登录页 / 应用主体
-    QStackedWidget *rootStack{nullptr};
+    QStackedWidget* rootStack{nullptr};
 
     // 应用主体：左侧边栏 + 右侧内容堆栈
-    QWidget *appPage{nullptr};
-    QWidget *sideBar{nullptr};
-    QStackedWidget *contentStack{nullptr};
+    QWidget* appPage{nullptr};
+    QWidget* sideBar{nullptr};
+    QStackedWidget* contentStack{nullptr};
 
     // 侧边栏按钮
-    QPushButton *btnDashboard{nullptr};
-    QPushButton *btnMonitor{nullptr};
-    QPushButton *btnUnlock{nullptr};
-    QPushButton *btnVisitRecord{nullptr};
-    QPushButton *btnMessage{nullptr};
-    QPushButton *btnSetting{nullptr};
-    QPushButton *btnLogs{nullptr};
-    QPushButton *btnLogout{nullptr};
+    QPushButton* btnDashboard{nullptr};
+    QPushButton* btnMonitor{nullptr};
+    QPushButton* btnUnlock{nullptr};
+    QPushButton* btnVisitRecord{nullptr};
+    QPushButton* btnMessage{nullptr};
+    QPushButton* btnSetting{nullptr};
+    QPushButton* btnLogs{nullptr};
+    QPushButton* btnLogout{nullptr};
 
     // 各页面
-    LoginWidget *loginWidget{nullptr};              // 登录页面
-    MainWidget *mainWidget{nullptr};                // Dashboard 主页面
-    MonitorWidget *monitorWidget{nullptr};          // 监控页面
-    VisitRecordWidget *visitRecordWidget{nullptr};  // 访客记录
-    MessageWidget *messageWidget{nullptr};          // 消息
-    SettingWidget *settingWidget{nullptr};          // 设置
-    UnlockWidget *unlockWidget{nullptr};            // 解锁
-    LogWidget *logWidget{nullptr};                  // 日志
+    LoginWidget* loginWidget{nullptr};              // 登录页面
+    MainWidget* mainWidget{nullptr};                // Dashboard 主页面
+    MonitorWidget* monitorWidget{nullptr};          // 监控页面
+    VisitRecordWidget* visitRecordWidget{nullptr};  // 访客记录
+    MessageWidget* messageWidget{nullptr};          // 消息
+    SettingWidget* settingWidget{nullptr};          // 设置
+    UnlockWidget* unlockWidget{nullptr};            // 解锁
+    LogWidget* logWidget{nullptr};                  // 日志
 
    private slots:
     void onLoginSuccess();

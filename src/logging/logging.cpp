@@ -22,7 +22,9 @@ void LoggerManager::ensureDefaultLogger_() {
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%n] %v");
 }
 
-void LoggerManager::init() { ensureDefaultLogger_(); }
+void LoggerManager::init() {
+    ensureDefaultLogger_();
+}
 
 void LoggerManager::installQtSinkToAll_() {
     if (!qt_sink_) return;

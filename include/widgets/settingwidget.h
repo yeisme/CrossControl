@@ -13,7 +13,7 @@ class SettingWidget : public QWidget {
     Q_OBJECT
 
    public:
-    SettingWidget(QWidget *parent = nullptr);
+    SettingWidget(QWidget* parent = nullptr);
     ~SettingWidget();
 
    signals:
@@ -24,11 +24,11 @@ class SettingWidget : public QWidget {
     void on_btnBackFromSetting_clicked();
     void on_btnToggleTheme_clicked();
 
-        private:
-         QWidget* addSettingRow(const QString& title, QWidget* control);
+   private:
+    QWidget* addSettingRow(const QString& title, QWidget* control);
 
    private:
-    Ui::SettingWidget *ui;
+    Ui::SettingWidget* ui;
 };
 
 #endif  // SETTINGWIDGET_H

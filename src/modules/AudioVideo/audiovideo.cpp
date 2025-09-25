@@ -26,7 +26,7 @@
  *
  * @param parent 指向父QObject的指针，默认为nullptr。
  */
-AudioVideo::AudioVideo(QObject *parent) : QObject(parent), m_isRecording(false) {
+AudioVideo::AudioVideo(QObject* parent) : QObject(parent), m_isRecording(false) {
     // 占位符初始化
     logging::LoggerManager::instance()
         .getLogger("AudioVideo")
@@ -51,7 +51,7 @@ AudioVideo::AudioVideo(QObject *parent) : QObject(parent), m_isRecording(false) 
  * @see recordingStarted()信号
  * @see stopRecording()
  */
-bool AudioVideo::startRecording(const QString &outputPath) {
+bool AudioVideo::startRecording(const QString& outputPath) {
     // 占位符实现
     logging::LoggerManager::instance()
         .getLogger("AudioVideo")
@@ -100,7 +100,7 @@ void AudioVideo::stopRecording() {
  * @note 真实的视频播放需要适当的视频编解码器和渲染表面。
  *       考虑支持各种视频格式并实现播放控制。
  */
-bool AudioVideo::playVideo(const QString &filePath) {
+bool AudioVideo::playVideo(const QString& filePath) {
     // 占位符实现
     logging::LoggerManager::instance()
         .getLogger("AudioVideo")
@@ -146,13 +146,13 @@ bool AudioVideo::captureAudio() {
  *       考虑实现各种滤镜、检测或转换。
  * @see videoFrameProcessed()信号
  */
-void AudioVideo::processVideoFrame(const QImage &frame) {
+void AudioVideo::processVideoFrame(const QImage& frame) {
     logging::LoggerManager::instance()
         .getLogger("AudioVideo")
         ->info("Processing video frame (placeholder)");
     // 占位符实现
     // 直接传递图像（占位符 - 无实际处理）
-    const QImage &processedImage = frame;
+    const QImage& processedImage = frame;
     emit videoFrameProcessed(processedImage);
 }
 
@@ -171,7 +171,7 @@ void AudioVideo::processVideoFrame(const QImage &frame) {
  *       考虑实现音频滤镜、FFT分析或压缩。
  * @see audioBufferProcessed()信号
  */
-void AudioVideo::processAudioBuffer(const QByteArray &buffer) {
+void AudioVideo::processAudioBuffer(const QByteArray& buffer) {
     logging::LoggerManager::instance()
         .getLogger("AudioVideo")
         ->info("Processing audio buffer (placeholder)");

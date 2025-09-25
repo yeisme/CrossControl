@@ -13,7 +13,7 @@ class UnlockWidget : public QWidget {
     Q_OBJECT
 
    public:
-    UnlockWidget(QWidget *parent = nullptr);
+    UnlockWidget(QWidget* parent = nullptr);
     ~UnlockWidget();
 
    signals:
@@ -24,7 +24,7 @@ class UnlockWidget : public QWidget {
     void on_btnCancelUnlock_clicked();
 
    private:
-    Ui::UnlockWidget *ui;
+    Ui::UnlockWidget* ui;
 };
 
 #endif  // UNLOCKWIDGET_H

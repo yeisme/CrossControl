@@ -22,7 +22,7 @@
  *
  * @param parent 指向父QObject的指针，默认为nullptr。
  */
-HumanRecognition::HumanRecognition(QObject *parent) : QObject(parent), m_isInitialized(false) {
+HumanRecognition::HumanRecognition(QObject* parent) : QObject(parent), m_isInitialized(false) {
     // 占位符初始化
     MCLog.info("HumanRecognition module initialized (placeholder)");
     m_isInitialized = true;
@@ -47,7 +47,7 @@ HumanRecognition::HumanRecognition(QObject *parent) : QObject(parent), m_isIniti
  *       照明条件和场景中的多个人类。
  * @see humanDetected() signal
  */
-bool HumanRecognition::detectHumans(const QImage &image) {
+bool HumanRecognition::detectHumans(const QImage& image) {
     // 占位符实现
     MCLog.info("Detecting humans in image (placeholder)");
     // 通过发出带有示例边界框的信号来模拟检测
@@ -73,7 +73,7 @@ bool HumanRecognition::detectHumans(const QImage &image) {
  *       考虑实施面部对齐和标准化以获得更好的结果。
  * @see recognitionCompleted() signal
  */
-QString HumanRecognition::recognizePerson(const QImage &faceImage) {
+QString HumanRecognition::recognizePerson(const QImage& faceImage) {
     // 占位符实现
     MCLog.info("Recognizing person from face image (placeholder)");
     // 模拟识别过程
@@ -99,7 +99,7 @@ QString HumanRecognition::recognizePerson(const QImage &faceImage) {
  *       OpenCV、TensorFlow或PyTorch这样的框架进行真实实现。
  * @warning 此占位符不执行任何实际训练。
  */
-void HumanRecognition::trainModel(const QString &datasetPath) {
+void HumanRecognition::trainModel(const QString& datasetPath) {
     // 占位符实现
     MCLog.info("Training model with dataset at: {} (placeholder)", datasetPath.toStdString());
     // 在真实实现中，这将:

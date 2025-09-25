@@ -9,7 +9,7 @@
  *
  * @param parent
  */
-MainWidget::MainWidget(QWidget *parent) : QWidget(parent), ui(new Ui::MainWidget) {
+MainWidget::MainWidget(QWidget* parent) : QWidget(parent), ui(new Ui::MainWidget) {
     ui->setupUi(this);
     weatherWidget = new WeatherWidget(this);
     // 将天气组件添加到顶部布局中，替换原来的 labelWeather
@@ -20,4 +20,6 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent), ui(new Ui::MainWidget
     if (ui->scrollArea) ui->scrollArea->setVisible(false);
 }
 
-MainWidget::~MainWidget() { delete ui; }
+MainWidget::~MainWidget() {
+    delete ui;
+}

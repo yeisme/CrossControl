@@ -18,16 +18,16 @@
 
 #include "ui_loginwidget.h"
 
-LoginWidget::LoginWidget(QWidget *parent) : QWidget(parent), ui(new Ui::LoginWidget) {
+LoginWidget::LoginWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LoginWidget) {
     ui->setupUi(this);
     // 在左侧 frame 动态添加品牌图标
     if (auto frame = findChild<QFrame*>(QStringLiteral("frameLeft"))) {
         if (auto vlay = frame->findChild<QVBoxLayout*>(QStringLiteral("verticalLayoutLeft"))) {
-            auto *logo = new QLabel(frame);
+            auto* logo = new QLabel(frame);
             logo->setObjectName("labelBrandIcon");
             logo->setAlignment(Qt::AlignHCenter);
-            logo->setPixmap(QIcon(":/icons/icons/brand.svg").pixmap(72,72));
-            vlay->insertWidget(1, logo); // 放在顶部 spacer 与文字之间
+            logo->setPixmap(QIcon(":/icons/icons/brand.svg").pixmap(72, 72));
+            vlay->insertWidget(1, logo);  // 放在顶部 spacer 与文字之间
         }
     }
 
@@ -50,7 +50,7 @@ LoginWidget::LoginWidget(QWidget *parent) : QWidget(parent), ui(new Ui::LoginWid
             &LoginWidget::on_lineEditRegisterPassword_textChanged);
 
     // 可选：在用户界面更新之前，确认密码字段可能不存在；稍后通过 QObject::findChild 进行保护。
-    if (auto confirm = findChild<QLineEdit *>(QStringLiteral("lineEditRegisterPasswordConfirm"));
+    if (auto confirm = findChild<QLineEdit*>(QStringLiteral("lineEditRegisterPasswordConfirm"));
         confirm) {
         connect(confirm,
                 &QLineEdit::textChanged,
@@ -59,7 +59,7 @@ LoginWidget::LoginWidget(QWidget *parent) : QWidget(parent), ui(new Ui::LoginWid
     }
 
     // 如果存在，设置密码可见性切换操作
-    auto setupPasswordToggle = [](QLineEdit *le) {
+    auto setupPasswordToggle = [](QLineEdit* le) {
         if (!le) return;
         auto makeIcon = [le]() {
             QColor base = le->palette().color(QPalette::Text);
@@ -90,7 +90,7 @@ LoginWidget::LoginWidget(QWidget *parent) : QWidget(parent), ui(new Ui::LoginWid
     };
     setupPasswordToggle(ui->lineEditLoginPassword);
     setupPasswordToggle(ui->lineEditRegisterPassword);
-    if (auto confirm = findChild<QLineEdit *>(QStringLiteral("lineEditRegisterPasswordConfirm"));
+    if (auto confirm = findChild<QLineEdit*>(QStringLiteral("lineEditRegisterPasswordConfirm"));
         confirm) {
         setupPasswordToggle(confirm);
     }
@@ -103,7 +103,9 @@ LoginWidget::LoginWidget(QWidget *parent) : QWidget(parent), ui(new Ui::LoginWid
     updateRegisterButtonState();
 }
 
-LoginWidget::~LoginWidget() { delete ui; }
+LoginWidget::~LoginWidget() {
+    delete ui;
+}
 
 void LoginWidget::on_pushButtonLogin_clicked() {
     QString email = ui->lineEditLoginEmail->text().trimmed();
@@ -149,8 +151,8 @@ void LoginWidget::on_pushButtonLogin_clicked() {
 void LoginWidget::on_pushButtonRegister_clicked() {
     const QString email = ui->lineEditRegisterEmail->text().trimmed();
     const QString password = ui->lineEditRegisterPassword->text();
-    const QLineEdit *confirm =
-        findChild<QLineEdit *>(QStringLiteral("lineEditRegisterPasswordConfirm"));
+    const QLineEdit* confirm =
+        findChild<QLineEdit*>(QStringLiteral("lineEditRegisterPasswordConfirm"));
     const QString confirmPwd = confirm ? confirm->text() : QString();
 
     if (!isEmailValid(email) || !isPasswordValid(password)) {
@@ -179,35 +181,37 @@ void LoginWidget::on_pushButtonRegister_clicked() {
 }
 
 // Realtime validation slots
-void LoginWidget::on_lineEditLoginEmail_textChanged(const QString &text) {
+void LoginWidget::on_lineEditLoginEmail_textChanged(const QString& text) {
     Q_UNUSED(text);
     updateLoginButtonState();
 }
-void LoginWidget::on_lineEditLoginPassword_textChanged(const QString &text) {
+void LoginWidget::on_lineEditLoginPassword_textChanged(const QString& text) {
     Q_UNUSED(text);
     updateLoginButtonState();
 }
-void LoginWidget::on_lineEditRegisterEmail_textChanged(const QString &text) {
+void LoginWidget::on_lineEditRegisterEmail_textChanged(const QString& text) {
     Q_UNUSED(text);
     updateRegisterButtonState();
 }
-void LoginWidget::on_lineEditRegisterPassword_textChanged(const QString &text) {
+void LoginWidget::on_lineEditRegisterPassword_textChanged(const QString& text) {
     Q_UNUSED(text);
     updateRegisterButtonState();
 }
-void LoginWidget::on_lineEditRegisterPasswordConfirm_textChanged(const QString &text) {
+void LoginWidget::on_lineEditRegisterPasswordConfirm_textChanged(const QString& text) {
     Q_UNUSED(text);
     updateRegisterButtonState();
 }
 
 // 邮箱正则验证
-bool LoginWidget::isEmailValid(const QString &email) const {
+bool LoginWidget::isEmailValid(const QString& email) const {
     static const QRegularExpression re(R"(^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$)");
     return re.match(email).hasMatch();
 }
 
 // 密码至少8位
-bool LoginWidget::isPasswordValid(const QString &password) const { return password.size() >= 8; }
+bool LoginWidget::isPasswordValid(const QString& password) const {
+    return password.size() >= 8;
+}
 
 void LoginWidget::updateLoginButtonState() {
     const bool ok = isEmailValid(ui->lineEditLoginEmail->text().trimmed()) &&
@@ -219,7 +223,7 @@ void LoginWidget::updateRegisterButtonState() {
     const bool emailOk = isEmailValid(ui->lineEditRegisterEmail->text().trimmed());
     const bool pwdOk = isPasswordValid(ui->lineEditRegisterPassword->text());
     bool confirmOk = true;
-    if (auto confirm = findChild<QLineEdit *>(QStringLiteral("lineEditRegisterPasswordConfirm"));
+    if (auto confirm = findChild<QLineEdit*>(QStringLiteral("lineEditRegisterPasswordConfirm"));
         confirm) {
         confirmOk = (ui->lineEditRegisterPassword->text() == confirm->text());
     }
@@ -227,45 +231,45 @@ void LoginWidget::updateRegisterButtonState() {
     ui->pushButtonRegister->setEnabled(ok);
 }
 
-QString LoginWidget::hashPassword(const QString &password) const {
+QString LoginWidget::hashPassword(const QString& password) const {
     const QByteArray hashed =
         QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256);
     return QString::fromLatin1(hashed.toHex());
 }
 
-void LoginWidget::saveAccount(const QString &email, const QString &passwordHash) {
+void LoginWidget::saveAccount(const QString& email, const QString& passwordHash) {
     QSettings settings("CrossControl", "Auth");
     settings.setValue("email", email);
     settings.setValue("passwordHash", passwordHash);
 }
 
-bool LoginWidget::loadAccount(QString &emailOut, QString &passwordHashOut) const {
+bool LoginWidget::loadAccount(QString& emailOut, QString& passwordHashOut) const {
     QSettings settings("CrossControl", "Auth");
     emailOut = settings.value("email").toString();
     passwordHashOut = settings.value("passwordHash").toString();
     return !emailOut.isEmpty() && !passwordHashOut.isEmpty();
 }
 
-void LoginWidget::showLoginError(const QString &msg) {
-    if (auto label = findChild<QLabel *>(QStringLiteral("labelLoginError")); label) {
+void LoginWidget::showLoginError(const QString& msg) {
+    if (auto label = findChild<QLabel*>(QStringLiteral("labelLoginError")); label) {
         label->setText(msg);
     }
 }
 
 void LoginWidget::clearLoginError() {
-    if (auto label = findChild<QLabel *>(QStringLiteral("labelLoginError")); label) {
+    if (auto label = findChild<QLabel*>(QStringLiteral("labelLoginError")); label) {
         label->clear();
     }
 }
 
-void LoginWidget::showRegisterError(const QString &msg) {
-    if (auto label = findChild<QLabel *>(QStringLiteral("labelRegisterError")); label) {
+void LoginWidget::showRegisterError(const QString& msg) {
+    if (auto label = findChild<QLabel*>(QStringLiteral("labelRegisterError")); label) {
         label->setText(msg);
     }
 }
 
 void LoginWidget::clearRegisterError() {
-    if (auto label = findChild<QLabel *>(QStringLiteral("labelRegisterError")); label) {
+    if (auto label = findChild<QLabel*>(QStringLiteral("labelRegisterError")); label) {
         label->clear();
     }
 }

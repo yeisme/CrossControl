@@ -51,7 +51,7 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      *
      * @param parent 父QObject。默认为nullptr。
      */
-    explicit AudioVideo(QObject *parent = nullptr);
+    explicit AudioVideo(QObject* parent = nullptr);
 
     /**
      * @brief 开始录制音频/视频到指定的输出路径。
@@ -65,7 +65,7 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      * @note 这是一个占位符实现。真实的录制需要
      *       访问音频/视频输入设备和编码能力。
      */
-    bool startRecording(const QString &outputPath);
+    bool startRecording(const QString& outputPath);
 
     /**
      * @brief 停止当前的录制会话。
@@ -89,7 +89,7 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      * @note 这是一个占位符实现。真实的播放将使用
      *       Qt Multimedia的QMediaPlayer或类似组件。
      */
-    bool playVideo(const QString &filePath);
+    bool playVideo(const QString& filePath);
 
     /**
      * @brief 开始从输入设备捕获音频。
@@ -113,7 +113,7 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      *
      * @note 此方法可用于实时视频处理管道。
      */
-    void processVideoFrame(const QImage &frame);
+    void processVideoFrame(const QImage& frame);
 
     /**
      * @brief 处理音频缓冲区以进行分析或特效。
@@ -125,7 +125,7 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      *
      * @note 此方法可用于实时音频处理管道。
      */
-    void processAudioBuffer(const QByteArray &buffer);
+    void processAudioBuffer(const QByteArray& buffer);
 
    signals:
     /**
@@ -149,7 +149,7 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      *
      * @param processedImage 处理后的视频帧图像。
      */
-    void videoFrameProcessed(const QImage &processedImage);
+    void videoFrameProcessed(const QImage& processedImage);
 
     /**
      * @brief 音频缓冲区处理完成时发出的信号。
@@ -158,7 +158,7 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      *
      * @param processedBuffer 处理后的音频数据。
      */
-    void audioBufferProcessed(const QByteArray &processedBuffer);
+    void audioBufferProcessed(const QByteArray& processedBuffer);
 
    private:
     /**

@@ -13,7 +13,7 @@ class MonitorWidget : public QWidget {
     Q_OBJECT
 
    public:
-    MonitorWidget(QWidget *parent = nullptr);
+    MonitorWidget(QWidget* parent = nullptr);
     ~MonitorWidget();
 
    signals:
@@ -23,7 +23,7 @@ class MonitorWidget : public QWidget {
     void on_btnBackFromMonitor_clicked();
 
    private:
-    Ui::MonitorWidget *ui;
+    Ui::MonitorWidget* ui;
 };
 
 #endif  // MONITORWIDGET_H

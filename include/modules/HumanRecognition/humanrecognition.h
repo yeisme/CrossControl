@@ -26,7 +26,7 @@
 #define HUMANRECOGNITION_EXPORT Q_DECL_IMPORT
 #endif
 
-static constexpr const char *LogModuleName = "HumanRecognition";
+static constexpr const char* LogModuleName = "HumanRecognition";
 
 /**
  * @brief 日志记录器的引用。
@@ -59,7 +59,7 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
      *
      * @param parent 父QObject。默认为nullptr。
      */
-    explicit HumanRecognition(QObject *parent = nullptr);
+    explicit HumanRecognition(QObject* parent = nullptr);
 
     /**
      * @brief 检测给定图像中的人类。
@@ -73,7 +73,7 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
      * @note 这是一个占位符实现。在真实实现中，
      *       这将使用计算机视觉算法，如HOG、CNN等。
      */
-    bool detectHumans(const QImage &image);
+    bool detectHumans(const QImage& image);
 
     /**
      * @brief 从人脸图像中识别个人。
@@ -87,7 +87,7 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
      * @note 这是一个占位符实现。真实的识别将涉及
      *       人脸嵌入提取和数据库匹配。
      */
-    QString recognizePerson(const QImage &faceImage);
+    QString recognizePerson(const QImage& faceImage);
 
     /**
      * @brief 使用数据集训练识别模型。
@@ -100,7 +100,7 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
      * @note 这是一个占位符实现。实际训练需要
      *       大量数据集和显著的计算资源。
      */
-    void trainModel(const QString &datasetPath);
+    void trainModel(const QString& datasetPath);
 
    signals:
     /**
@@ -111,7 +111,7 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
      *
      * @param boundingBox 包含检测到人类的矩形区域。
      */
-    void humanDetected(const QRect &boundingBox);
+    void humanDetected(const QRect& boundingBox);
 
     /**
      * @brief 个人识别完成时发出的信号。
@@ -121,7 +121,7 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
      *
      * @param personName 被识别个人的姓名或"Unknown Person"。
      */
-    void recognitionCompleted(const QString &personName);
+    void recognitionCompleted(const QString& personName);
 
    private:
     /**

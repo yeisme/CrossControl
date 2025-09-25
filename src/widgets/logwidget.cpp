@@ -42,7 +42,9 @@ void LogWidget::applyColors() {}
  * @brief 处理返回主页面按钮点击
  *
  */
-void LogWidget::on_btnBack_clicked() { emit backToMain(); }
+void LogWidget::on_btnBack_clicked() {
+    emit backToMain();
+}
 
 /**
  * @brief 处理启用日志复选框状态变化
@@ -77,7 +79,9 @@ void LogWidget::on_cmbLevel_currentIndexChanged(int index) {
  * @brief 处理清除日志按钮点击
  *
  */
-void LogWidget::on_btnClear_clicked() { ui->textEdit->clear(); }
+void LogWidget::on_btnClear_clicked() {
+    ui->textEdit->clear();
+}
 
 /**
  * @brief 处理保存日志按钮点击

@@ -76,7 +76,8 @@ class MessageWidget : public QWidget {
      *
      * 该槽用于更新自定义 item widget 的选中样式（高亮）。
      */
-    void on_listWidgetMessages_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+    void on_listWidgetMessages_currentItemChanged(QListWidgetItem* current,
+                                                  QListWidgetItem* previous);
 
    private:
     Ui::MessageWidget* ui;

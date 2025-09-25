@@ -33,7 +33,7 @@ static QString defaultDatabasePath() {
  * - 将 messages 表中的记录按时间加载到 QListWidget，每条记录用自定义 QWidget
  * 展示姓名/联系方式/时间/内容
  */
-MessageWidget::MessageWidget(QWidget *parent) : QWidget(parent), ui(new Ui::MessageWidget) {
+MessageWidget::MessageWidget(QWidget* parent) : QWidget(parent), ui(new Ui::MessageWidget) {
     ui->setupUi(this);
 
     // Lazy initialize DB for the message board
@@ -96,14 +96,14 @@ MessageWidget::MessageWidget(QWidget *parent) : QWidget(parent), ui(new Ui::Mess
     }
 
     struct AddCol {
-        const char *name;
-        const char *def;
+        const char* name;
+        const char* def;
     } addCols[] = {
         {"visitor_name", "TEXT"},
         {"visitor_phone", "TEXT"},
         {"visitor_email", "TEXT"},
     };
-    for (const auto &c : addCols) {
+    for (const auto& c : addCols) {
         if (!cols.contains(QString::fromUtf8(c.name))) {
             const QString alter = QString("ALTER TABLE messages ADD COLUMN %1 %2;")
                                       .arg(QString::fromUtf8(c.name), QString::fromUtf8(c.def));
@@ -127,22 +127,22 @@ MessageWidget::MessageWidget(QWidget *parent) : QWidget(parent), ui(new Ui::Mess
             const QString content = q.value(5).toString();
 
             // Build a rich item widget showing all fields
-            QWidget *w = new QWidget();
+            QWidget* w = new QWidget();
             w->setAutoFillBackground(true);
-            QVBoxLayout *v = new QVBoxLayout(w);
+            QVBoxLayout* v = new QVBoxLayout(w);
             v->setContentsMargins(6, 6, 6, 6);
             v->setSpacing(4);
 
             // Top row: name and time
-            QHBoxLayout *top = new QHBoxLayout();
-            QLabel *lblName = new QLabel();
+            QHBoxLayout* top = new QHBoxLayout();
+            QLabel* lblName = new QLabel();
             lblName->setText(name.isEmpty() ? tr("(Anonymous)") : name);
             QFont bold = lblName->font();
             bold.setBold(true);
             lblName->setFont(bold);
             top->addWidget(lblName, 1);
 
-            QLabel *lblTime = new QLabel(created);
+            QLabel* lblTime = new QLabel(created);
             lblTime->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
             QFont small = lblTime->font();
             small.setPointSizeF(small.pointSizeF() - 1.0);
@@ -152,7 +152,7 @@ MessageWidget::MessageWidget(QWidget *parent) : QWidget(parent), ui(new Ui::Mess
             v->addLayout(top);
 
             // Middle row: phone and email
-            QLabel *lblContact = new QLabel(QString("%1 | %2").arg(
+            QLabel* lblContact = new QLabel(QString("%1 | %2").arg(
                 phone.isEmpty() ? tr("-") : phone, email.isEmpty() ? tr("-") : email));
             lblContact->setWordWrap(false);
             QFont contactFont = lblContact->font();
@@ -161,12 +161,12 @@ MessageWidget::MessageWidget(QWidget *parent) : QWidget(parent), ui(new Ui::Mess
             v->addWidget(lblContact);
 
             // Content row
-            QLabel *lblContent = new QLabel(content);
+            QLabel* lblContent = new QLabel(content);
             lblContent->setWordWrap(true);
             v->addWidget(lblContent);
 
             // Create list item and attach widget
-            QListWidgetItem *item = new QListWidgetItem();
+            QListWidgetItem* item = new QListWidgetItem();
             item->setData(Qt::UserRole, id);
             // Ensure the item is selectable and enabled
             item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -199,7 +199,9 @@ MessageWidget::MessageWidget(QWidget *parent) : QWidget(parent), ui(new Ui::Mess
 /**
  * @brief 析构函数：清理 UI
  */
-MessageWidget::~MessageWidget() { delete ui; }
+MessageWidget::~MessageWidget() {
+    delete ui;
+}
 
 void MessageWidget::on_btnSendMessage_clicked() {
     const QString visitor = ui->lineEditVisitorName->text().trimmed();
@@ -249,20 +251,20 @@ void MessageWidget::on_btnSendMessage_clicked() {
         }
     }
     // Create a widget for the new message and insert into the list
-    QWidget *w = new QWidget();
+    QWidget* w = new QWidget();
     w->setAutoFillBackground(true);
-    QVBoxLayout *v = new QVBoxLayout(w);
+    QVBoxLayout* v = new QVBoxLayout(w);
     v->setContentsMargins(6, 6, 6, 6);
     v->setSpacing(4);
 
-    QHBoxLayout *top = new QHBoxLayout();
-    QLabel *lblName = new QLabel(visitor.isEmpty() ? tr("(Anonymous)") : visitor);
+    QHBoxLayout* top = new QHBoxLayout();
+    QLabel* lblName = new QLabel(visitor.isEmpty() ? tr("(Anonymous)") : visitor);
     QFont bold = lblName->font();
     bold.setBold(true);
     lblName->setFont(bold);
     top->addWidget(lblName, 1);
 
-    QLabel *lblTime = new QLabel(now);
+    QLabel* lblTime = new QLabel(now);
     lblTime->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     QFont small = lblTime->font();
     small.setPointSizeF(small.pointSizeF() - 1.0);
@@ -271,18 +273,18 @@ void MessageWidget::on_btnSendMessage_clicked() {
 
     v->addLayout(top);
 
-    QLabel *lblContact = new QLabel(QString("%1 | %2").arg(phone.isEmpty() ? tr("-") : phone,
+    QLabel* lblContact = new QLabel(QString("%1 | %2").arg(phone.isEmpty() ? tr("-") : phone,
                                                            email.isEmpty() ? tr("-") : email));
     QFont contactFont = lblContact->font();
     contactFont.setPointSizeF(contactFont.pointSizeF() - 0.5);
     lblContact->setFont(contactFont);
     v->addWidget(lblContact);
 
-    QLabel *lblContent = new QLabel(message);
+    QLabel* lblContent = new QLabel(message);
     lblContent->setWordWrap(true);
     v->addWidget(lblContent);
 
-    QListWidgetItem *item = new QListWidgetItem();
+    QListWidgetItem* item = new QListWidgetItem();
     item->setData(Qt::UserRole, id);
     item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     ui->listWidgetMessages->addItem(item);
@@ -298,7 +300,7 @@ void MessageWidget::on_btnSendMessage_clicked() {
 }
 
 void MessageWidget::on_btnDeleteMessage_clicked() {
-    auto *item = ui->listWidgetMessages->currentItem();
+    auto* item = ui->listWidgetMessages->currentItem();
     if (!item) {
         QMessageBox::information(this, tr("Delete"), tr("Please select a message to delete."));
         return;
@@ -322,24 +324,26 @@ void MessageWidget::on_btnDeleteMessage_clicked() {
 
     // 从 UI 列表中移除并释放对应的 widget 与 item
     const int row = ui->listWidgetMessages->row(item);
-    QWidget *w = ui->listWidgetMessages->itemWidget(item);
-    QListWidgetItem *taken = ui->listWidgetMessages->takeItem(row);
+    QWidget* w = ui->listWidgetMessages->itemWidget(item);
+    QListWidgetItem* taken = ui->listWidgetMessages->takeItem(row);
     if (w) delete w;
     if (taken) delete taken;
 }
 
-void MessageWidget::on_btnBackFromMessage_clicked() { emit backToMain(); }
+void MessageWidget::on_btnBackFromMessage_clicked() {
+    emit backToMain();
+}
 
-void MessageWidget::on_listWidgetMessages_currentItemChanged(QListWidgetItem *current,
-                                                             QListWidgetItem *previous) {
+void MessageWidget::on_listWidgetMessages_currentItemChanged(QListWidgetItem* current,
+                                                             QListWidgetItem* previous) {
     // Reset previous widget style
     if (previous) {
-        QWidget *pw = ui->listWidgetMessages->itemWidget(previous);
+        QWidget* pw = ui->listWidgetMessages->itemWidget(previous);
         if (pw) { pw->setStyleSheet(""); }
     }
 
     if (current) {
-        QWidget *cw = ui->listWidgetMessages->itemWidget(current);
+        QWidget* cw = ui->listWidgetMessages->itemWidget(current);
         if (cw) {
             // Use palette highlight color for selected background and ensure text readable
             const QColor bg = palette().color(QPalette::Highlight);
@@ -353,12 +357,12 @@ void MessageWidget::on_listWidgetMessages_currentItemChanged(QListWidgetItem *cu
  * @brief 事件过滤器：把对 item widget 的点击映射为列表项选择
  * @note 这样可以在点击自定义 widget 的任意位置时，触发 QListWidget 的选中与高亮行为
  */
-bool MessageWidget::eventFilter(QObject *watched, QEvent *event) {
+bool MessageWidget::eventFilter(QObject* watched, QEvent* event) {
     if (event->type() == QEvent::MouseButtonPress) {
         // Find which item has this widget
         for (int i = 0; i < ui->listWidgetMessages->count(); ++i) {
-            QListWidgetItem *it = ui->listWidgetMessages->item(i);
-            QWidget *w = ui->listWidgetMessages->itemWidget(it);
+            QListWidgetItem* it = ui->listWidgetMessages->item(i);
+            QWidget* w = ui->listWidgetMessages->itemWidget(it);
             if (w == watched) {
                 ui->listWidgetMessages->setCurrentItem(it);
                 ui->listWidgetMessages->setFocus();

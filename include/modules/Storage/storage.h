@@ -1,7 +1,8 @@
 ﻿#pragma once
 
-#include "dbmanager.h"
 #include <QSqlDatabase>
+
+#include "dbmanager.h"
 
 namespace storage {
 
@@ -12,10 +13,10 @@ namespace storage {
 class Storage final {
    public:
     // Initialize SQLite database (creates a connection if needed)
-    static bool initSqlite(const QString &path);
+    static bool initSqlite(const QString& path);
 
     // Obtain reference to underlying QSqlDatabase (throws if not initialized)
-    static QSqlDatabase &db();
+    static QSqlDatabase& db();
 };
 
 }  // namespace storage

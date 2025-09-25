@@ -15,12 +15,12 @@ class MainWidget : public QWidget {
     Q_OBJECT
 
    public:
-    MainWidget(QWidget *parent = nullptr);
+    MainWidget(QWidget* parent = nullptr);
     ~MainWidget();
 
    private:
-    Ui::MainWidget *ui;
-    WeatherWidget *weatherWidget;  // 天气组件
+    Ui::MainWidget* ui;
+    WeatherWidget* weatherWidget;  // 天气组件
 };
 
 #endif  // MAINWIDGET_H

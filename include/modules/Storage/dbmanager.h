@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include <QDateTime>
-#include <QString>
-#include <QVariant>
-#include <QSqlDatabase>
-#include <QTimeZone>
 #include <QSharedPointer>
+#include <QSqlDatabase>
+#include <QString>
+#include <QTimeZone>
+#include <QVariant>
 
 namespace storage {
 
@@ -28,16 +28,16 @@ struct DbConfig {
 class DbManager {
    public:
     // 采用懒加载单例（线程安全的 C++11 局部静态）
-    static DbManager &instance();
+    static DbManager& instance();
 
     // 初始化连接(可多次调用，后续重复调用将忽略除非 force=true)
-    bool init(const DbConfig &cfg, bool force = false) noexcept;
+    bool init(const DbConfig& cfg, bool force = false) noexcept;
 
     // 是否已经初始化
     bool initialized() const noexcept { return m_initialized; }
 
     // 取得底层的 QSqlDatabase (throws if not initialized)
-    QSqlDatabase &db();
+    QSqlDatabase& db();
 
     // 关闭连接
     void close();
@@ -46,13 +46,13 @@ class DbManager {
     DbManager() = default;
     ~DbManager() = default;
 
-    DbManager(const DbManager &) = delete;
-    DbManager &operator=(const DbManager &) = delete;
+    DbManager(const DbManager&) = delete;
+    DbManager& operator=(const DbManager&) = delete;
 
     bool m_initialized{false};
-    QSqlDatabase m_db;        // 底层数据库对象（非共享指针）
-    QString m_connectionName; // 连接名
-    DbConfig m_cfg;           // 保存当前配置
+    QSqlDatabase m_db;         // 底层数据库对象（非共享指针）
+    QString m_connectionName;  // 连接名
+    DbConfig m_cfg;            // 保存当前配置
 };
 
 }  // namespace storage
