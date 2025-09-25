@@ -21,6 +21,7 @@ endif()
 # Core formatting / logging libraries used across the project
 find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED) # 使用 spdlog 作为日志库，比 QDebug 快且功能丰富
+find_package(reflectcpp CONFIG REQUIRED) # 作为序列化库，用于配置、网络等模块
 
 # Optional module-specific dependencies
 if(BUILD_HUMAN_RECOGNITION)
@@ -30,5 +31,3 @@ endif()
 if(BUILD_MQTT_CLIENT)
   find_package(PahoMqttCpp CONFIG REQUIRED) # Paho MQTT C++ client (or choose another MQTT client)
 endif()
-
-# TinyORM 作为子项目时，其自身会处理 Qt/其他依赖的查找，无需在此重复。

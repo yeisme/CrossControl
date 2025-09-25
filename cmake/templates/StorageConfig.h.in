@@ -1,0 +1,10 @@
+﻿/* StorageConfig.h.in
+ * Generated configuration template for the Storage module.
+ * This file is processed by CMake to emit StorageConfig.h into the build
+ * directory so consumers (and installed headers) see consistent macro state.
+ */
+#pragma once
+
+/* HAVE_TINYORM and TINYORM_FOUND are defined to 1 or 0 by configure_file. */
+#define HAVE_TINYORM @STORAGE_HAVE_TINYORM@
+#define TINYORM_FOUND @STORAGE_TINYORM_FOUND@

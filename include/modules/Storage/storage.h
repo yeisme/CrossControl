@@ -1,15 +1,21 @@
 ﻿// Simple storage wrapper for database operations.
 #pragma once
 
-namespace Storage {
+#include "dbmanager.h"
 
-class StorageManager {
-public:
-    StorageManager();
-    ~StorageManager();
+namespace storage {
 
-    bool initialize();
-    void shutdown();
+/**
+ * @brief Facade-style helper for initializing and accessing the TinyORM
+ *        DatabaseManager used inside the project.
+ */
+class Storage final {
+   public:
+    // Initialize SQLite database (creates a connection if needed)
+    static bool initSqlite(const QString &path);
+
+    // Obtain reference to underlying Orm::DatabaseManager (throws if not initialized)
+    static Orm::DatabaseManager &db();
 };
 
-} // namespace Storage
+}  // namespace storage

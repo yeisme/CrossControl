@@ -1,6 +1,5 @@
 # Source Files
-set(TS_FILES
-    src/i18n/CrossControl_zh_CN.ts)
+set(TS_FILES src/i18n/CrossControl_zh_CN.ts)
 
 set(PROJECT_SOURCES
     src/main.cpp
@@ -39,22 +38,21 @@ set(PROJECT_SOURCES
 
 # Module source files (for extensibility)
 if(BUILD_HUMAN_RECOGNITION)
-    set(HUMAN_RECOGNITION_SOURCES
-        src/modules/HumanRecognition/humanrecognition.cpp
-        include/modules/HumanRecognition/humanrecognition.h
-    )
+  set(HUMAN_RECOGNITION_SOURCES
+      src/modules/HumanRecognition/humanrecognition.cpp
+      include/modules/HumanRecognition/humanrecognition.h)
 endif()
 
 if(BUILD_AUDIO_VIDEO)
-    set(AUDIO_VIDEO_SOURCES
-        src/modules/AudioVideo/audiovideo.cpp
-        include/modules/AudioVideo/audiovideo.h
-    )
+  set(AUDIO_VIDEO_SOURCES src/modules/AudioVideo/audiovideo.cpp
+                          include/modules/AudioVideo/audiovideo.h)
 endif()
 
-if(BUILD_STORAGE)
-    set(STORAGE_SOURCES
-        src/modules/Storage/storage.cpp
-        include/modules/Storage/storage.h
-    )
-endif()
+set(STORAGE_SOURCES
+  src/modules/Storage/storage.cpp
+  include/modules/Storage/storage.h
+  src/modules/Storage/dbmanager.cpp
+  include/modules/Storage/dbmanager.h)
+
+set(CONFIG_SOURCES src/modules/Config/config.cpp
+                   include/modules/Config/config.h)

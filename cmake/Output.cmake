@@ -21,9 +21,7 @@ if(BUILD_AUDIO_VIDEO)
   list(APPEND _PROJECT_LOCAL_TARGETS AudioVideo)
 endif()
 
-if(BUILD_STORAGE)
-  list(APPEND _PROJECT_LOCAL_TARGETS Storage)
-endif()
+list(APPEND _PROJECT_LOCAL_TARGETS Storage)
 
 foreach(_tgt IN LISTS _PROJECT_LOCAL_TARGETS)
   if(TARGET ${_tgt})
