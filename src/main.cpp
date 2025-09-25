@@ -13,6 +13,8 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <memory>
+#include <QPalette>
+#include <QColor>
 
 #include "crosscontrolwidget.h"
 #include "logging.h"
@@ -51,11 +53,30 @@ static std::unique_ptr<QTranslator> installSystemTranslator(QCoreApplication& ap
     return translator;
 }
 
+// Detect system theme (simple heuristic): if window background is dark -> dark, else light
+static QString detectSystemTheme(QApplication& app) {
+    const QPalette pal = app.palette();
+    const QColor bg = pal.color(QPalette::Window);
+    // perceived luminance
+    const double lum = 0.2126 * bg.red() + 0.7152 * bg.green() + 0.0722 * bg.blue();
+    return (lum < 128.0) ? "dark" : "light";
+}
+
 int main(int argc, char* argv[]) {
     QApplication a(argc, argv);
 
     // 保持翻译器在应用程序的生命周期内有效
     const auto translatorHolder = installSystemTranslator(a);
+
+    // Ensure application locale is set so date/time and weekday names are localized correctly.
+    // If the system locale is Chinese, enforce zh_CN as the default QLocale so UI strings like
+    // weekday names appear in Chinese.
+    const QString sysName = QLocale::system().name();
+    if (sysName.startsWith("zh", Qt::CaseInsensitive)) {
+        QLocale::setDefault(QLocale(QLocale::Chinese, QLocale::China));
+    } else {
+        QLocale::setDefault(QLocale::system());
+    }
 
     // 初始化统一日志，并将 Qt 消息重定向到 spdlog
     logging::LoggerManager::instance().init();
@@ -75,11 +96,14 @@ int main(int argc, char* argv[]) {
     }
 
     // 加载样式
-    // 读取用户上次主题偏好
+    // 读取用户上次主题偏好（默认 auto 跟随系统）
     QSettings settings("CrossControl", "Preferences");
-    const QString theme = settings.value("theme", "light").toString();
-    const QString themePath =
-        theme == "dark" ? ":/themes/themes/dark.qss" : ":/themes/themes/light.qss";
+    const QString themePref = settings.value("theme", "auto").toString();
+    QString appliedTheme = themePref;
+    if (themePref == "auto") {
+        appliedTheme = detectSystemTheme(a);
+    }
+    const QString themePath = appliedTheme == "dark" ? ":/themes/themes/dark.qss" : ":/themes/themes/light.qss";
     QFile qss(themePath);
     if (qss.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString style = QString::fromUtf8(qss.readAll());

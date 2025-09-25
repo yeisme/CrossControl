@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include "weatherwidget.h"
+#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,6 +22,10 @@ class MainWidget : public QWidget {
    private:
     Ui::MainWidget* ui;
     WeatherWidget* weatherWidget;  // 天气组件
+    void updateVisitorStats();
+    // real-time clock
+    QTimer* dateTimeTimer = nullptr;
+    void updateDateTime();
 };
 
 #endif  // MAINWIDGET_H

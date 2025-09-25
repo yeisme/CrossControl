@@ -4,50 +4,42 @@
 <context>
     <name>CrossControlWidget</name>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="68"/>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="210"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="66"/>
         <source>Dashboard</source>
         <translation>仪表盘</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="71"/>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="211"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="69"/>
         <source>Monitor</source>
         <translation>监控</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="74"/>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="212"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="72"/>
         <source>Remote Unlock</source>
         <translation>远程开锁</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="77"/>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="213"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="75"/>
         <source>Visit Records</source>
         <translation>来访记录</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="80"/>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="214"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="78"/>
         <source>Messages</source>
         <translation>留言</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="83"/>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="215"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="81"/>
         <source>System Settings</source>
         <translation>系统设置</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="86"/>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="216"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="84"/>
         <source>Logs</source>
         <translation>运行日志</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="97"/>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="217"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="95"/>
         <source>Logout</source>
         <translation>退出登录</translation>
     </message>
@@ -240,74 +232,127 @@
         <translation type="vanished">晴 空气质量：优质</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="11"/>
+        <location filename="../widgets/mainwidget.ui" line="17"/>
+        <location filename="../widgets/mainwidget.ui" line="58"/>
+        <location filename="../widgets/mainwidget.ui" line="108"/>
+        <source>background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwidget.ui" line="23"/>
         <source>font-size: 16px;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="14"/>
+        <location filename="../widgets/mainwidget.ui" line="26"/>
         <source>14:36 2025/08/19 Tuesday</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="24"/>
+        <location filename="../widgets/mainwidget.ui" line="36"/>
         <source>font-size: 14px; color: #555;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="27"/>
+        <location filename="../widgets/mainwidget.ui" line="39"/>
         <source>29℃~34℃ Sunny Air quality: Good</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="60"/>
-        <location filename="../widgets/mainwidget.ui" line="76"/>
-        <location filename="../widgets/mainwidget.ui" line="92"/>
-        <location filename="../widgets/mainwidget.ui" line="108"/>
-        <location filename="../widgets/mainwidget.ui" line="124"/>
-        <location filename="../widgets/mainwidget.ui" line="156"/>
+        <location filename="../widgets/mainwidget.ui" line="64"/>
+        <source>background: transparent; padding: 8px;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwidget.ui" line="70"/>
+        <location filename="../widgets/mainwidget.cpp" line="123"/>
+        <source>Today: 0</source>
+        <translation>今日: 0</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwidget.ui" line="80"/>
+        <location filename="../widgets/mainwidget.cpp" line="126"/>
+        <source>Week: 0</source>
+        <translation>本周: 0</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwidget.ui" line="90"/>
+        <location filename="../widgets/mainwidget.cpp" line="129"/>
+        <source>Total: 0</source>
+        <translation>今日: 0</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwidget.ui" line="120"/>
+        <location filename="../widgets/mainwidget.ui" line="136"/>
+        <location filename="../widgets/mainwidget.ui" line="152"/>
+        <location filename="../widgets/mainwidget.ui" line="168"/>
+        <location filename="../widgets/mainwidget.ui" line="184"/>
+        <location filename="../widgets/mainwidget.ui" line="216"/>
         <source>font-size: 18px;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="63"/>
+        <location filename="../widgets/mainwidget.ui" line="123"/>
         <source>Monitor</source>
         <translation>监控</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="79"/>
+        <location filename="../widgets/mainwidget.ui" line="139"/>
         <source>Remote Unlock</source>
         <translation>远程开锁</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="95"/>
+        <location filename="../widgets/mainwidget.ui" line="155"/>
         <source>Visit Records</source>
         <translation>来访记录</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="111"/>
+        <location filename="../widgets/mainwidget.ui" line="171"/>
         <source>Messages</source>
         <translation>留言</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="127"/>
+        <location filename="../widgets/mainwidget.ui" line="187"/>
         <source>System Settings</source>
         <translation>系统设置</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="140"/>
+        <location filename="../widgets/mainwidget.ui" line="200"/>
         <source>font-size: 18px; color: #ff4444;</source>
         <translation>font-size: 18px; color: #ff4444;</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="143"/>
+        <location filename="../widgets/mainwidget.ui" line="203"/>
         <source>Logout</source>
         <translation>退出登录</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.ui" line="159"/>
+        <location filename="../widgets/mainwidget.ui" line="219"/>
         <source>Logs</source>
         <translation>运行日志</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwidget.cpp" line="141"/>
+        <source>Visitor Statistics</source>
+        <translation>访客统计</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwidget.cpp" line="177"/>
+        <location filename="../widgets/mainwidget.cpp" line="189"/>
+        <source>Total: %1</source>
+        <translation>总计: %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwidget.cpp" line="178"/>
+        <location filename="../widgets/mainwidget.cpp" line="204"/>
+        <source>Today: %1</source>
+        <translation>今日: %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/mainwidget.cpp" line="179"/>
+        <location filename="../widgets/mainwidget.cpp" line="217"/>
+        <source>Week: %1</source>
+        <translation>本周: %1</translation>
     </message>
 </context>
 <context>
@@ -468,64 +513,42 @@
         <translation>返回主页</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="17"/>
-        <location filename="../widgets/settingwidget.cpp" line="78"/>
+        <location filename="../widgets/settingwidget.cpp" line="15"/>
         <source>Toggle Light/Dark Theme</source>
         <translation>切换主题（明/暗）</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="19"/>
-        <location filename="../widgets/settingwidget.cpp" line="82"/>
+        <location filename="../widgets/settingwidget.cpp" line="17"/>
         <source>Theme</source>
         <translation>主题</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="23"/>
-        <location filename="../widgets/settingwidget.cpp" line="87"/>
+        <location filename="../widgets/settingwidget.cpp" line="21"/>
         <source>Configure Storage</source>
         <translation>配置存储</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="26"/>
-        <location filename="../widgets/settingwidget.cpp" line="90"/>
+        <location filename="../widgets/settingwidget.cpp" line="23"/>
         <source>Storage</source>
         <translation>存储</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="29"/>
-        <location filename="../widgets/settingwidget.cpp" line="95"/>
+        <location filename="../widgets/settingwidget.cpp" line="26"/>
         <source>Manage Accounts</source>
         <translation>管理账户</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="32"/>
-        <location filename="../widgets/settingwidget.cpp" line="98"/>
+        <location filename="../widgets/settingwidget.cpp" line="28"/>
         <source>Accounts</source>
         <translation>账户</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="37"/>
-        <location filename="../widgets/settingwidget.cpp" line="106"/>
         <source>Automatic</source>
-        <translation>自动</translation>
+        <translation type="vanished">自动</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="38"/>
-        <location filename="../widgets/settingwidget.cpp" line="107"/>
-        <source>中文</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../widgets/settingwidget.cpp" line="39"/>
-        <location filename="../widgets/settingwidget.cpp" line="108"/>
-        <source>English</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../widgets/settingwidget.cpp" line="55"/>
-        <location filename="../widgets/settingwidget.cpp" line="114"/>
         <source>Language</source>
-        <translation>语言</translation>
+        <translation type="vanished">语言</translation>
     </message>
 </context>
 <context>
@@ -602,42 +625,42 @@
         <translation>天气组件</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.ui" line="20"/>
+        <location filename="../widgets/weatherwidget.ui" line="35"/>
         <source>font-size: 14px; color: #555;</source>
         <translation>font-size: 14px; color: #555;</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.ui" line="23"/>
+        <location filename="../widgets/weatherwidget.ui" line="38"/>
         <source>Loading...</source>
         <translation>加载中...</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="56"/>
+        <location filename="../widgets/weatherwidget.cpp" line="60"/>
         <source>Failed to fetch weather</source>
         <translation>获取天气失败</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="78"/>
+        <location filename="../widgets/weatherwidget.cpp" line="82"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="80"/>
+        <location filename="../widgets/weatherwidget.cpp" line="84"/>
         <source>Air quality: Unknown</source>
         <translation>空气质量：未知</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="89"/>
+        <location filename="../widgets/weatherwidget.cpp" line="136"/>
         <source>No weather data</source>
         <translation>无天气数据</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="93"/>
+        <location filename="../widgets/weatherwidget.cpp" line="140"/>
         <source>Failed to parse weather data</source>
         <translation>解析天气数据失败</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="97"/>
+        <location filename="../widgets/weatherwidget.cpp" line="144"/>
         <source>Weather data error</source>
         <translation>天气数据异常</translation>
     </message>

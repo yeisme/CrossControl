@@ -1,4 +1,5 @@
-﻿<RCC>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RCC>
   <qresource prefix="/icons">
     <file>icons/dashboard.svg</file>
     <file>icons/monitor.svg</file>
@@ -9,7 +10,11 @@
     <file>icons/logs.svg</file>
     <file>icons/logout.svg</file>
     <file>icons/app.svg</file>
-  <file>icons/brand.svg</file>
+    <file>icons/brand.svg</file>
+    <file>icons/weather_sunny.svg</file>
+    <file>icons/weather_cloudy.svg</file>
+    <file>icons/weather_rainy.svg</file>
+    <file>icons/weather_night.svg</file>
   </qresource>
   <qresource prefix="/themes">
     <file>themes/dark.qss</file>

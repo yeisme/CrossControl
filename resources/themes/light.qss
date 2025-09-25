@@ -65,3 +65,15 @@ QWidget#LogWidget { background: #f3f4f6; }
 QTextEdit#textEdit { background: #f3f4f6; color: #334155; }
 QTextEdit#textEdit ::selection { background: #cfe3ff; color: #0f172a; }
 
+/* Ensure main dashboard frames inherit theme (override inline white backgrounds in .ui) */
+QFrame#frameWeather, QFrame#frameStats, QFrame#frameFunctions, QWidget#visitorStatsWidget {
+	background: #ffffff; /* light card background */
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	padding: 12px;
+}
+
+QLabel#labelDateTime, QLabel#labelWeather { color: #334155; }
+
+QLabel#labelVisitorTitle { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+

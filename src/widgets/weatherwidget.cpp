@@ -4,12 +4,14 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLabel>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QPixmap>
 #include <QTimer>
 
-#include "ui_weatherwidget.h"
 #include "spdlog/spdlog.h"
+#include "ui_weatherwidget.h"
 
 WeatherWidget::WeatherWidget(QWidget* parent) : QWidget(parent), ui(new Ui::WeatherWidget) {
     ui->setupUi(this);
@@ -42,7 +44,8 @@ WeatherWidget::~WeatherWidget() {
 void WeatherWidget::updateWeather() {
     // 使用 wttr.in API 获取广州的天气（可以根据需要修改城市）
     QNetworkRequest request(QUrl("https://wttr.in/Guangzhou?format=j1"));
-    spdlog::debug("WeatherWidget: requesting weather from {}", request.url().toString().toStdString());
+    spdlog::debug("WeatherWidget: requesting weather from {}",
+                  request.url().toString().toStdString());
     networkManager->get(request);
 }
 
@@ -83,7 +86,36 @@ void WeatherWidget::parseWeatherData(const QString& data) {
 
                 QString weatherText =
                     QString("%1℃~%2℃ %3 %4").arg(tempMin, tempMax, weatherDesc, airQuality);
-                ui->labelWeather->setText(weatherText);
+                if (ui && ui->labelWeather) ui->labelWeather->setText(weatherText);
+
+                // Choose an icon based on weather description keywords
+                QString descLower = weatherDesc.toLower();
+                QString iconPath;
+                if (descLower.contains("sun") || descLower.contains("clear") ||
+                    descLower.contains("hot")) {
+                    iconPath = ":/icons/weather_sunny.svg";
+                } else if (descLower.contains("rain") || descLower.contains("shower") ||
+                           descLower.contains("drizzle")) {
+                    iconPath = ":/icons/weather_rainy.svg";
+                } else if (descLower.contains("cloud") || descLower.contains("overcast") ||
+                           descLower.contains("fog")) {
+                    iconPath = ":/icons/weather_cloudy.svg";
+                } else {
+                    // night fallback if contains night or moon
+                    if (descLower.contains("night") || descLower.contains("moon"))
+                        iconPath = ":/icons/weather_night.svg";
+                    else
+                        iconPath = ":/icons/weather_sunny.svg";  // default
+                }
+
+                QLabel* iconLbl = this->findChild<QLabel*>("labelIcon");
+                if (iconLbl) {
+                    QPixmap pm(iconPath);
+                    if (!pm.isNull()) {
+                        iconLbl->setPixmap(
+                            pm.scaled(48, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                    }
+                }
             } else {
                 ui->labelWeather->setText(
                     QCoreApplication::translate("WeatherWidget", "No weather data"));

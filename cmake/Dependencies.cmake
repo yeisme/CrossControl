@@ -1,16 +1,16 @@
 # Dependencies
 find_package(QT NAMES Qt6 Qt5 REQUIRED
-             COMPONENTS CoreTools Widgets LinguistTools Network)
+  COMPONENTS CoreTools Widgets LinguistTools Network)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED
-             COMPONENTS CoreTools Widgets LinguistTools Network)
+  COMPONENTS CoreTools Widgets LinguistTools Network)
 
 message(STATUS "CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
 
 if(DEFINED ENV{VCPKG_ROOT})
   message(STATUS "Using VCPKG from environment variable: $ENV{VCPKG_ROOT}")
   set(CMAKE_TOOLCHAIN_FILE
-      "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-      CACHE STRING "")
+    "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+    CACHE STRING "")
 
   set(OpenCV_ROOT "${VCPKG_ROOT}/installed/x64-windows/share/opencv4")
 

@@ -85,3 +85,15 @@ QFrame#settingDivider { background: #334155; max-height:1px; }
 
 /* 小型圆形徽标（用于提醒） */
 Badge { background: #ef4444; color:#fff; border-radius: 8px; padding: 0 6px; }
+
+/* MainWidget: ensure specific frames/cards use themed background (fix white boxes from inline .ui styles) */
+QFrame#frameWeather, QFrame#frameStats, QFrame#frameFunctions, QWidget#visitorStatsWidget {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+QLabel#labelDateTime, QLabel#labelWeather { color: #e2e8f0; }
+
+QLabel#labelVisitorTitle { font-size: 14px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; }
