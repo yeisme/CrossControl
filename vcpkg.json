@@ -9,9 +9,7 @@
       "features": [
         "contrib",
         "dnn",
-        "photo",
-        "highgui",
-        "ffmpeg"
+        "highgui"
       ]
     }
   ]

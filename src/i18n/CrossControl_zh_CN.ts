@@ -310,19 +310,118 @@
         <translation>留言板</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.ui" line="26"/>
+        <location filename="../widgets/messagewidget.ui" line="24"/>
+        <source>Visitor Name</source>
+        <translation>访客姓名</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.ui" line="34"/>
+        <source>Phone</source>
+        <translation>电话</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.ui" line="44"/>
+        <source>Email</source>
+        <translation>邮箱</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.ui" line="56"/>
         <source>Enter a new message...</source>
         <translation>输入新留言...</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.ui" line="33"/>
+        <location filename="../widgets/messagewidget.ui" line="65"/>
         <source>Send</source>
         <translation>发送</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.ui" line="40"/>
+        <location filename="../widgets/messagewidget.ui" line="72"/>
+        <source>Delete Selected</source>
+        <translation>删除选中</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.ui" line="79"/>
         <source>Back to Main</source>
         <translation>返回主页</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="215"/>
+        <source>Confirm Send</source>
+        <translation>确认发送</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="232"/>
+        <location filename="../widgets/messagewidget.cpp" line="319"/>
+        <source>Error</source>
+        <translation>错误</translation>
+    </message>
+    <message>
+        <source>Failed to save message to database.</source>
+        <translation type="vanished">保存留言到数据库失败。</translation>
+    </message>
+    <message>
+        <source>Failed to save message to database: %1</source>
+        <translation type="vanished">保存留言到数据库失败: %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="46"/>
+        <location filename="../widgets/messagewidget.cpp" line="56"/>
+        <source>Database Error</source>
+        <translation>数据库错误</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="47"/>
+        <source>Failed to initialize database. Message saving will be disabled.</source>
+        <translation>初始化数据库失败。留言保存将被禁用。</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="57"/>
+        <source>Database opened but not available (not open). Message saving will be disabled.</source>
+        <translation>数据库已打开但不可用（未打开）。留言保存将被禁用。</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="139"/>
+        <location filename="../widgets/messagewidget.cpp" line="259"/>
+        <source>(Anonymous)</source>
+        <translation>(匿名)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="156"/>
+        <location filename="../widgets/messagewidget.cpp" line="274"/>
+        <location filename="../widgets/messagewidget.cpp" line="275"/>
+        <source>-</source>
+        <translation>-</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="233"/>
+        <source>Failed to save message to database:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="303"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="303"/>
+        <source>Please select a message to delete.</source>
+        <translation>请选择要删除的留言。</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="309"/>
+        <source>Confirm Delete</source>
+        <translation>确认删除</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="310"/>
+        <source>Delete selected message?</source>
+        <translation>确认删除选中的留言吗？</translation>
+    </message>
+    <message>
+        <location filename="../widgets/messagewidget.cpp" line="319"/>
+        <source>Failed to delete message from database.</source>
+        <translation>从数据库中删除留言失败。</translation>
     </message>
 </context>
 <context>

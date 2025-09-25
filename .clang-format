@@ -2,8 +2,16 @@
 BinPackParameters: false
 BinPackArguments: false
 IndentWidth: 4
-AllowShortFunctionsOnASingleLine: All
+TabWidth: 4
+UseTab: Never
 AllowShortBlocksOnASingleLine: true
 AllowShortIfStatementsOnASingleLine: true
 AllowShortLoopsOnASingleLine: true
 ColumnLimit: 100
+
+# 额外建议设置（覆盖/增强）：
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Inline
+DerivePointerBinding: false
+PointerAlignment: Left
+Language: Cpp

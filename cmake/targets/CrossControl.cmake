@@ -25,8 +25,12 @@ endif()
 
 target_link_libraries(
   CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-  Qt${QT_VERSION_MAJOR}::Network logging)
-target_include_directories(CrossControl PRIVATE include/widgets include/logging)
+  Qt${QT_VERSION_MAJOR}::Network Qt${QT_VERSION_MAJOR}::Sql logging)
+target_include_directories(
+  CrossControl PRIVATE
+  ${CMAKE_SOURCE_DIR}/include
+  ${CMAKE_SOURCE_DIR}/include/widgets
+  ${CMAKE_SOURCE_DIR}/include/logging)
 
 set_target_properties(CrossControl PROPERTIES WIN32_EXECUTABLE TRUE)
 

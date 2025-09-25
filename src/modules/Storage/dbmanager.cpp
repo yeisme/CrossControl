@@ -6,6 +6,7 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QUuid>
+#include <QStandardPaths>
 
 namespace storage {
 
@@ -36,9 +37,40 @@ bool DbManager::init(const DbConfig &cfg, bool force) noexcept {
 
         if (!m_db.open()) {
             qWarning() << "Failed to open database:" << m_db.lastError().text();
-            QSqlDatabase::removeDatabase(m_connectionName);
-            m_connectionName.clear();
-            return false;
+
+            // If using SQLite, try fallback to AppDataLocation (writable)
+            if (cfg.driver.compare("QSQLITE", Qt::CaseInsensitive) == 0) {
+                const QString appDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+                if (!appDataDir.isEmpty()) {
+                    QDir dir(appDataDir);
+                    if (!dir.exists()) dir.mkpath(".");
+                    const QString fallbackPath = dir.filePath(QFileInfo(cfg.database).fileName());
+                    qWarning() << "Attempting fallback DB path:" << fallbackPath;
+
+                    // remove the failed connection and add a new one for fallback
+                    QSqlDatabase::removeDatabase(m_connectionName);
+                    m_connectionName = QStringLiteral("crosscontrol_connection_%1").arg(QUuid::createUuid().toString());
+                    m_db = QSqlDatabase::addDatabase(cfg.driver, m_connectionName);
+                    m_db.setDatabaseName(fallbackPath);
+                    if (m_db.open()) {
+                        qWarning() << "Opened fallback DB:" << fallbackPath;
+                        m_cfg.database = fallbackPath;
+                    } else {
+                        qWarning() << "Fallback DB open also failed:" << m_db.lastError().text();
+                        QSqlDatabase::removeDatabase(m_connectionName);
+                        m_connectionName.clear();
+                        return false;
+                    }
+                } else {
+                    QSqlDatabase::removeDatabase(m_connectionName);
+                    m_connectionName.clear();
+                    return false;
+                }
+            } else {
+                QSqlDatabase::removeDatabase(m_connectionName);
+                m_connectionName.clear();
+                return false;
+            }
         }
 
         // Set PRAGMA foreign_keys = ON for SQLite if requested

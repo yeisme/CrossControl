@@ -13,34 +13,75 @@
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QTextEdit" name="textEditMessages">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="lineEditNewMessage">
-    <property name="placeholderText">
-     <string>Enter a new message...</string>
-    </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="btnSendMessage">
-    <property name="text">
-     <string>Send</string>
-    </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="btnBackFromMessage">
-    <property name="text">
-     <string>Back to Main</string>
-    </property>
-    </widget>
-   </item>
+    <item>
+     <widget class="QListWidget" name="listWidgetMessages"/>
+    </item>
+    <item>
+     <layout class="QFormLayout" name="formLayoutVisitor">
+      <item row="0" column="0">
+        <widget class="QLabel" name="labelVisitorName">
+         <property name="text">
+          <string>Visitor Name</string>
+         </property>
+        </widget>
+      </item>
+      <item row="0" column="1">
+        <widget class="QLineEdit" name="lineEditVisitorName"/>
+      </item>
+      <item row="1" column="0">
+        <widget class="QLabel" name="labelVisitorPhone">
+         <property name="text">
+          <string>Phone</string>
+         </property>
+        </widget>
+      </item>
+      <item row="1" column="1">
+        <widget class="QLineEdit" name="lineEditVisitorPhone"/>
+      </item>
+      <item row="2" column="0">
+        <widget class="QLabel" name="labelVisitorEmail">
+         <property name="text">
+          <string>Email</string>
+         </property>
+        </widget>
+      </item>
+      <item row="2" column="1">
+        <widget class="QLineEdit" name="lineEditVisitorEmail"/>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="lineEditNewMessage">
+      <property name="placeholderText">
+        <string>Enter a new message...</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayoutButtons">
+      <item>
+        <widget class="QPushButton" name="btnSendMessage">
+         <property name="text">
+          <string>Send</string>
+         </property>
+        </widget>
+      </item>
+      <item>
+        <widget class="QPushButton" name="btnDeleteMessage">
+         <property name="text">
+          <string>Delete Selected</string>
+         </property>
+        </widget>
+      </item>
+      <item>
+        <widget class="QPushButton" name="btnBackFromMessage">
+         <property name="text">
+          <string>Back to Main</string>
+         </property>
+        </widget>
+      </item>
+     </layout>
+    </item>
   </layout>
  </widget>
  <resources/>
