@@ -1,0 +1,87 @@
+﻿/* Dark theme stylesheet for CrossControl */
+
+/* 基础调色板 */
+* {
+  font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+
+QWidget { background: #0f172a; color: #e2e8f0; }
+#frameLeft { background: #0f172a; color: #e2e8f0; }
+#frameLeft QLabel#labelBrand { font-size: 28px; font-weight: 700; color: #f1f5f9; }
+#frameLeft QLabel#labelSlogan { font-size: 12px; color: #cbd5e1; }
+QFrame#Card, QWidget#Card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; }
+
+/* 滚动条 */
+QScrollBar:vertical { background: #1e293b; width: 12px; margin: 0; }
+QScrollBar::handle:vertical { background: #334155; border-radius: 6px; min-height: 24px; }
+QScrollBar::handle:vertical:hover { background: #475569; }
+QScrollBar::add-line, QScrollBar::sub-line { height: 0; }
+
+/* 侧边栏 */
+#sidebar { background: #111827; border-right: 1px solid #1e293b; }
+#sidebar QLabel { color: #f1f5f9; }
+#sidebar QPushButton { background: transparent; border: 0; color: #cbd5e1; border-radius: 6px; }
+#sidebar QPushButton:hover { background: rgba(255,255,255,0.06); color: #f8fafc; }
+#sidebar QPushButton:pressed { background: rgba(255,255,255,0.12); }
+#sidebar QPushButton[active="true"] { background: #334155; color: #f1f5f9; }
+#sidebar QPushButton#btnLogout { color: #f87171; }
+#sidebar QPushButton#btnLogout:hover { background: rgba(239,68,68,0.15); }
+
+/* 输入框 */
+QLineEdit { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 6px 10px; selection-background-color: #3b82f6; selection-color: #fff; }
+QLineEdit:focus { border: 1px solid #3b82f6; }
+
+/* 标签与错误信息 */
+QLabel#error, QLabel#labelLoginError, QLabel#labelRegisterError { color: #f87171; font-size: 12px; }
+
+/* 按钮 */
+QPushButton { background: #334155; border: 1px solid #334155; border-radius: 10px; padding: 8px 18px; font-weight: 500; }
+QPushButton:hover { background: #3e4c63; }
+QPushButton:pressed { background: #2d3a4f; }
+QPushButton:disabled { background: #1e293b; color: #64748b; border-color: #1e293b; }
+
+/* 主要操作按钮 */
+QPushButton.primary { background: #2563eb; border-color: #2563eb; color: #fff; }
+QPushButton.primary:hover { background: #1d4ed8; }
+QPushButton.primary:pressed { background: #1e40af; }
+
+/* 标签页 / 工具栏（如使用） */
+QTabBar::tab { background: #1e293b; color: #cbd5e1; padding: 6px 12px; border-top-left-radius: 6px; border-top-right-radius: 6px; }
+QTabBar::tab:selected { background: #334155; color: #f1f5f9; }
+QTabWidget::pane { border: 1px solid #334155; top: -1px; }
+
+/* 表格 */
+QHeaderView::section { background: #1e293b; padding: 6px 8px; border: 0; border-right: 1px solid #334155; }
+QTableView { gridline-color: #334155; selection-background-color: #2563eb; selection-color: #fff; }
+
+/* 消息弹窗 */
+QMessageBox { background: #1e293b; }
+QMessageBox QLabel { color: #e2e8f0; }
+QMessageBox QPushButton { min-width: 80px; }
+
+/* 复选框/单选按钮 */
+QCheckBox, QRadioButton { spacing: 6px; }
+QCheckBox::indicator, QRadioButton::indicator { width: 16px; height: 16px; }
+QCheckBox::indicator { border: 1px solid #475569; border-radius: 4px; background: #0f172a; }
+QCheckBox::indicator:checked { background: #3b82f6; border-color: #3b82f6; image: url(none); }
+QRadioButton::indicator { border: 2px solid #475569; border-radius: 9px; background: #0f172a; }
+QRadioButton::indicator:checked { background: #3b82f6; border: 4px solid #1e293b; }
+
+/* 列表视图 hover */
+QListView, QTreeView, QTableView { background: #0f172a; alternate-background-color: #132238; }
+QListView::item:hover, QTreeView::item:hover { background: #1e293b; }
+QListView::item:selected, QTreeView::item:selected { background: #334155; }
+
+/* Setting rows */
+QWidget#settingRow { background: transparent; }
+QWidget#settingRow:hover { background: #1e293b; border-radius: 8px; }
+QLabel#settingLabel { font-size: 14px; color: #cbd5e1; }
+QFrame#settingDivider { background: #334155; max-height:1px; }
+
+/* 状态强调（绿色/红色） */
+.status-success { color: #34d399; }
+.status-error { color: #f87171; }
+.status-warning { color: #fbbf24; }
+
+/* 小型圆形徽标（用于提醒） */
+Badge { background: #ef4444; color:#fff; border-radius: 8px; padding: 0 6px; }

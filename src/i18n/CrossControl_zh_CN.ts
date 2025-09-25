@@ -4,42 +4,42 @@
 <context>
     <name>CrossControlWidget</name>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="52"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="65"/>
         <source>Dashboard</source>
         <translation>仪表盘</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="53"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="67"/>
         <source>Monitor</source>
         <translation>监控</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="54"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="69"/>
         <source>Remote Unlock</source>
         <translation>远程开锁</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="55"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="72"/>
         <source>Visit Records</source>
         <translation>来访记录</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="56"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="74"/>
         <source>Messages</source>
         <translation>留言</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="57"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="77"/>
         <source>System Settings</source>
         <translation>系统设置</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="58"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="79"/>
         <source>Logs</source>
         <translation>运行日志</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="67"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="89"/>
         <source>Logout</source>
         <translation>退出登录</translation>
     </message>
@@ -90,53 +90,52 @@
         <translation>登录 / 注册</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="15"/>
         <source>QFrame#frameLeft { background: #0f172a; color: #e2e8f0; } QLabel#labelBrand { font-size: 28px; font-weight: 700; color: #f1f5f9; } QLabel#labelSlogan { font-size: 12px; color: #cbd5e1; }</source>
-        <translation>QFrame#frameLeft { background: #0f172a; color: #e2e8f0; } QLabel#labelBrand { font-size: 28px; font-weight: 700; color: #f1f5f9; } QLabel#labelSlogan { font-size: 12px; color: #cbd5e1; }</translation>
+        <translation type="vanished">QFrame#frameLeft { background: #0f172a; color: #e2e8f0; } QLabel#labelBrand { font-size: 28px; font-weight: 700; color: #f1f5f9; } QLabel#labelSlogan { font-size: 12px; color: #cbd5e1; }</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="34"/>
+        <location filename="../widgets/loginwidget.ui" line="31"/>
         <source>Smart Home Control</source>
         <translation>智能家居中控</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="44"/>
+        <location filename="../widgets/loginwidget.ui" line="41"/>
         <source>Safer · More Convenient · Smarter</source>
         <translation>更安全 · 更便捷 · 更智能</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="73"/>
+        <location filename="../widgets/loginwidget.ui" line="70"/>
         <source>QFrame#frameRight { background: #ffffff; } QLineEdit { padding: 8px; } QPushButton { padding: 8px 12px; }</source>
         <translation>QFrame#frameRight { background: #ffffff; } QLineEdit { padding: 8px; } QPushButton { padding: 8px 12px; }</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="89"/>
-        <location filename="../widgets/loginwidget.ui" line="151"/>
+        <location filename="../widgets/loginwidget.ui" line="86"/>
+        <location filename="../widgets/loginwidget.ui" line="148"/>
         <source>Email</source>
         <translation>邮箱</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="102"/>
+        <location filename="../widgets/loginwidget.ui" line="99"/>
         <source>Password (min 8 chars)</source>
         <translation>密码（至少 8 个字符）</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="145"/>
+        <location filename="../widgets/loginwidget.ui" line="142"/>
         <source>Register</source>
         <translation>注册</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="164"/>
+        <location filename="../widgets/loginwidget.ui" line="161"/>
         <source>Set password (min 8 chars)</source>
         <translation>设置密码（至少 8 个字符）</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="180"/>
+        <location filename="../widgets/loginwidget.ui" line="177"/>
         <source>Confirm password</source>
         <translation>确认密码</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="212"/>
+        <location filename="../widgets/loginwidget.ui" line="209"/>
         <source>Register &amp; Sign In</source>
         <translation>注册并登录</translation>
     </message>
@@ -149,71 +148,71 @@
         <translation type="vanished">密码</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.ui" line="83"/>
-        <location filename="../widgets/loginwidget.ui" line="134"/>
+        <location filename="../widgets/loginwidget.ui" line="80"/>
+        <location filename="../widgets/loginwidget.ui" line="131"/>
         <source>Login</source>
         <translation>登录</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="76"/>
+        <location filename="../widgets/loginwidget.cpp" line="89"/>
         <source>Show/Hide password</source>
         <translation>显示/隐藏密码</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="100"/>
-        <location filename="../widgets/loginwidget.cpp" line="142"/>
+        <location filename="../widgets/loginwidget.cpp" line="113"/>
+        <location filename="../widgets/loginwidget.cpp" line="157"/>
         <source>Please enter a valid email and a password with at least 8 characters</source>
         <translation>请输入有效的邮箱和至少 8 个字符的密码·</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="110"/>
-        <location filename="../widgets/loginwidget.cpp" line="119"/>
-        <location filename="../widgets/loginwidget.cpp" line="129"/>
+        <location filename="../widgets/loginwidget.cpp" line="123"/>
+        <location filename="../widgets/loginwidget.cpp" line="132"/>
+        <location filename="../widgets/loginwidget.cpp" line="144"/>
         <source>Login Failed</source>
         <translation>登录失败</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="111"/>
+        <location filename="../widgets/loginwidget.cpp" line="124"/>
         <source>This email is not registered. Please register first.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="113"/>
+        <location filename="../widgets/loginwidget.cpp" line="126"/>
         <source>Email not registered</source>
         <translation>邮箱未注册</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="119"/>
+        <location filename="../widgets/loginwidget.cpp" line="133"/>
         <source>Email does not match the registered account.</source>
         <translation>邮箱与注册账户不匹配。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="120"/>
+        <location filename="../widgets/loginwidget.cpp" line="135"/>
         <source>Email mismatch</source>
         <translation>邮箱不匹配</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="129"/>
+        <location filename="../widgets/loginwidget.cpp" line="144"/>
         <source>Incorrect password. Please try again.</source>
         <translation>密码错误，请重试。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="130"/>
+        <location filename="../widgets/loginwidget.cpp" line="145"/>
         <source>Incorrect password</source>
         <translation>密码错误</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="149"/>
+        <location filename="../widgets/loginwidget.cpp" line="164"/>
         <source>Registration Failed</source>
         <translation>注册失败</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="150"/>
+        <location filename="../widgets/loginwidget.cpp" line="165"/>
         <source>Passwords do not match.</source>
         <translation>密码不匹配。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="151"/>
+        <location filename="../widgets/loginwidget.cpp" line="166"/>
         <source>Passwords do not match</source>
         <translation>密码不匹配</translation>
     </message>
@@ -357,9 +356,39 @@
         <translation>系统设置</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.ui" line="22"/>
+        <location filename="../widgets/settingwidget.ui" line="56"/>
         <source>Back to Main</source>
         <translation>返回主页</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="14"/>
+        <source>Toggle Light/Dark Theme</source>
+        <translation>切换主题（明/暗）</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="16"/>
+        <source>Theme</source>
+        <translation>主题</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="20"/>
+        <source>Configure Storage</source>
+        <translation>配置存储</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="22"/>
+        <source>Storage</source>
+        <translation>存储</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="25"/>
+        <source>Manage Accounts</source>
+        <translation>管理账户</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="27"/>
+        <source>Accounts</source>
+        <translation>账户</translation>
     </message>
 </context>
 <context>

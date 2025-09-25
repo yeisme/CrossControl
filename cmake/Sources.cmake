@@ -33,6 +33,7 @@ set(PROJECT_SOURCES
     src/widgets/weatherwidget.cpp
     include/widgets/weatherwidget.h
     src/widgets/weatherwidget.ui
+  resources/icons.qrc
     include/logging/logging.h
     ${TS_FILES})
 

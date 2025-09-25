@@ -20,6 +20,16 @@
 
 LoginWidget::LoginWidget(QWidget *parent) : QWidget(parent), ui(new Ui::LoginWidget) {
     ui->setupUi(this);
+    // 在左侧 frame 动态添加品牌图标
+    if (auto frame = findChild<QFrame*>(QStringLiteral("frameLeft"))) {
+        if (auto vlay = frame->findChild<QVBoxLayout*>(QStringLiteral("verticalLayoutLeft"))) {
+            auto *logo = new QLabel(frame);
+            logo->setObjectName("labelBrandIcon");
+            logo->setAlignment(Qt::AlignHCenter);
+            logo->setPixmap(QIcon(":/icons/icons/brand.svg").pixmap(72,72));
+            vlay->insertWidget(1, logo); // 放在顶部 spacer 与文字之间
+        }
+    }
 
     // Connect real-time validation
     connect(ui->lineEditLoginEmail,
@@ -51,24 +61,27 @@ LoginWidget::LoginWidget(QWidget *parent) : QWidget(parent), ui(new Ui::LoginWid
     // 如果存在，设置密码可见性切换操作
     auto setupPasswordToggle = [](QLineEdit *le) {
         if (!le) return;
-        // Create a custom dark eye icon for better contrast
-        QPixmap pm(16, 16);
-        pm.fill(Qt::transparent);
-        {
+        auto makeIcon = [le]() {
+            QColor base = le->palette().color(QPalette::Text);
+            if (base.lightness() < 128)
+                base = base.lighter(160);
+            else
+                base = base.darker(140);
+            QPixmap pm(18, 18);
+            pm.fill(Qt::transparent);
             QPainter p(&pm);
             p.setRenderHint(QPainter::Antialiasing, true);
-            QPen pen(QColor(30, 41, 59));  // slate-800 tone dark
+            QPen pen(base);
             pen.setWidth(2);
             p.setPen(pen);
-            // Eye outline
-            QRectF r(2, 4, 12, 8);
+            QRectF r(3, 5, 12, 8);
             p.drawArc(r, 30 * 16, 120 * 16);
             p.drawArc(r, (180 + 30) * 16, 120 * 16);
-            // Pupil
-            p.setBrush(QBrush(QColor(30, 41, 59)));
-            p.drawEllipse(QPointF(8, 8), 2.2, 2.2);
-        }
-        auto action = le->addAction(QIcon(pm), QLineEdit::TrailingPosition);
+            p.setBrush(base);
+            p.drawEllipse(QPointF(9, 9), 2.4, 2.4);
+            return QIcon(pm);
+        };
+        auto action = le->addAction(makeIcon(), QLineEdit::TrailingPosition);
         action->setCheckable(true);
         QObject::connect(action, &QAction::toggled, le, [le](bool checked) {
             le->setEchoMode(checked ? QLineEdit::Normal : QLineEdit::Password);
@@ -115,9 +128,11 @@ void LoginWidget::on_pushButtonLogin_clicked() {
     }
 
     if (email.compare(savedEmail, Qt::CaseInsensitive) != 0) {
-        QMessageBox::warning(
-            this, tr("Login Failed"), tr("Email does not match the registered account."));
-        showLoginError(tr("Email mismatch"));
+        QMessageBox::warning(this,
+                             QCoreApplication::translate("LoginWidget", "Login Failed"),
+                             QCoreApplication::translate(
+                                 "LoginWidget", "Email does not match the registered account."));
+        showLoginError(QCoreApplication::translate("LoginWidget", "Email mismatch"));
         return;
     }
 

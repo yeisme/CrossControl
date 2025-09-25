@@ -18,9 +18,14 @@ class SettingWidget : public QWidget {
 
    signals:
     void backToMain();
+    void toggleThemeRequested();  // 请求切换主题
 
    private slots:
     void on_btnBackFromSetting_clicked();
+    void on_btnToggleTheme_clicked();
+
+        private:
+         QWidget* addSettingRow(const QString& title, QWidget* control);
 
    private:
     Ui::SettingWidget *ui;

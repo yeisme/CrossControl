@@ -2,6 +2,12 @@
 #include "crosscontrolwidget.h"
 
 #include <QCoreApplication>
+#include <QStyle>
+#include <QFile>
+#include <QApplication>
+#include <QLineEdit>
+#include <QLabel>
+#include <QSettings>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
@@ -41,21 +47,37 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     sideLayout->addWidget(lblTitle);
 
     // 侧边栏按钮构造
-    auto makeBtn = [](const QString& text) {
+    auto makeBtn = [](const QString& text, const QString& iconPath, const QString& name) {
         auto* b = new QPushButton(text);
-        b->setCheckable(false);
-        b->setMinimumHeight(36);
-        b->setStyleSheet("text-align: left; padding: 6px 10px; font-size: 14px;");
+        b->setObjectName(name);
+        b->setCheckable(true);
+        b->setMinimumHeight(38);
+        b->setCursor(Qt::PointingHandCursor);
+        b->setStyleSheet("text-align: left; padding: 6px 14px; font-size: 14px;");
+        if (!iconPath.isEmpty()) {
+            QIcon icon(iconPath);
+            b->setIcon(icon);
+            b->setIconSize(QSize(18,18));
+        }
         return b;
     };
 
-    btnDashboard = makeBtn(QCoreApplication::translate("CrossControlWidget", "Dashboard"));
-    btnMonitor = makeBtn(QCoreApplication::translate("CrossControlWidget", "Monitor"));
-    btnUnlock = makeBtn(QCoreApplication::translate("CrossControlWidget", "Remote Unlock"));
-    btnVisitRecord = makeBtn(QCoreApplication::translate("CrossControlWidget", "Visit Records"));
-    btnMessage = makeBtn(QCoreApplication::translate("CrossControlWidget", "Messages"));
-    btnSetting = makeBtn(QCoreApplication::translate("CrossControlWidget", "System Settings"));
-    btnLogs = makeBtn(QCoreApplication::translate("CrossControlWidget", "Logs"));
+    btnDashboard = makeBtn(QCoreApplication::translate("CrossControlWidget", "Dashboard"),
+                           ":/icons/icons/dashboard.svg", "btnDashboard");
+    btnMonitor = makeBtn(QCoreApplication::translate("CrossControlWidget", "Monitor"),
+                         ":/icons/icons/monitor.svg", "btnMonitor");
+    btnUnlock = makeBtn(QCoreApplication::translate("CrossControlWidget", "Remote Unlock"),
+                        ":/icons/icons/unlock.svg", "btnUnlock");
+    btnVisitRecord = makeBtn(
+        QCoreApplication::translate("CrossControlWidget", "Visit Records"),
+        ":/icons/icons/visit.svg", "btnVisitRecord");
+    btnMessage = makeBtn(QCoreApplication::translate("CrossControlWidget", "Messages"),
+                         ":/icons/icons/message.svg", "btnMessage");
+    btnSetting = makeBtn(
+        QCoreApplication::translate("CrossControlWidget", "System Settings"),
+        ":/icons/icons/setting.svg", "btnSetting");
+    btnLogs = makeBtn(QCoreApplication::translate("CrossControlWidget", "Logs"),
+                      ":/icons/icons/logs.svg", "btnLogs");
 
     for (auto* b :
          {btnDashboard, btnMonitor, btnUnlock, btnVisitRecord, btnMessage, btnSetting, btnLogs}) {
@@ -64,9 +86,11 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
 
     sideLayout->addStretch(1);
 
-    btnLogout = makeBtn(QCoreApplication::translate("CrossControlWidget", "Logout"));
-    btnLogout->setStyleSheet(
-        "text-align: left; padding: 6px 10px; font-size: 14px; color: #ff4444;");
+    btnLogout = makeBtn(QCoreApplication::translate("CrossControlWidget", "Logout"),
+                        ":/icons/icons/logout.svg", "btnLogout");
+    btnLogout->setCheckable(false);
+    btnLogout->setProperty("destructive", true);
+    btnLogout->setStyleSheet("text-align: left; padding: 6px 10px; font-size: 14px; color: #ff7777;");
     sideLayout->addWidget(btnLogout);
 
     // 右侧内容堆栈
@@ -105,13 +129,44 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     connect(loginWidget, &LoginWidget::loginSuccess, this, &CrossControlWidget::onLoginSuccess);
 
     // 侧边栏导航
-    connect(btnDashboard, &QPushButton::clicked, this, &CrossControlWidget::showMainPage);
-    connect(btnMonitor, &QPushButton::clicked, this, &CrossControlWidget::showMonitorPage);
-    connect(btnUnlock, &QPushButton::clicked, this, &CrossControlWidget::showUnlockPage);
-    connect(btnVisitRecord, &QPushButton::clicked, this, &CrossControlWidget::showVisitRecordPage);
-    connect(btnMessage, &QPushButton::clicked, this, &CrossControlWidget::showMessagePage);
-    connect(btnSetting, &QPushButton::clicked, this, &CrossControlWidget::showSettingPage);
-    connect(btnLogs, &QPushButton::clicked, this, &CrossControlWidget::showLogPage);
+    auto setActive = [this](QPushButton* active) {
+        for (auto* b : {btnDashboard, btnMonitor, btnUnlock, btnVisitRecord, btnMessage, btnSetting,
+                        btnLogs}) {
+            if (!b) continue;
+            b->setProperty("active", b == active ? "true" : "false");
+            b->style()->unpolish(b);
+            b->style()->polish(b);
+        }
+    };
+
+    connect(btnDashboard, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnDashboard);
+        showMainPage();
+    });
+    connect(btnMonitor, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnMonitor);
+        showMonitorPage();
+    });
+    connect(btnUnlock, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnUnlock);
+        showUnlockPage();
+    });
+    connect(btnVisitRecord, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnVisitRecord);
+        showVisitRecordPage();
+    });
+    connect(btnMessage, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnMessage);
+        showMessagePage();
+    });
+    connect(btnSetting, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnSetting);
+        showSettingPage();
+    });
+    connect(btnLogs, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnLogs);
+        showLogPage();
+    });
     connect(btnLogout, &QPushButton::clicked, this, &CrossControlWidget::onLogout);
 
     // 子页面返回主页面
@@ -120,6 +175,8 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
         visitRecordWidget, &VisitRecordWidget::backToMain, this, &CrossControlWidget::showMainPage);
     connect(messageWidget, &MessageWidget::backToMain, this, &CrossControlWidget::showMainPage);
     connect(settingWidget, &SettingWidget::backToMain, this, &CrossControlWidget::showMainPage);
+    connect(settingWidget, &SettingWidget::toggleThemeRequested, this,
+        [this]() { toggleTheme(); });
     connect(unlockWidget, &UnlockWidget::cancelUnlock, this, &CrossControlWidget::showMainPage);
     connect(logWidget, &LogWidget::backToMain, this, &CrossControlWidget::showMainPage);
 
@@ -132,6 +189,8 @@ CrossControlWidget::~CrossControlWidget() = default;
 void CrossControlWidget::onLoginSuccess() {
     rootStack->setCurrentWidget(appPage);
     showMainPage();
+    // 默认激活 Dashboard
+    QMetaObject::invokeMethod(btnDashboard, "click", Qt::QueuedConnection);
 }
 
 void CrossControlWidget::onLogout() { rootStack->setCurrentWidget(loginWidget); }
@@ -145,3 +204,45 @@ void CrossControlWidget::showMessagePage() { contentStack->setCurrentWidget(mess
 void CrossControlWidget::showSettingPage() { contentStack->setCurrentWidget(settingWidget); }
 void CrossControlWidget::showUnlockPage() { contentStack->setCurrentWidget(unlockWidget); }
 void CrossControlWidget::showLogPage() { contentStack->setCurrentWidget(logWidget); }
+
+// 主题管理：缓存当前主题（应用启动在 main.cpp 中默认加载 light）
+void CrossControlWidget::toggleTheme() {
+    static bool dark = false;
+    dark = !dark;
+    const QString path = dark ? ":/themes/themes/dark.qss" : ":/themes/themes/light.qss";
+    {
+        QSettings settings("CrossControl", "Preferences");
+        settings.setValue("theme", dark ? "dark" : "light");
+    }
+    QFile f(path);
+    if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        if (auto *core = QApplication::instance()) {
+            auto *app = static_cast<QApplication*>(core);
+            app->setStyleSheet(QString::fromUtf8(f.readAll()));
+        }
+    }
+    // 刷新登录界面上的密码可见性图标（重新触发构造逻辑比较复杂，这里简单地通过 focus/clear palette 方式强制重绘）
+    if (loginWidget) {
+        for (auto *le : loginWidget->findChildren<QLineEdit*>()) {
+            if (le->echoMode() == QLineEdit::Password || le->echoMode() == QLineEdit::Normal) {
+                // 通过改变字体再复原触发 repaint
+                auto fnt = le->font();
+                fnt.setPointSize(fnt.pointSize());
+                le->setFont(fnt);
+                le->update();
+            }
+        }
+        // 如果当前是浅色主题（dark == false），修正那些在 UI 设计器中被硬编码为白色的标签文字颜色
+        if (!dark) {
+            for (auto *lbl : loginWidget->findChildren<QLabel*>()) {
+                auto pal = lbl->palette();
+                const QColor current = pal.color(QPalette::WindowText);
+                // 若亮度非常高(>220) 且接近白色，则替换为深色可读文本
+                if (current.lightness() > 220) {
+                    pal.setColor(QPalette::WindowText, QColor("#1e293b"));
+                    lbl->setPalette(pal);
+                }
+            }
+        }
+    }
+}

@@ -62,6 +62,7 @@ class CrossControlWidget : public QWidget {
     void showSettingPage();
     void showUnlockPage();
     void showLogPage();
+    void toggleTheme();
 };
 
 #endif  // CROSSCONTROLWIDGET_H

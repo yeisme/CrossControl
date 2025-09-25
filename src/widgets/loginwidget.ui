@@ -7,13 +7,10 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayoutRoot">
    <item>
-    <widget class="QFrame" name="frameLeft">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-   <property name="styleSheet">
-    <string>QFrame#frameLeft { background: #0f172a; color: #e2e8f0; } QLabel#labelBrand { font-size: 28px; font-weight: 700; color: #f1f5f9; } QLabel#labelSlogan { font-size: 12px; color: #cbd5e1; }</string>
-   </property>
+      <widget class="QFrame" name="frameLeft">
+       <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+       </property>
      <layout class="QVBoxLayout" name="verticalLayoutLeft">
       <item>
        <spacer name="verticalSpacerLeftTop">

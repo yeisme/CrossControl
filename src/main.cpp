@@ -9,6 +9,9 @@
 #include <QTranslator>
 #include <QVBoxLayout>
 #include <QWidget>
+#include <QFile>
+#include <QIcon>
+#include <QSettings>
 #include <memory>
 
 #include "crosscontrolwidget.h"
@@ -62,6 +65,23 @@ int main(int argc, char *argv[]) {
 
     CrossControlWidget mainWindow;
     mainWindow.setWindowTitle("CrossControl");
+    // 应用程序图标
+    QIcon appIcon(":/icons/icons/app.svg");
+    if (!appIcon.isNull()) {
+        mainWindow.setWindowIcon(appIcon);
+        QApplication::setWindowIcon(appIcon);
+    }
+
+    // 加载样式
+    // 读取用户上次主题偏好
+    QSettings settings("CrossControl", "Preferences");
+    const QString theme = settings.value("theme", "light").toString();
+    const QString themePath = theme == "dark" ? ":/themes/themes/dark.qss" : ":/themes/themes/light.qss";
+    QFile qss(themePath);
+    if (qss.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        const QString style = QString::fromUtf8(qss.readAll());
+        a.setStyleSheet(style);
+    }
     mainWindow.setMinimumSize(1024, 640);
     mainWindow.show();
     const int rc = a.exec();

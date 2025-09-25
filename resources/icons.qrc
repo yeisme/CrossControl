@@ -1,0 +1,18 @@
+﻿<RCC>
+  <qresource prefix="/icons">
+    <file>icons/dashboard.svg</file>
+    <file>icons/monitor.svg</file>
+    <file>icons/unlock.svg</file>
+    <file>icons/visit.svg</file>
+    <file>icons/message.svg</file>
+    <file>icons/setting.svg</file>
+    <file>icons/logs.svg</file>
+    <file>icons/logout.svg</file>
+    <file>icons/app.svg</file>
+  <file>icons/brand.svg</file>
+  </qresource>
+  <qresource prefix="/themes">
+    <file>themes/dark.qss</file>
+    <file>themes/light.qss</file>
+  </qresource>
+</RCC>
