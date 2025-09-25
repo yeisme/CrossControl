@@ -3,10 +3,9 @@
 #include <QDateTime>
 #include <QString>
 #include <QVariant>
-#include <QVector>
-#include <memory>
-#include <orm/db.hpp>
-#include <orm/exceptions/ormerror.hpp>
+#include <QSqlDatabase>
+#include <QTimeZone>
+#include <QSharedPointer>
 
 namespace storage {
 
@@ -23,7 +22,7 @@ struct DbConfig {
 };
 
 /**
- * @brief 数据库管理类
+ * @brief 基于 Qt QSql 的数据库管理类（单例）
  *
  */
 class DbManager {
@@ -37,8 +36,8 @@ class DbManager {
     // 是否已经初始化
     bool initialized() const noexcept { return m_initialized; }
 
-    // 取得底层的 Orm::DatabaseManager 共享指针
-    Orm::DatabaseManager &db();
+    // 取得底层的 QSqlDatabase (throws if not initialized)
+    QSqlDatabase &db();
 
     // 关闭连接
     void close();
@@ -51,8 +50,9 @@ class DbManager {
     DbManager &operator=(const DbManager &) = delete;
 
     bool m_initialized{false};
-    std::shared_ptr<Orm::DatabaseManager> m_manager;  // shared_ptr 得到的管理器
-    DbConfig m_cfg;                                   // 保存当前配置
+    QSqlDatabase m_db;        // 底层数据库对象（非共享指针）
+    QString m_connectionName; // 连接名
+    DbConfig m_cfg;           // 保存当前配置
 };
 
 }  // namespace storage

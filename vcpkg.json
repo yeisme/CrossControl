@@ -4,6 +4,15 @@
   "dependencies": [
     "fmt",
     "spdlog",
-    "range-v3"
+    {
+      "name": "opencv4",
+      "features": [
+        "contrib",
+        "dnn",
+        "photo",
+        "highgui",
+        "ffmpeg"
+      ]
+    }
   ]
 }

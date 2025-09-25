@@ -18,8 +18,7 @@
 #include "spdlog/spdlog.h"
 #include "logging.h"
 
-// 为当前系统用户界面语言安装翻译器。如果加载并安装了翻译，则返回一个非空的 unique_ptr；否则返回
-// nullptr。
+// 为当前系统用户界面语言安装翻译器。如果加载并安装了翻译，则返回一个非空的 unique_ptr；否则返回 nullptr。
 static std::unique_ptr<QTranslator> installSystemTranslator(QCoreApplication &app) {
     auto translator = std::make_unique<QTranslator>();
     const QStringList uiLanguages = QLocale::system().uiLanguages();
