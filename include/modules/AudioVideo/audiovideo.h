@@ -16,6 +16,16 @@
 #include <QtCore/qglobal.h>
 
 #include <QObject>
+#include <QString>
+
+// Forward declarations for Qt Multimedia types used by the implementation
+class QMediaPlayer;
+class QAudioSource;
+class QAudioSink;
+class QCamera;
+class QMediaRecorder;
+class QVideoSink;
+class QAudioBuffer;
 
 #ifdef AudioVideo_EXPORTS
 #define AUDIOVIDEO_EXPORT Q_DECL_EXPORT
@@ -52,6 +62,7 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      * @param parent 父QObject。默认为nullptr。
      */
     explicit AudioVideo(QObject* parent = nullptr);
+    ~AudioVideo();
 
     /**
      * @brief 开始录制音频/视频到指定的输出路径。
@@ -127,6 +138,11 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      */
     void processAudioBuffer(const QByteArray& buffer);
 
+    /**
+     * @brief 获取最后一次错误的文字描述
+     */
+    QString lastError() const;
+
    signals:
     /**
      * @brief 录制已开始时发出的信号。
@@ -160,6 +176,11 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      */
     void audioBufferProcessed(const QByteArray& processedBuffer);
 
+    /**
+     * @brief 当内部发生错误时发出。包含错误描述。
+     */
+    void errorOccurred(const QString& errorString);
+
    private:
     /**
      * @brief 私有成员，指示录制是否正在进行。
@@ -174,6 +195,10 @@ class AUDIOVIDEO_EXPORT AudioVideo : public QObject {
      * 保存当前录制正在保存的文件路径。
      */
     QString m_currentOutputPath;
+
+    // Private opaque pointer to Qt multimedia objects (pimpl-ish, kept simple)
+    struct Impl;
+    Impl* m_impl;
 };
 
 #endif  // AUDIOVIDEO_H

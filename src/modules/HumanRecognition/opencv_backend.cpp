@@ -100,6 +100,18 @@ int OpenCVHumanRecognitionBackend::enrollPerson(const PersonInfo& info,
     QSqlQuery q(db);
     db.transaction();
     int count = 0;
+    // Ensure person record exists (upsert) so listPersons() will show this person
+    QSqlQuery qPerson(db);
+    qPerson.prepare(
+        "INSERT INTO persons(person_id,name,extra,created_at) VALUES(?,?,?,strftime('%s','now'))"
+        " ON CONFLICT(person_id) DO UPDATE SET name=excluded.name, extra=excluded.extra");
+    qPerson.addBindValue(info.personId);
+    qPerson.addBindValue(info.name);
+    qPerson.addBindValue(info.extraJson);
+    if (!qPerson.exec()) {
+        HRLog.warn("Upsert person failed during enroll: {}", qPerson.lastError().text().toStdString());
+        // continue: still try to insert features
+    }
     for (const auto& img : faceImages) {
         auto embOpt = extractEmbedding(img);
         if (!embOpt) continue;
@@ -162,6 +174,10 @@ std::optional<FaceDetectionResult> OpenCVHumanRecognitionBackend::matchEmbedding
 }
 
 bool OpenCVHumanRecognitionBackend::saveFeatureDatabase() {
+    // 对于 SQLite 后端，数据已经写入 DB；此方法保证事务落盘
+    QSqlDatabase& db = storage::Storage::db();
+    if (!db.isOpen()) return false;
+    // Commit should have been used by enroll; ensure no-op success
     return true;
 }
 
@@ -191,6 +207,15 @@ bool OpenCVHumanRecognitionBackend::ensureSchema_() {
     QSqlDatabase& db = storage::Storage::db();
     QSqlQuery q(db);
     // 建表：基础人员表 (person_id 唯一) 与特征表（多条）
+    if (!q.exec("CREATE TABLE IF NOT EXISTS persons(\n"
+                " person_id TEXT PRIMARY KEY,\n"
+                " name TEXT,\n"
+                " extra TEXT,\n"
+                " created_at INTEGER\n"
+                ")")) {
+        HRLog.warn("Create table failed: {}", q.lastError().text().toStdString());
+        return false;
+    }
     if (!q.exec("CREATE TABLE IF NOT EXISTS face_features(\n"
                 " id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 " person_id TEXT NOT NULL,\n"
@@ -208,6 +233,89 @@ bool OpenCVHumanRecognitionBackend::ensureSchema_() {
         HRLog.warn("Create index failed: {}", q.lastError().text().toStdString());
     }
     return true;
+}
+
+// ----- Person management -----
+std::vector<PersonInfo> OpenCVHumanRecognitionBackend::listPersons() {
+    std::vector<PersonInfo> out;
+    QSqlDatabase& db = storage::Storage::db();
+    QSqlQuery q(db);
+    if (!q.exec("SELECT person_id,name,extra FROM persons")) return out;
+    while (q.next()) {
+        PersonInfo p;
+        p.personId = q.value(0).toString();
+        p.name = q.value(1).toString();
+        p.extraJson = q.value(2).toString();
+        out.push_back(std::move(p));
+    }
+    return out;
+}
+
+bool OpenCVHumanRecognitionBackend::updatePersonInfo(const PersonInfo& info) {
+    if (info.personId.isEmpty()) return false;
+    QSqlDatabase& db = storage::Storage::db();
+    QSqlQuery q(db);
+    // upsert
+    q.prepare(
+        "INSERT INTO persons(person_id,name,extra,created_at) VALUES(?,?,?,strftime('%s','now'))"
+        " ON CONFLICT(person_id) DO UPDATE SET name=excluded.name, extra=excluded.extra");
+    q.addBindValue(info.personId);
+    q.addBindValue(info.name);
+    q.addBindValue(info.extraJson);
+    if (!q.exec()) {
+        HRLog.warn("Update person failed: {}", q.lastError().text().toStdString());
+        return false;
+    }
+    return true;
+}
+
+bool OpenCVHumanRecognitionBackend::deletePerson(const QString& personId) {
+    if (personId.isEmpty()) return false;
+    QSqlDatabase& db = storage::Storage::db();
+    QSqlQuery q(db);
+    db.transaction();
+    q.prepare("DELETE FROM face_features WHERE person_id = ?");
+    q.addBindValue(personId);
+    if (!q.exec()) {
+        HRLog.warn("Delete features failed: {}", q.lastError().text().toStdString());
+        db.rollback();
+        return false;
+    }
+    q.prepare("DELETE FROM persons WHERE person_id = ?");
+    q.addBindValue(personId);
+    if (!q.exec()) {
+        HRLog.warn("Delete person failed: {}", q.lastError().text().toStdString());
+        db.rollback();
+        return false;
+    }
+    db.commit();
+    // 清理内存缓存
+    m_featureCache.erase(
+        std::remove_if(m_featureCache.begin(),
+                       m_featureCache.end(),
+                       [&](const CacheItem& it) { return it.personId == personId; }),
+        m_featureCache.end());
+    return true;
+}
+
+std::vector<FaceEmbedding> OpenCVHumanRecognitionBackend::getPersonFeatures(
+    const QString& personId) {
+    std::vector<FaceEmbedding> out;
+    if (personId.isEmpty()) return out;
+    QSqlDatabase& db = storage::Storage::db();
+    QSqlQuery q(db);
+    q.prepare("SELECT feature,dim FROM face_features WHERE person_id = ?");
+    q.addBindValue(personId);
+    if (!q.exec()) return out;
+    while (q.next()) {
+        QByteArray blob = q.value(0).toByteArray();
+        int dim = q.value(1).toInt();
+        FaceEmbedding emb;
+        emb.resize(dim);
+        memcpy(emb.data(), blob.data(), std::min<int>(blob.size(), dim * sizeof(float)));
+        out.push_back(std::move(emb));
+    }
+    return out;
 }
 
 std::vector<FaceDetectionResult> OpenCVHumanRecognitionBackend::processFrame(const QImage& frame,

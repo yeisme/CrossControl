@@ -16,6 +16,7 @@
 #include "logging.h"
 #include "spdlog/spdlog.h"
 #include "modules/Config/config.h"
+#include "facerecognitionwidget.h"
 
 CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     LogM::instance().init();  // 初始化日志系统
@@ -85,9 +86,12 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     btnLogs = makeBtn(QCoreApplication::translate("CrossControlWidget", "Logs"),
                       ":/icons/icons/logs.svg",
                       "btnLogs");
+    btnFaceRec = makeBtn(QCoreApplication::translate("CrossControlWidget", "Face Recognition"),
+                         ":/icons/icons/app.svg",
+                         "btnFaceRec");
 
     for (auto* b :
-         {btnDashboard, btnMonitor, btnUnlock, btnVisitRecord, btnMessage, btnSetting, btnLogs}) {
+        {btnDashboard, btnMonitor, btnUnlock, btnVisitRecord, btnMessage, btnSetting, btnLogs, btnFaceRec}) {
         sideLayout->addWidget(b);
     }
 
@@ -113,6 +117,7 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     settingWidget = new SettingWidget();
     unlockWidget = new UnlockWidget();
     logWidget = new LogWidget();
+    faceRecWidget = new FaceRecognitionWidget();
 
     contentStack->addWidget(mainWidget);
     contentStack->addWidget(monitorWidget);
@@ -121,6 +126,7 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     contentStack->addWidget(settingWidget);
     contentStack->addWidget(unlockWidget);
     contentStack->addWidget(logWidget);
+    contentStack->addWidget(faceRecWidget);
 
     // 组装主体
     appLayout->addWidget(sideBar);
@@ -145,7 +151,8 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
                         btnVisitRecord,
                         btnMessage,
                         btnSetting,
-                        btnLogs}) {
+                        btnLogs,
+                        btnFaceRec}) {
             if (!b) continue;
             b->setProperty("active", b == active ? "true" : "false");
             b->style()->unpolish(b);
@@ -181,6 +188,10 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
         setActive(btnLogs);
         showLogPage();
     });
+    connect(btnFaceRec, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnFaceRec);
+        contentStack->setCurrentWidget(faceRecWidget);
+    });
     connect(btnLogout, &QPushButton::clicked, this, &CrossControlWidget::onLogout);
 
     // 子页面返回主页面
@@ -192,6 +203,7 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     connect(settingWidget, &SettingWidget::toggleThemeRequested, this, [this]() { toggleTheme(); });
     connect(unlockWidget, &UnlockWidget::cancelUnlock, this, &CrossControlWidget::showMainPage);
     connect(logWidget, &LogWidget::backToMain, this, &CrossControlWidget::showMainPage);
+    connect(faceRecWidget, &FaceRecognitionWidget::backToMain, this, &CrossControlWidget::showMainPage);
 
     // 默认显示登录页
     rootStack->setCurrentWidget(loginWidget);

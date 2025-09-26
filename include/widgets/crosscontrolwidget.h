@@ -14,6 +14,7 @@ class QPushButton;
 #include "settingwidget.h"
 #include "unlockwidget.h"
 #include "visitrecordwidget.h"
+class FaceRecognitionWidget;
 
 class CrossControlWidget : public QWidget {
     Q_OBJECT
@@ -39,6 +40,7 @@ class CrossControlWidget : public QWidget {
     QPushButton* btnMessage{nullptr};
     QPushButton* btnSetting{nullptr};
     QPushButton* btnLogs{nullptr};
+  QPushButton* btnFaceRec{nullptr};
     QPushButton* btnLogout{nullptr};
 
     // 各页面
@@ -50,6 +52,7 @@ class CrossControlWidget : public QWidget {
     SettingWidget* settingWidget{nullptr};          // 设置
     UnlockWidget* unlockWidget{nullptr};            // 解锁
     LogWidget* logWidget{nullptr};                  // 日志
+  FaceRecognitionWidget* faceRecWidget{nullptr};  // 人脸识别页面
 
     public:
      // 供外部（例如 main.cpp）访问日志页面以完成全局绑定

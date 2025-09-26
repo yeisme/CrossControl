@@ -126,6 +126,9 @@ if(BUILD_HUMAN_RECOGNITION)
           "${_vcpkg_ocv}"
           CACHE PATH "Path to OpenCV used (vcpkg)")
       message(STATUS "Found OpenCV (vcpkg): ${OpenCV_VERSION} @ ${OpenCV_DIR}")
+
+      # list all opencv components found
+      message(STATUS "OpenCV components: ${OpenCV_LIBS}")
     endif()
   endif()
 

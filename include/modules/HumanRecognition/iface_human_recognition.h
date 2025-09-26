@@ -1,6 +1,12 @@
 ﻿/**
  * @file iface_human_recognition.h
+ * @author your name (you@domain.com)
  * @brief 人脸/人体识别模块的抽象接口定义，便于支持多种底层实现（OpenCV、ONNX、其他推理引擎等）。
+ * @version 0.1
+ * @date 2025-09-26
+ *
+ * @copyright Copyright (c) 2025
+ *
  */
 
 #pragma once
@@ -77,6 +83,19 @@ class IHumanRecognitionBackend {
 
     // 从持久化介质重新加载
     virtual bool loadFeatureDatabase() = 0;
+
+    // ----- 人员信息管理接口（高层业务/UI 使用） -----
+    // 列出已知人员（从 person 表或从 feature 表去重）
+    virtual std::vector<PersonInfo> listPersons() = 0;
+
+    // 更新人员信息（如姓名/extraJson），如果不存在则插入
+    virtual bool updatePersonInfo(const PersonInfo& info) = 0;
+
+    // 删除人员（同时删除其对应的 feature 条目）
+    virtual bool deletePerson(const QString& personId) = 0;
+
+    // 获取某人的所有特征（用于展示/迁移）
+    virtual std::vector<FaceEmbedding> getPersonFeatures(const QString& personId) = 0;
 };
 
 /**
@@ -104,6 +123,14 @@ class HumanRecognitionService {
     }
     bool save() { return m_backend->saveFeatureDatabase(); }
     bool load() { return m_backend->loadFeatureDatabase(); }
+
+    // Person management proxies
+    std::vector<PersonInfo> listPersons() { return m_backend->listPersons(); }
+    bool updatePersonInfo(const PersonInfo& p) { return m_backend->updatePersonInfo(p); }
+    bool deletePerson(const QString& id) { return m_backend->deletePerson(id); }
+    std::vector<FaceEmbedding> getPersonFeatures(const QString& id) {
+        return m_backend->getPersonFeatures(id);
+    }
 
     void setThreshold(float t) {
         if (m_backend) m_backend->setRecognitionThreshold(t);

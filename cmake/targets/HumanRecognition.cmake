@@ -7,19 +7,22 @@
   else()
     add_library(HumanRecognition STATIC ${HUMAN_RECOGNITION_SOURCES})
   endif()
-  target_link_libraries(
-    HumanRecognition
-    PRIVATE Qt6::Widgets Qt6::Network Qt6::Sql)
+  target_link_libraries(HumanRecognition PRIVATE Qt6::Widgets Qt6::Network
+                                                 Qt6::Sql)
   target_link_libraries(HumanRecognition PRIVATE logging)
 
   # Ensure Qt6 targets are available (Dependencies.cmake should provide them)
   if(NOT TARGET Qt6::Widgets)
-    message(FATAL_ERROR "HumanRecognition requires Qt6 (Qt6::Widgets target not found).\n"
-      "Ensure cmake/Dependencies.cmake configured Qt6 or set CMAKE_PREFIX_PATH to your Qt6 installation.")
+    message(
+      FATAL_ERROR
+        "HumanRecognition requires Qt6 (Qt6::Widgets target not found).\n"
+        "Ensure cmake/Dependencies.cmake configured Qt6 or set CMAKE_PREFIX_PATH to your Qt6 installation."
+    )
   endif()
   # OpenCV - ensure we locate OpenCV and provide include dirs to the target
   find_package(OpenCV REQUIRED COMPONENTS core imgproc objdetect)
-  message(STATUS "HumanRecognition: OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
+  message(
+    STATUS "HumanRecognition: OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
   target_link_libraries(HumanRecognition PRIVATE ${OpenCV_LIBS})
   target_include_directories(HumanRecognition PRIVATE ${OpenCV_INCLUDE_DIRS})
   target_include_directories(
@@ -37,10 +40,11 @@
     PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${_hr_bin_dir}"
                LIBRARY_OUTPUT_DIRECTORY "${_hr_bin_dir}"
                ARCHIVE_OUTPUT_DIRECTORY "${_hr_lib_dir}")
-endif()
 
-install(
-  TARGETS HumanRecognition
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime)
+  install(
+    TARGETS HumanRecognition
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime)
+
+endif()

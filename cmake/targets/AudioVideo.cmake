@@ -5,8 +5,13 @@
   else()
     add_library(AudioVideo STATIC ${AUDIO_VIDEO_SOURCES})
   endif()
-  # 移除对 QtMultimedia 的依赖，使用 FFmpeg 进行音视频处理
+  # Link project logging first
   target_link_libraries(AudioVideo PRIVATE logging)
+
+  # Use Qt Multimedia as the default backend for audio/video functionality.
+  # This makes Multimedia an explicit dependency of the AudioVideo target.
+  find_package(Qt6 COMPONENTS Multimedia REQUIRED)
+  target_link_libraries(AudioVideo PRIVATE Qt6::Multimedia)
   target_include_directories(AudioVideo PRIVATE include/modules/AudioVideo)
   target_link_libraries(CrossControl PRIVATE AudioVideo)
 
@@ -17,10 +22,11 @@
     PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${_av_bin_dir}"
                LIBRARY_OUTPUT_DIRECTORY "${_av_bin_dir}"
                ARCHIVE_OUTPUT_DIRECTORY "${_av_lib_dir}")
-endif()
 
-install(
-  TARGETS AudioVideo
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime)
+  install(
+    TARGETS AudioVideo
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime)
+
+endif()

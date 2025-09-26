@@ -1,6 +1,12 @@
 ﻿/**
  * @file opencv_backend.h
+ * @author your name (you@domain.com)
  * @brief 基于 OpenCV 的人脸检测/识别后端 (简化骨架实现)
+ * @version 0.1
+ * @date 2025-09-26
+ *
+ * @copyright Copyright (c) 2025
+ *
  */
 
 #pragma once
@@ -76,4 +82,9 @@ class OpenCVHumanRecognitionBackend : public IHumanRecognitionBackend {
         r.matchedDistance = bestScore;
         return r;
     }
+    // Person management
+    std::vector<PersonInfo> listPersons() override;
+    bool updatePersonInfo(const PersonInfo& info) override;
+    bool deletePerson(const QString& personId) override;
+    std::vector<FaceEmbedding> getPersonFeatures(const QString& personId) override;
 };

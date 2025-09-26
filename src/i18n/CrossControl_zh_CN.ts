@@ -4,44 +4,188 @@
 <context>
     <name>CrossControlWidget</name>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="67"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="68"/>
         <source>Dashboard</source>
         <translation>仪表盘</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="70"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="71"/>
         <source>Monitor</source>
         <translation>监控</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="73"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="74"/>
         <source>Remote Unlock</source>
         <translation>远程开锁</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="76"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="77"/>
         <source>Visit Records</source>
         <translation>来访记录</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="79"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="80"/>
         <source>Messages</source>
         <translation>留言</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="82"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="83"/>
         <source>System Settings</source>
         <translation>系统设置</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="85"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="86"/>
         <source>Logs</source>
         <translation>运行日志</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="96"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="89"/>
+        <source>Face Recognition</source>
+        <translation>人脸识别</translation>
+    </message>
+    <message>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="100"/>
         <source>Logout</source>
         <translation>退出登录</translation>
+    </message>
+</context>
+<context>
+    <name>FaceRecognitionWidget</name>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="25"/>
+        <source>Load Image</source>
+        <translation>加载图像</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="27"/>
+        <source>Capture</source>
+        <translation>捕获</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="29"/>
+        <source>Enroll</source>
+        <translation>注册</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="31"/>
+        <source>Match</source>
+        <translation>匹配</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="33"/>
+        <source>Refresh</source>
+        <translation>刷新</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="35"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="42"/>
+        <source>Frequent</source>
+        <translation>频繁</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="43"/>
+        <source>Occasional</source>
+        <translation>偶尔</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="60"/>
+        <source>Name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="62"/>
+        <source>Type:</source>
+        <translation>类型：</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="67"/>
+        <source>Phone:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="69"/>
+        <source>Note:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="77"/>
+        <source>Registered Persons:</source>
+        <translation>已注册人员：</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="109"/>
+        <source>Select image</source>
+        <translation>选择图像</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="111"/>
+        <source>Images (*.png *.jpg *.jpeg)</source>
+        <translation>图像 (*.png *.jpg *.jpeg)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="115"/>
+        <source>Failed to load image</source>
+        <translation>加载图像失败</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="121"/>
+        <source>Image loaded: %1</source>
+        <translation>图像加载成功：%1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="126"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="159"/>
+        <source>No image loaded</source>
+        <translation>未加载图像</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="131"/>
+        <source>Please input name</source>
+        <translation>请输入姓名</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="147"/>
+        <source>Enrolled %1 embeddings for %2</source>
+        <translation>为 %2 注册了 %1 个嵌入</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="151"/>
+        <source>Enroll failed or no embeddings extracted</source>
+        <translation>注册失败或未提取到嵌入</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="164"/>
+        <source>No faces detected</source>
+        <translation>未检测到人脸</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="169"/>
+        <source>Matched: %1 (dist=%2)</source>
+        <translation>匹配成功：%1 (距离=%2)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="173"/>
+        <source>Face not matched</source>
+        <translation>人脸未匹配</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="186"/>
+        <source>Refreshed person list: %1 entries</source>
+        <translation>已刷新人员列表：%1 条目</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="197"/>
+        <source>Deleted person: %1</source>
+        <translation>已删除人员：%1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="200"/>
+        <source>Delete failed for %1</source>
+        <translation>删除失败：%1</translation>
     </message>
 </context>
 <context>
@@ -246,7 +390,7 @@
         <location filename="../widgets/mainwidget.ui" line="58"/>
         <location filename="../widgets/mainwidget.ui" line="108"/>
         <source>background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 12px;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="23"/>
@@ -507,43 +651,63 @@
     </message>
     <message>
         <location filename="../widgets/monitorwidget.ui" line="49"/>
+        <source>Listen Port</source>
+        <translation>监听端口</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="59"/>
+        <source>Listen</source>
+        <translation>监听</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="66"/>
         <source>Save Device</source>
         <translation>保存设备</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="56"/>
+        <location filename="../widgets/monitorwidget.ui" line="73"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="63"/>
+        <location filename="../widgets/monitorwidget.ui" line="80"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="77"/>
+        <location filename="../widgets/monitorwidget.ui" line="87"/>
+        <source>Command / Text to send</source>
+        <translation>命令 / 发送的文本</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="97"/>
+        <source>Send</source>
+        <translation>发送</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="111"/>
         <source>Choose Path</source>
         <translation>选择路径</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="88"/>
+        <location filename="../widgets/monitorwidget.ui" line="122"/>
         <source>background-color: #333; color: white; min-height: 300px;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="91"/>
+        <location filename="../widgets/monitorwidget.ui" line="125"/>
         <source>Monitor Video Area</source>
         <translation>监控视频区域</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="102"/>
+        <location filename="../widgets/monitorwidget.ui" line="136"/>
         <source>Back to Main</source>
         <translation>返回主页</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="78"/>
+        <location filename="../widgets/monitorwidget.cpp" line="231"/>
         <source>Choose save path</source>
-        <translation type="unfinished"></translation>
+        <translation>选择保存路径</translation>
     </message>
 </context>
 <context>
@@ -555,13 +719,13 @@
     </message>
     <message>
         <location filename="../widgets/settingwidget.ui" line="46"/>
-        <location filename="../widgets/settingwidget.cpp" line="47"/>
+        <location filename="../widgets/settingwidget.cpp" line="50"/>
         <source>Key</source>
         <translation>键</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.ui" line="51"/>
-        <location filename="../widgets/settingwidget.cpp" line="47"/>
+        <location filename="../widgets/settingwidget.cpp" line="51"/>
         <source>Value</source>
         <translation>值</translation>
     </message>
@@ -611,22 +775,22 @@
         <translation>账户</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="152"/>
+        <location filename="../widgets/settingwidget.cpp" line="162"/>
         <source>Save Failed</source>
         <translation>保存失败</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="152"/>
+        <location filename="../widgets/settingwidget.cpp" line="163"/>
         <source>Failed to save some configuration keys. Check permissions or file locks.</source>
         <translation>无法保存某些配置键。请检查权限或文件锁。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="154"/>
+        <location filename="../widgets/settingwidget.cpp" line="169"/>
         <source>Saved</source>
         <translation>已保存</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="154"/>
+        <location filename="../widgets/settingwidget.cpp" line="170"/>
         <source>Settings saved successfully.</source>
         <translation>设置已成功保存。</translation>
     </message>

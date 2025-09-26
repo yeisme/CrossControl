@@ -2,13 +2,13 @@
 
 #include <qcoreapplication.h>
 
-#include "spdlog/spdlog.h"
-#include "ui_settingwidget.h"
-#include "modules/Config/config.h"
-#include <QTableWidget>
 #include <QHeaderView>
 #include <QMessageBox>
+#include <QTableWidget>
 
+#include "modules/Config/config.h"
+#include "spdlog/spdlog.h"
+#include "ui_settingwidget.h"
 
 SettingWidget::SettingWidget(QWidget* parent) : QWidget(parent), ui(new Ui::SettingWidget) {
     ui->setupUi(this);
@@ -37,18 +37,23 @@ SettingWidget::SettingWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Sett
     // wire save/reload buttons
     auto* reloadBtn = findChild<QPushButton*>(QStringLiteral("btnReloadSettings"));
     auto* saveBtn = findChild<QPushButton*>(QStringLiteral("btnSaveSettings"));
-    if (reloadBtn) connect(reloadBtn, &QPushButton::clicked, this, &SettingWidget::on_btnReloadSettings_clicked);
-    if (saveBtn) connect(saveBtn, &QPushButton::clicked, this, &SettingWidget::on_btnSaveSettings_clicked);
+    if (reloadBtn)
+        connect(
+            reloadBtn, &QPushButton::clicked, this, &SettingWidget::on_btnReloadSettings_clicked);
+    if (saveBtn)
+        connect(saveBtn, &QPushButton::clicked, this, &SettingWidget::on_btnSaveSettings_clicked);
 
     // prepare table
     auto* table = findChild<QTableWidget*>(QStringLiteral("tableSettings"));
     if (table) {
         table->setColumnCount(2);
-        table->setHorizontalHeaderLabels({tr("Key"), tr("Value")});
+        table->setHorizontalHeaderLabels({QCoreApplication::translate("SettingWidget", "Key"),
+                                          QCoreApplication::translate("SettingWidget", "Value")});
         table->horizontalHeader()->setStretchLastSection(true);
         table->verticalHeader()->setVisible(false);
         table->setSelectionBehavior(QAbstractItemView::SelectRows);
-        table->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::SelectedClicked);
+        table->setEditTriggers(QAbstractItemView::DoubleClicked |
+                               QAbstractItemView::SelectedClicked);
     }
 
     // initial population
@@ -144,13 +149,24 @@ void SettingWidget::on_btnSaveSettings_clicked() {
         const QString expected = valIt->text();
         const QString actual = cfg.getString(key, QString());
         if (actual != expected) {
-            spdlog::error("Failed to persist key {} (expected '{}' got '{}')", key.toStdString(), expected.toStdString(), actual.toStdString());
+            spdlog::error("Failed to persist key {} (expected '{}' got '{}')",
+                          key.toStdString(),
+                          expected.toStdString(),
+                          actual.toStdString());
             allOk = false;
         }
     }
     if (!allOk) {
-        QMessageBox::warning(this, tr("Save Failed"), tr("Failed to save some configuration keys. Check permissions or file locks."));
+        QMessageBox::warning(
+            this,
+            QCoreApplication::translate("SettingWidget", "Save Failed"),
+            QCoreApplication::translate(
+                "SettingWidget",
+                "Failed to save some configuration keys. Check permissions or file locks."));
     } else {
-        QMessageBox::information(this, tr("Saved"), tr("Settings saved successfully."));
+        QMessageBox::information(
+            this,
+            QCoreApplication::translate("SettingWidget", "Saved"),
+            QCoreApplication::translate("SettingWidget", "Settings saved successfully."));
     }
 }

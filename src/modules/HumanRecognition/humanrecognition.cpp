@@ -151,3 +151,5 @@ bool HumanRecognition::save() {
 bool HumanRecognition::load() {
     return m_isInitialized && m_service->load();
 }
+
+// Person management wrappers are inlined in header (delegating to service)

@@ -28,6 +28,8 @@ set(PROJECT_SOURCES
     src/widgets/logwidget.cpp
     include/widgets/logwidget.h
     src/widgets/logwidget.ui
+  src/widgets/facerecognitionwidget.cpp
+  include/widgets/facerecognitionwidget.h
     src/widgets/unlockwidget.cpp
     include/widgets/unlockwidget.h
     src/widgets/unlockwidget.ui

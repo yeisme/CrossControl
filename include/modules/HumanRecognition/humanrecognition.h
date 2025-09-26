@@ -3,7 +3,7 @@
  * @brief HumanRecognition类的头文件，提供人类检测和识别功能。
  *
  * 此文件定义了HumanRecognition类，这是一个基于Qt的模块，用于处理
- * 人类检测、人脸识别和模型训练。它作为未来实现人类识别任务计算机视觉算法的占位符。
+ * 人类检测、人脸识别和模型训练。
  *
  * @author yefun2004@gmail.com
  * @date 2025
@@ -92,13 +92,13 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
      */
     QString recognizePerson(const QImage& faceImage);
 
-    // 新增：一张图片内检测 + 识别所有人脸
+    // 一张图片内检测 + 识别所有人脸
     std::vector<FaceDetectionResult> detectAndRecognize(const QImage& image);
 
-    // 新增：注册(训练) —— 传入人员信息和该人员的人脸图片集合
+    // 注册(训练) —— 传入人员信息和该人员的人脸图片集合
     int enroll(const PersonInfo& info, const std::vector<QImage>& faces);
 
-    // 新增：阈值调节 & 视频帧处理封装
+    // 阈值调节 & 视频帧处理封装
     void setThreshold(float t) {
         if (m_service) m_service->setThreshold(t);
     }
@@ -110,6 +110,18 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
 
     bool save();
     bool load();
+
+    // 人员信息管理（UI 使用）
+    std::vector<PersonInfo> listPersons() {
+        return m_service ? m_service->listPersons() : std::vector<PersonInfo>{};
+    }
+    bool updatePersonInfo(const PersonInfo& p) {
+        return m_service ? m_service->updatePersonInfo(p) : false;
+    }
+    bool deletePerson(const QString& id) { return m_service ? m_service->deletePerson(id) : false; }
+    std::vector<FaceEmbedding> getPersonFeatures(const QString& id) {
+        return m_service ? m_service->getPersonFeatures(id) : std::vector<FaceEmbedding>{};
+    }
 
     /**
      * @brief 使用数据集训练识别模型。
