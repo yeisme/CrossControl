@@ -15,6 +15,13 @@ endif()
 target_link_libraries(
   CrossControl
   PRIVATE Qt6::Widgets Qt6::Network Qt6::Sql logging config)
+
+# Qt Multimedia is required for camera UI
+if(NOT TARGET Qt6::Multimedia)
+  message(FATAL_ERROR "Qt6::Multimedia target not found. Multimedia support is required for the FaceRecognition UI. Ensure cmake/Dependencies.cmake configures Qt Multimedia or set CMAKE_PREFIX_PATH to your Qt6 installation that includes Multimedia.")
+endif()
+target_link_libraries(CrossControl PRIVATE Qt6::Multimedia)
+target_compile_definitions(CrossControl PRIVATE HAVE_QTMULTIMEDIA=1)
 target_include_directories(
   CrossControl
   PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/include/widgets

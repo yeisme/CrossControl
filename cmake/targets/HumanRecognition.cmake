@@ -21,9 +21,20 @@
   endif()
   # OpenCV - ensure we locate OpenCV and provide include dirs to the target
   find_package(OpenCV REQUIRED COMPONENTS core imgproc objdetect)
-  message(
-    STATUS "HumanRecognition: OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
-  target_link_libraries(HumanRecognition PRIVATE ${OpenCV_LIBS})
+  message(STATUS "HumanRecognition: OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
+  # Prefer linking OpenCV via exported CMake targets if available (vcpkg config
+  # provides OpenCV::opencv_world or per-component targets). Fall back to
+  # ${OpenCV_LIBS} for older OpenCV find modules.
+  if(TARGET OpenCV::opencv_world)
+    message(STATUS "HumanRecognition: linking with OpenCV::opencv_world target")
+    target_link_libraries(HumanRecognition PRIVATE OpenCV::opencv_world)
+  elseif(TARGET OpenCV::opencv_core)
+    message(STATUS "HumanRecognition: linking with OpenCV component targets (core,imgproc,objdetect)")
+    target_link_libraries(HumanRecognition PRIVATE OpenCV::opencv_core OpenCV::opencv_imgproc OpenCV::opencv_objdetect)
+  else()
+    message(STATUS "HumanRecognition: linking with OpenCV libs variable: ${OpenCV_LIBS}")
+    target_link_libraries(HumanRecognition PRIVATE ${OpenCV_LIBS})
+  endif()
   target_include_directories(HumanRecognition PRIVATE ${OpenCV_INCLUDE_DIRS})
   target_include_directories(
     HumanRecognition

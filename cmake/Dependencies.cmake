@@ -1,18 +1,7 @@
-# 依赖项 仅支持 Qt6：如果未找到 Qt6 则报错并提供如何指向 Qt6 的说明。
-find_package(Qt6 REQUIRED COMPONENTS CoreTools Widgets LinguistTools Network)
-if(NOT Qt6_FOUND)
-  message(
-    FATAL_ERROR
-      "Qt6 was not found. This project requires Qt6.\n"
-      "Please install Qt6 or set CMAKE_PREFIX_PATH to your Qt6 installation (for example: -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x.x).\n"
-      "You can also use your platform package manager or vcpkg to install Qt6.")
-endif()
+# 依赖项：只支持 Qt6，Qt Multimedia 已列为必需组件
+find_package(Qt6 REQUIRED COMPONENTS CoreTools Widgets LinguistTools Network Multimedia)
 set(QT_VERSION_MAJOR 6)
 message(STATUS "Found and using Qt6 (QT_VERSION_MAJOR=${QT_VERSION_MAJOR})")
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS CoreTools Widgets LinguistTools
-                                              Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS CoreTools Widgets
-                                                       LinguistTools Network)
 
 # 输出 QT 版本相关信息和库路径
 message(STATUS "Using Qt version: ${Qt${QT_VERSION_MAJOR}_VERSION}")
@@ -31,6 +20,11 @@ message(
 message(
   STATUS
     "Qt${QT_VERSION_MAJOR} Network library: ${Qt${QT_VERSION_MAJOR}_Network_LIBRARIES}"
+)
+
+message(
+  STATUS
+    "Qt${QT_VERSION_MAJOR} Multimedia library: ${Qt${QT_VERSION_MAJOR}_Multimedia_LIBRARIES}"
 )
 
 # message 状态：CMAKE_TOOLCHAIN_FILE
