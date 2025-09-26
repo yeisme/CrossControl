@@ -243,6 +243,21 @@
             ]
         },
         {
+            "name": "gcc-debug-workflow",
+            "description": "",
+            "displayName": "",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "gcc-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "gcc-debug"
+                }
+            ]
+        },
+        {
             "name": "clang-release-workflow",
             "description": "",
             "displayName": "",
@@ -266,6 +281,21 @@
             ]
         },
         {
+            "name": "clang-debug-workflow",
+            "description": "",
+            "displayName": "",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "clang-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "clang-debug"
+                }
+            ]
+        },
+        {
             "name": "msvc-release-workflow",
             "description": "",
             "displayName": "",
@@ -285,6 +315,21 @@
                 {
                     "type": "package",
                     "name": "msvc-release-package"
+                }
+            ]
+        },
+        {
+            "name": "msvc-debug-workflow",
+            "description": "",
+            "displayName": "",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "msvc-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "msvc-debug"
                 }
             ]
         }

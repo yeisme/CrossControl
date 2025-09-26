@@ -1,0 +1,96 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: Configure  MSVC 2022 Debug",
+			"command": "configure",
+			"preset": "msvc-debug",
+			"group": "build",
+			"detail": "配置 MSVC 2022 调试构建"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: Configure  MSVC 2022 Release",
+			"command": "configure",
+			"preset": "msvc-release",
+			"group": "build",
+			"detail": "配置 MSVC 2022 发布构建"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: Build  MSVC 2022 Debug",
+			"command": "build",
+			"preset": "msvc-debug",
+			"group": "build",
+			"detail": "构建 MSVC 2022 调试版本"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: Build  MSVC 2022 Release",
+			"command": "build",
+			"preset": "msvc-release",
+			"group": "build",
+			"detail": "构建 MSVC 2022 发布版本"
+		},
+		{
+			"type": "shell",
+			"label": "CMake: Workflow  MSVC 2022 Release",
+			"command": "cmake",
+			"args": [
+				"--workflow",
+				"--preset",
+				"msvc-release-workflow"
+			],
+			"group": "build",
+			"detail": "执行 MSVC 2022 发布工作流（配置、构建、打包）"
+		},
+		{
+			"type": "shell",
+			"label": "CMake: Package  MSVC 2022 Release",
+			"command": "cmake",
+			"args": [
+				"--package",
+				"--preset",
+				"msvc-release"
+			],
+			"group": "build",
+			"detail": "打包 MSVC 2022 发布版本"
+		},
+		{
+			"type": "shell",
+			"label": "CMake: Clean Build Files",
+			"command": "cmake",
+			"args": [
+				"--build",
+				".",
+				"--target",
+				"clean"
+			],
+			"group": "build",
+			"detail": "清理构建文件"
+		},
+		{
+			"type": "shell",
+			"label": "Format Code",
+			"detail": "格式化代码",
+			"windows": {
+				"command": "pwsh",
+				"args": [
+					"-NoProfile",
+					"-ExecutionPolicy",
+					"Bypass",
+					"-File",
+					"${cwd}/scripts/format.ps1"
+				]
+			},
+			"linux": {
+				"command": "bash",
+				"args": [
+					"${cwd}/scripts/format.sh"
+				]
+			},
+			"group": "none",
+		}
+	]
+}
