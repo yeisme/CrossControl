@@ -1,10 +1,10 @@
 ﻿#ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
+#include <QTimer>
 #include <QWidget>
 
 #include "weatherwidget.h"
-#include <QTimer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

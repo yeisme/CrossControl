@@ -1,10 +1,12 @@
 ﻿#include <QApplication>
+#include <QColor>
 #include <QFile>
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QLabel>
 #include <QLocale>
 #include <QMessageLogContext>
+#include <QPalette>
 #include <QPushButton>
 #include <QSettings>
 #include <QSplitter>
@@ -13,8 +15,6 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <memory>
-#include <QPalette>
-#include <QColor>
 
 #include "crosscontrolwidget.h"
 #include "logging.h"
@@ -100,10 +100,9 @@ int main(int argc, char* argv[]) {
     QSettings settings("CrossControl", "Preferences");
     const QString themePref = settings.value("theme", "auto").toString();
     QString appliedTheme = themePref;
-    if (themePref == "auto") {
-        appliedTheme = detectSystemTheme(a);
-    }
-    const QString themePath = appliedTheme == "dark" ? ":/themes/themes/dark.qss" : ":/themes/themes/light.qss";
+    if (themePref == "auto") { appliedTheme = detectSystemTheme(a); }
+    const QString themePath =
+        appliedTheme == "dark" ? ":/themes/themes/dark.qss" : ":/themes/themes/light.qss";
     QFile qss(themePath);
     if (qss.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString style = QString::fromUtf8(qss.readAll());

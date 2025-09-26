@@ -75,7 +75,7 @@ void LogWidget::on_cmbLevel_currentIndexChanged(int index) {
         logging::LoggerManager::instance().setLevel(
             static_cast<spdlog::level::level_enum>(m_minLevel));
     spdlog::info("Log level changed to {}", ui->cmbLevel->currentText().toStdString());
-    spdlog::debug("LogWidget: level index {}" , index);
+    spdlog::debug("LogWidget: level index {}", index);
 }
 
 /**

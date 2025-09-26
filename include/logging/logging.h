@@ -66,7 +66,9 @@ class LOGGING_EXPORT LoggerManager {
 // 便捷别名与函数：返回具名 logger 的引用，便于使用点号语法
 using Logger = spdlog::logger;
 // Inline helper to force ODR-use of spdlog symbols when only including this header
-inline void _logging_header_touch_spdlog() { (void)spdlog::level::info; }
+inline void _logging_header_touch_spdlog() {
+    (void)spdlog::level::info;
+}
 LOGGING_EXPORT Logger& logger(const std::string& name);
 
 // 将具名 logger 设为全局默认 logger，之后可以直接用 spdlog::info 等全局函数

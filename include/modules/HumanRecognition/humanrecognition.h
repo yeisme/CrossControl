@@ -17,11 +17,11 @@
 #include <QObject>
 #include <QRect>
 #include <QString>
-#include <vector>
 #include <memory>
+#include <vector>
 
-#include "logging.h"
 #include "iface_human_recognition.h"
+#include "logging.h"
 
 #ifdef HumanRecognition_EXPORTS
 #define HUMANRECOGNITION_EXPORT Q_DECL_EXPORT
@@ -76,7 +76,7 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
      * @note 这是一个占位符实现。在真实实现中，
      *       这将使用计算机视觉算法，如HOG、CNN等。
      */
-    bool detectHumans(const QImage& image); // 兼容旧接口（仅返回是否检测到 >=1）
+    bool detectHumans(const QImage& image);  // 兼容旧接口（仅返回是否检测到 >=1）
 
     /**
      * @brief 从人脸图像中识别个人。
@@ -99,10 +99,13 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
     int enroll(const PersonInfo& info, const std::vector<QImage>& faces);
 
     // 新增：阈值调节 & 视频帧处理封装
-    void setThreshold(float t) { if (m_service) m_service->setThreshold(t); }
+    void setThreshold(float t) {
+        if (m_service) m_service->setThreshold(t);
+    }
     float threshold() const { return m_service ? m_service->threshold() : 0.f; }
     std::vector<FaceDetectionResult> processFrame(const QImage& frame, bool recognize = true) {
-        if (!m_isInitialized) return {}; return m_service->processFrame(frame, recognize);
+        if (!m_isInitialized) return {};
+        return m_service->processFrame(frame, recognize);
     }
 
     bool save();
@@ -149,7 +152,7 @@ class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
      * 跟踪识别模块的初始化状态。
      */
     bool m_isInitialized;
-    std::unique_ptr<HumanRecognitionService> m_service; // 后端服务（OpenCV 等）
+    std::unique_ptr<HumanRecognitionService> m_service;  // 后端服务（OpenCV 等）
 };
 
 #endif  // HUMANRECOGNITION_H

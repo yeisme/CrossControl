@@ -1,7 +1,8 @@
 ﻿#include "storage.h"
-#include "dbmanager.h"
 
 #include <QSqlDatabase>
+
+#include "dbmanager.h"
 
 namespace storage {
 

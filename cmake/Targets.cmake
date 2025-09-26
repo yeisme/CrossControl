@@ -8,6 +8,7 @@ include(cmake/targets/Logging.cmake)
 include(cmake/targets/HumanRecognition.cmake)
 include(cmake/targets/AudioVideo.cmake)
 include(cmake/targets/Storage.cmake)
+include(cmake/targets/Connect.cmake)
 
 target_link_libraries(
         CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
