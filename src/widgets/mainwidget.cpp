@@ -211,7 +211,9 @@ void MainWidget::updateVisitorStats() {
     if (qToday.exec() && qToday.next()) {
         int todayCount = qToday.value(0).toInt();
         QLabel* lblToday = this->findChild<QLabel*>("labelVisitorsToday");
-        if (lblToday) lblToday->setText(tr("Today: %1").arg(todayCount));
+        if (lblToday)
+            lblToday->setText(
+                QCoreApplication::translate("MainWidget", "Today: %1").arg(todayCount));
     }
 
     // Week (last 7 days)
@@ -224,7 +226,8 @@ void MainWidget::updateVisitorStats() {
     if (qWeek.exec() && qWeek.next()) {
         int weekCount = qWeek.value(0).toInt();
         QLabel* lblWeek = this->findChild<QLabel*>("labelVisitorsWeek");
-        if (lblWeek) lblWeek->setText(tr("Week: %1").arg(weekCount));
+        if (lblWeek)
+            lblWeek->setText(QCoreApplication::translate("MainWidget", "Week: %1").arg(weekCount));
     }
 }
 

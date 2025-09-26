@@ -8,7 +8,6 @@
 #include <QMessageLogContext>
 #include <QPalette>
 #include <QPushButton>
-#include "modules/Config/config.h"
 #include <QSplitter>
 #include <QTextEdit>
 #include <QTranslator>
@@ -18,6 +17,7 @@
 
 #include "crosscontrolwidget.h"
 #include "logging.h"
+#include "modules/Config/config.h"
 #include "spdlog/spdlog.h"
 
 // 为当前系统用户界面语言安装翻译器。如果加载并安装了翻译，则返回一个非空的 unique_ptr；否则返回
@@ -87,6 +87,14 @@ int main(int argc, char* argv[]) {
 
     logging::useAsDefault("App");
 
+    // 创建一个临时（不可见）的 QTextEdit 并在应用早期绑定为全局 Qt sink，
+    // 以便捕获主窗口创建前产生的日志。LogWidget 就绪后会替换为真实的 UI
+    // QTextEdit（通过 LogWidget::bindToLoggerManager），之后我们删除临时控件。
+    QTextEdit* tmpLogEdit = new QTextEdit();
+    tmpLogEdit->setVisible(false);
+    logging::LoggerManager::instance().attachQtSink(tmpLogEdit, MAX_LOG_LINES);
+    spdlog::info("Application started");
+
     CrossControlWidget mainWindow;
     mainWindow.setWindowTitle("CrossControl");
     // 应用程序图标
@@ -98,7 +106,8 @@ int main(int argc, char* argv[]) {
 
     // 加载样式
     // 读取用户上次主题偏好（默认 auto 跟随系统）
-    const QString themePref = config::ConfigManager::instance().getString("Preferences/theme", "auto");
+    const QString themePref =
+        config::ConfigManager::instance().getString("Preferences/theme", "auto");
     QString appliedTheme = themePref;
     if (themePref == "auto") { appliedTheme = detectSystemTheme(a); }
     const QString themePath =
@@ -111,12 +120,14 @@ int main(int argc, char* argv[]) {
     mainWindow.setMinimumSize(1024, 640);
     mainWindow.show();
 
-    // 全局绑定日志面板：在主窗口创建后、事件循环启动前完成，这样启动阶段的日志也能被捕获。
+    // 完成全局绑定（将 sink 切换到 LogWidget 的 QTextEdit），并删除临时 QTextEdit
     if (auto lw = mainWindow.getLogWidget()) {
         lw->bindToLoggerManager();
+        // bindToLoggerManager() 会在内部通过 LoggerManager::attachQtSink() 替换当前 sink，
+        // 因此此时可以安全删除临时的 QTextEdit
+        delete tmpLogEdit;
+        tmpLogEdit = nullptr;
     }
-
-    spdlog::info("Application started");
     const int rc = a.exec();
 
     spdlog::info("Application exiting");

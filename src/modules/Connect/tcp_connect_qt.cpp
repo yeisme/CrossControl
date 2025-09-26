@@ -2,6 +2,11 @@
 
 #include <QHostAddress>
 
+/**
+ * @brief 通过继承自 IConnectQt 实现基于 QTcpSocket 的异步连接
+ * 
+ * @param parent 
+ */
 TcpConnectQt::TcpConnectQt(QObject* parent) : IConnectQt(parent), m_socket(new QTcpSocket(this)) {
     connect(m_socket, &QTcpSocket::connected, this, &TcpConnectQt::onConnected);
     connect(m_socket, &QTcpSocket::disconnected, this, &TcpConnectQt::onDisconnected);

@@ -17,8 +17,8 @@ target_include_directories(Connect PUBLIC "${CMAKE_BINARY_DIR}/include")
 target_include_directories(Connect PUBLIC ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/include/widgets)
 target_include_directories(Connect PUBLIC include/modules/Connect)
 
-find_package(Qt6 COMPONENTS Network REQUIRED)
-target_link_libraries(Connect PRIVATE Qt6::Network logging config)
+find_package(Qt6 COMPONENTS Network Widgets REQUIRED)
+target_link_libraries(Connect PRIVATE Qt6::Network Qt6::Widgets logging config)
 
 target_link_libraries(CrossControl PUBLIC Connect)
 

@@ -41,6 +41,9 @@ public:
     int getInt(const QString& key, int defaultValue = 0) const;
     QString getString(const QString& key, const QString& defaultValue = QString()) const;
 
+    // Return all keys currently present in the underlying QSettings
+    QStringList allKeys() const;
+
 private:
     ConfigManager();
     ~ConfigManager();

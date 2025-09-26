@@ -35,7 +35,41 @@
           <item>
            <widget class="QFrame" name="frameSettingsList">
             <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
-            <layout class="QVBoxLayout" name="layoutSettingsList"/>
+                        <layout class="QVBoxLayout" name="layoutSettingsList">
+                         <item>
+                            <widget class="QTableWidget" name="tableSettings">
+                             <property name="columnCount">
+                                <number>2</number>
+                             </property>
+                             <column>
+                                <property name="text">
+                                 <string>Key</string>
+                                </property>
+                             </column>
+                             <column>
+                                <property name="text">
+                                 <string>Value</string>
+                                </property>
+                             </column>
+                            </widget>
+                         </item>
+                         <item>
+                            <widget class="QWidget" name="settingsButtons">
+                             <layout class="QHBoxLayout" name="horizontalLayoutSettingsButtons">
+                                <item>
+                                 <widget class="QPushButton" name="btnReloadSettings">
+                                    <property name="text"><string>Reload</string></property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="btnSaveSettings">
+                                    <property name="text"><string>Save</string></property>
+                                 </widget>
+                                </item>
+                             </layout>
+                            </widget>
+                         </item>
+                        </layout>
            </widget>
           </item>
           <item>

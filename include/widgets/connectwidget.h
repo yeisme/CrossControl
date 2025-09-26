@@ -5,15 +5,16 @@
 #include <QTextEdit>
 #include <QWidget>
 
-#include "iface_connect_qt.h"
+#include "iface_connect.h"
+#include <QTimer>
 
 /**
  * @file connectwidget.h
  * @brief 连接配置与测试的 UI 组件
  *
  * ConnectWidget 提供一个简单的 UI，用于输入连接端点、打开/关闭连接、
- * 发送数据并查看日志。组件通过 IConnectQt 接口与底层连接实现解耦，
- * 支持异步回调（信号/槽）。
+ * 发送数据并查看日志。组件通过 IConnect 接口与底层连接实现解耦，
+ * 使用轮询方式读取数据以支持同步实现。
  */
 class ConnectWidget : public QWidget {
     Q_OBJECT
@@ -63,5 +64,6 @@ class ConnectWidget : public QWidget {
     QPushButton* m_sendBtn;
     QTextEdit* m_log;
 
-    std::unique_ptr<IConnectQt> m_conn;
+    IConnectPtr m_conn;
+    QTimer* m_timer{nullptr};
 };

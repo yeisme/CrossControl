@@ -20,6 +20,10 @@ class SettingWidget : public QWidget {
     void backToMain();
     void toggleThemeRequested();  // 请求切换主题
 
+     public slots:
+        void on_btnReloadSettings_clicked();
+        void on_btnSaveSettings_clicked();
+
    private slots:
     void on_btnBackFromSetting_clicked();
     void on_btnToggleTheme_clicked();
@@ -29,6 +33,7 @@ class SettingWidget : public QWidget {
 
    private:
     Ui::SettingWidget* ui;
+    void populateSettingsTable();
 };
 
 #endif  // SETTINGWIDGET_H

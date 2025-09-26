@@ -68,11 +68,10 @@ set(CONFIG_SOURCES src/modules/Config/config.cpp
 # Connect module source files
 set(CONNECT_SOURCES
   src/modules/Connect/tcp_connect.cpp
+  src/modules/Connect/connect_factory.cpp
   include/modules/Connect/iface_connect.h
   include/modules/Connect/tcp_connect.h
-  src/modules/Connect/tcp_connect_qt.cpp
-  include/modules/Connect/tcp_connect_qt.h
-  include/modules/Connect/iface_connect_qt.h
+  include/modules/Connect/connect_factory.h
   include/modules/Connect/connect_wrapper.h
   include/widgets/connectwidget.h
   src/widgets/connectwidget.cpp)

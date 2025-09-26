@@ -153,6 +153,11 @@ void ConfigManager::sync() {
     settings_->sync();
 }
 
+QStringList ConfigManager::allKeys() const {
+    if (!settings_) return {};
+    return settings_->allKeys();
+}
+
 bool ConfigManager::getBool(const QString& key, bool defaultValue) const {
     return getValue(key, defaultValue).toBool();
 }

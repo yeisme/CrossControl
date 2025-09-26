@@ -72,12 +72,12 @@
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../widgets/logwidget.cpp" line="102"/>
+        <location filename="../widgets/logwidget.cpp" line="103"/>
         <source>Save Logs</source>
         <translation>保存日志</translation>
     </message>
     <message>
-        <location filename="../widgets/logwidget.cpp" line="104"/>
+        <location filename="../widgets/logwidget.cpp" line="105"/>
         <source>HTML (*.html);;Text (*.txt)</source>
         <translation>HTML (*.html);;文本 (*.txt)</translation>
     </message>
@@ -354,13 +354,13 @@
     </message>
     <message>
         <location filename="../widgets/mainwidget.cpp" line="186"/>
-        <location filename="../widgets/mainwidget.cpp" line="214"/>
+        <location filename="../widgets/mainwidget.cpp" line="216"/>
         <source>Today: %1</source>
         <translation>今日: %1</translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.cpp" line="187"/>
-        <location filename="../widgets/mainwidget.cpp" line="227"/>
+        <location filename="../widgets/mainwidget.cpp" line="230"/>
         <source>Week: %1</source>
         <translation>本周: %1</translation>
     </message>
@@ -496,19 +496,54 @@
         <translation>监控画面</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="19"/>
+        <location filename="../widgets/monitorwidget.ui" line="29"/>
+        <source>IP</source>
+        <translation>IP</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="39"/>
+        <source>Port</source>
+        <translation>端口</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="49"/>
+        <source>Save Device</source>
+        <translation>保存设备</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="56"/>
+        <source>Start</source>
+        <translation>开始</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="63"/>
+        <source>Stop</source>
+        <translation>停止</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="77"/>
+        <source>Choose Path</source>
+        <translation>选择路径</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="88"/>
         <source>background-color: #333; color: white; min-height: 300px;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="22"/>
+        <location filename="../widgets/monitorwidget.ui" line="91"/>
         <source>Monitor Video Area</source>
         <translation>监控视频区域</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="32"/>
+        <location filename="../widgets/monitorwidget.ui" line="102"/>
         <source>Back to Main</source>
         <translation>返回主页</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.cpp" line="77"/>
+        <source>Choose save path</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -519,39 +554,81 @@
         <translation>系统设置</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.ui" line="56"/>
+        <location filename="../widgets/settingwidget.ui" line="46"/>
+        <location filename="../widgets/settingwidget.cpp" line="47"/>
+        <source>Key</source>
+        <translation>键</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.ui" line="51"/>
+        <location filename="../widgets/settingwidget.cpp" line="47"/>
+        <source>Value</source>
+        <translation>值</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.ui" line="61"/>
+        <source>Reload</source>
+        <translation>重新加载</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.ui" line="66"/>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.ui" line="90"/>
         <source>Back to Main</source>
         <translation>返回主页</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="15"/>
+        <location filename="../widgets/settingwidget.cpp" line="20"/>
         <source>Toggle Light/Dark Theme</source>
         <translation>切换主题（明/暗）</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="17"/>
+        <location filename="../widgets/settingwidget.cpp" line="22"/>
         <source>Theme</source>
         <translation>主题</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="21"/>
+        <location filename="../widgets/settingwidget.cpp" line="26"/>
         <source>Configure Storage</source>
         <translation>配置存储</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="23"/>
+        <location filename="../widgets/settingwidget.cpp" line="28"/>
         <source>Storage</source>
         <translation>存储</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="26"/>
+        <location filename="../widgets/settingwidget.cpp" line="31"/>
         <source>Manage Accounts</source>
         <translation>管理账户</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="28"/>
+        <location filename="../widgets/settingwidget.cpp" line="33"/>
         <source>Accounts</source>
         <translation>账户</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="152"/>
+        <source>Save Failed</source>
+        <translation>保存失败</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="152"/>
+        <source>Failed to save some configuration keys. Check permissions or file locks.</source>
+        <translation>无法保存某些配置键。请检查权限或文件锁。</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="154"/>
+        <source>Saved</source>
+        <translation>已保存</translation>
+    </message>
+    <message>
+        <location filename="../widgets/settingwidget.cpp" line="154"/>
+        <source>Settings saved successfully.</source>
+        <translation>设置已成功保存。</translation>
     </message>
     <message>
         <source>Automatic</source>
