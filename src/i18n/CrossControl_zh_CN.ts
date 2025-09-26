@@ -72,12 +72,12 @@
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../widgets/logwidget.cpp" line="98"/>
+        <location filename="../widgets/logwidget.cpp" line="102"/>
         <source>Save Logs</source>
         <translation>保存日志</translation>
     </message>
     <message>
-        <location filename="../widgets/logwidget.cpp" line="100"/>
+        <location filename="../widgets/logwidget.cpp" line="104"/>
         <source>HTML (*.html);;Text (*.txt)</source>
         <translation>HTML (*.html);;文本 (*.txt)</translation>
     </message>
@@ -414,7 +414,7 @@
     </message>
     <message>
         <location filename="../widgets/messagewidget.cpp" line="255"/>
-        <location filename="../widgets/messagewidget.cpp" line="350"/>
+        <location filename="../widgets/messagewidget.cpp" line="351"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
@@ -473,17 +473,17 @@
         <translation>请选择要删除的留言。</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="339"/>
+        <location filename="../widgets/messagewidget.cpp" line="340"/>
         <source>Confirm Delete</source>
         <translation>确认删除</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="340"/>
+        <location filename="../widgets/messagewidget.cpp" line="341"/>
         <source>Delete selected message?</source>
         <translation>确认删除选中的留言吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="351"/>
+        <location filename="../widgets/messagewidget.cpp" line="352"/>
         <source>Failed to delete message from database.</source>
         <translation>从数据库中删除留言失败。</translation>
     </message>

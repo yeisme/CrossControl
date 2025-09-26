@@ -330,6 +330,7 @@ void MessageWidget::on_btnDeleteMessage_clicked() {
             this,
             QCoreApplication::translate("MessageWidget", "Delete"),
             QCoreApplication::translate("MessageWidget", "Please select a message to delete."));
+        spdlog::debug("No message selected for deletion");
         return;
     }
 
@@ -350,6 +351,8 @@ void MessageWidget::on_btnDeleteMessage_clicked() {
                              QCoreApplication::translate("MessageWidget", "Error"),
                              QCoreApplication::translate(
                                  "MessageWidget", "Failed to delete message from database."));
+
+        spdlog::debug("Failed to delete message with id {} from database", id);
         return;
     }
 
@@ -359,6 +362,7 @@ void MessageWidget::on_btnDeleteMessage_clicked() {
     QListWidgetItem* taken = ui->listWidgetMessages->takeItem(row);
     if (w) delete w;
     if (taken) delete taken;
+    spdlog::debug("Deleted message with id {} from database and UI", id);
 }
 
 void MessageWidget::on_btnBackFromMessage_clicked() {

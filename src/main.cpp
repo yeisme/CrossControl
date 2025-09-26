@@ -87,8 +87,6 @@ int main(int argc, char* argv[]) {
 
     logging::useAsDefault("App");
 
-    spdlog::info("Application started");
-
     CrossControlWidget mainWindow;
     mainWindow.setWindowTitle("CrossControl");
     // 应用程序图标
@@ -112,6 +110,13 @@ int main(int argc, char* argv[]) {
     }
     mainWindow.setMinimumSize(1024, 640);
     mainWindow.show();
+
+    // 全局绑定日志面板：在主窗口创建后、事件循环启动前完成，这样启动阶段的日志也能被捕获。
+    if (auto lw = mainWindow.getLogWidget()) {
+        lw->bindToLoggerManager();
+    }
+
+    spdlog::info("Application started");
     const int rc = a.exec();
 
     spdlog::info("Application exiting");

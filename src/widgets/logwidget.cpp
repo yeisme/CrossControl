@@ -21,20 +21,25 @@ LogWidget::LogWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LogWidget) {
     ui->cmbLevel->setCurrentIndex(m_minLevel);
     ui->chkEnable->setChecked(m_enabled);
 
-    // 绑定统一日志 sink 到该页面的 QTextEdit
+    // 注意：不要在这里做全局绑定（会导致应用启动早期的日志丢失）。
+    // 全局绑定请在主流程中调用 bindToLoggerManager() 完成。
+    spdlog::debug(
+        "LogWidget initialized (deferred binding), enabled={} minLevel={}", m_enabled, m_minLevel);
+}
+
+LogWidget::~LogWidget() {
+    // 不在析构中自动卸载全局 sink，避免在 UI 生命周期中意外移除。若需要显式卸载，请在
+    // 应用级别通过 LoggerManager 进行管理。
+    delete ui;
+}
+
+// 在主流程中调用以完成将 LogWidget 的 QTextEdit 作为全局 Qt sink 的绑定。
+void LogWidget::bindToLoggerManager() {
     logging::LoggerManager::instance().attachQtSink(ui->textEdit, m_maxLines);
-    // 同步 UI 的开关与级别到 sink，避免初次进入无输出
     logging::LoggerManager::instance().setEnabled(m_enabled);
     logging::LoggerManager::instance().setLevel(static_cast<spdlog::level::level_enum>(m_minLevel));
     spdlog::info("Log panel attached. Current min level: {}",
                  ui->cmbLevel->currentText().toStdString());
-    spdlog::debug("LogWidget initialized, enabled={} minLevel={}", m_enabled, m_minLevel);
-}
-
-LogWidget::~LogWidget() {
-    // 若当前绑定的 QTextEdit 与本控件一致，则卸载
-    logging::LoggerManager::instance().detachQtSink(ui->textEdit);
-    delete ui;
 }
 
 void LogWidget::applyColors() {}

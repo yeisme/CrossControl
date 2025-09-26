@@ -51,6 +51,10 @@ class CrossControlWidget : public QWidget {
     UnlockWidget* unlockWidget{nullptr};            // 解锁
     LogWidget* logWidget{nullptr};                  // 日志
 
+    public:
+     // 供外部（例如 main.cpp）访问日志页面以完成全局绑定
+     LogWidget* getLogWidget() const { return logWidget; }
+
    private slots:
     void onLoginSuccess();
     void onLogout();

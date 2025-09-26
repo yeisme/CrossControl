@@ -5,6 +5,7 @@
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
+// do not depend on spdlog internals (registry) — operate on default_logger and loggers we track
 
 namespace logging {
 
@@ -29,35 +30,44 @@ void LoggerManager::init() {
 void LoggerManager::installQtSinkToAll_() {
     if (!qt_sink_) return;
     // 安装到默认 logger
-    auto& sinks = spdlog::default_logger()->sinks();
-    if (std::find(sinks.begin(), sinks.end(), qt_sink_) == sinks.end()) {
-        sinks.push_back(qt_sink_);
-    }
-    // 安装到所有已存在的具名 logger
+    auto addSinkToLogger = [&](std::shared_ptr<spdlog::logger> lg) {
+        if (!lg) return;
+        auto& s = lg->sinks();
+        if (std::find(s.begin(), s.end(), qt_sink_) == s.end()) { s.push_back(qt_sink_); }
+    };
+
+    // default logger first
+    if (spdlog::default_logger()) addSinkToLogger(spdlog::default_logger());
+
+    // add to loggers we explicitly track
     loggers_.erase(
         std::remove_if(loggers_.begin(), loggers_.end(), [](auto& w) { return w.expired(); }),
         loggers_.end());
-    for (auto& w : loggers_) {
-        if (auto lg = w.lock()) {
-            auto& s = lg->sinks();
-            if (std::find(s.begin(), s.end(), qt_sink_) == s.end()) { s.push_back(qt_sink_); }
-        }
-    }
+    for (auto& w : loggers_)
+        if (auto lg = w.lock()) addSinkToLogger(lg);
+
+    // 注意：我们故意不在这里扫描 spdlog 的内部。为了确保 Qt 接收器的覆盖率， 请在主函数的早期调用
+    // LoggerManager::init()，并在 UI 准备好后通过 attachQtSink() 附加 Qt 接收器。通过我们的
+    // getLogger() 创建的新日志记录器如果存在 qt_sink_ 将继承它。
 }
 
 void LoggerManager::uninstallQtSinkFromAll_() {
     if (!qt_sink_) return;
-    auto& sinks = spdlog::default_logger()->sinks();
-    sinks.erase(std::remove(sinks.begin(), sinks.end(), qt_sink_), sinks.end());
+    auto removeSinkFromLogger = [&](std::shared_ptr<spdlog::logger> lg) {
+        if (!lg) return;
+        auto& s = lg->sinks();
+        s.erase(std::remove(s.begin(), s.end(), qt_sink_), s.end());
+    };
+
+    if (spdlog::default_logger()) removeSinkFromLogger(spdlog::default_logger());
+
     loggers_.erase(
         std::remove_if(loggers_.begin(), loggers_.end(), [](auto& w) { return w.expired(); }),
         loggers_.end());
-    for (auto& w : loggers_) {
-        if (auto lg = w.lock()) {
-            auto& s = lg->sinks();
-            s.erase(std::remove(s.begin(), s.end(), qt_sink_), s.end());
-        }
-    }
+    for (auto& w : loggers_)
+        if (auto lg = w.lock()) removeSinkFromLogger(lg);
+
+    // See note above: do not touch spdlog internals here.
 }
 
 void LoggerManager::attachQtSink(QTextEdit* edit, int maxLines, const std::string& pattern) {
@@ -100,6 +110,11 @@ std::shared_ptr<spdlog::logger> LoggerManager::getLogger(const std::string& name
         lg->set_level(spdlog::level::trace);
         lg->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
         spdlog::register_logger(lg);
+        // 如果我们已经有 qt_sink_，确保新的 logger 也带上它
+        if (qt_sink_) {
+            auto& s = lg->sinks();
+            if (std::find(s.begin(), s.end(), qt_sink_) == s.end()) s.push_back(qt_sink_);
+        }
         loggers_.push_back(lg);
     }
     return lg;

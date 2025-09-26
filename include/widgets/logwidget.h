@@ -22,12 +22,11 @@ class LogWidget : public QWidget {
    public:
     explicit LogWidget(QWidget* parent = nullptr);
     ~LogWidget();
+    // 在主流程中调用此函数以将 LogWidget 的 QTextEdit 绑定为全局日志 sink
+    void bindToLoggerManager();
 
    signals:
     void backToMain();
-
-   public slots:
-    // 无需手动 append，qt sink 会自动写入 QTextEdit
 
    private slots:
     void on_btnBack_clicked();
