@@ -14,7 +14,7 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QRegularExpression>
-#include <QSettings>
+#include "modules/Config/config.h"
 #include <QTimer>
 #include <QVariant>
 
@@ -169,9 +169,8 @@ LoginWidget::LoginWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LoginWid
         // QSettings stores simple key/value pairs in a platform-specific
         // location (registry on Windows). We namespace settings with the
         // application and group to keep them organized.
-        QSettings settings("CrossControl", "Auth");
-        const bool remembered = settings.value("rememberPassword", false).toBool();
-        const bool autoLogin = settings.value("autoLogin", false).toBool();
+    const bool remembered = config::ConfigManager::instance().getBool("Auth/rememberPassword", false);
+    const bool autoLogin = config::ConfigManager::instance().getBool("Auth/autoLogin", false);
         chkRemember->setChecked(remembered);
         chkAuto->setChecked(autoLogin);
 
@@ -182,7 +181,7 @@ LoginWidget::LoginWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LoginWid
         //  - Use OS-provided secure storage (Windows Credentials, Keychain),
         //  - Encrypt password with a user-specific key (requires key mgmt).
         if (remembered) {
-            const QString plain = settings.value("passwordPlain").toString();
+            const QString plain = config::ConfigManager::instance().getString("Auth/passwordPlain", QString());
             if (!plain.isEmpty()) ui->lineEditLoginPassword->setText(plain);
         }
 
@@ -249,19 +248,17 @@ void LoginWidget::on_pushButtonLogin_clicked() {
         // Persist remember / auto-login preference and optionally password
         if (auto chkRemember = findChild<QCheckBox*>(QStringLiteral("chkRememberPassword"));
             chkRemember) {
-            QSettings settings("CrossControl", "Auth");
-            settings.setValue("rememberPassword", chkRemember->isChecked());
+            config::ConfigManager::instance().setValue("Auth/rememberPassword", chkRemember->isChecked());
             if (chkRemember->isChecked()) {
-                settings.setValue("passwordPlain", ui->lineEditLoginPassword->text());
+                config::ConfigManager::instance().setValue("Auth/passwordPlain", ui->lineEditLoginPassword->text());
             } else {
-                settings.remove("passwordPlain");
+                config::ConfigManager::instance().remove("Auth/passwordPlain");
             }
         }
         if (auto chkAuto = findChild<QCheckBox*>(QStringLiteral("chkAutoLogin")); chkAuto) {
-            QSettings settings("CrossControl", "Auth");
-            settings.setValue("autoLogin", chkAuto->isChecked());
+            config::ConfigManager::instance().setValue("Auth/autoLogin", chkAuto->isChecked());
             // If auto-login enabled but remember not checked, enable remember
-            if (chkAuto->isChecked()) settings.setValue("rememberPassword", true);
+            if (chkAuto->isChecked()) config::ConfigManager::instance().setValue("Auth/rememberPassword", true);
         }
     } else {
         QMessageBox::warning(
@@ -362,15 +359,13 @@ QString LoginWidget::hashPassword(const QString& password) const {
 }
 
 void LoginWidget::saveAccount(const QString& email, const QString& passwordHash) {
-    QSettings settings("CrossControl", "Auth");
-    settings.setValue("email", email);
-    settings.setValue("passwordHash", passwordHash);
+    config::ConfigManager::instance().setValue("Auth/email", email);
+    config::ConfigManager::instance().setValue("Auth/passwordHash", passwordHash);
 }
 
 bool LoginWidget::loadAccount(QString& emailOut, QString& passwordHashOut) const {
-    QSettings settings("CrossControl", "Auth");
-    emailOut = settings.value("email").toString();
-    passwordHashOut = settings.value("passwordHash").toString();
+    emailOut = config::ConfigManager::instance().getString("Auth/email", QString());
+    passwordHashOut = config::ConfigManager::instance().getString("Auth/passwordHash", QString());
     return !emailOut.isEmpty() && !passwordHashOut.isEmpty();
 }
 

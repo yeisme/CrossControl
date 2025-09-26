@@ -18,7 +18,7 @@ target_include_directories(Connect PUBLIC ${CMAKE_SOURCE_DIR}/include ${CMAKE_SO
 target_include_directories(Connect PUBLIC include/modules/Connect)
 
 find_package(Qt6 COMPONENTS Network REQUIRED)
-target_link_libraries(Connect PRIVATE Qt6::Network logging)
+target_link_libraries(Connect PRIVATE Qt6::Network logging config)
 
 target_link_libraries(CrossControl PUBLIC Connect)
 

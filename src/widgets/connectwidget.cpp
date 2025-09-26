@@ -2,13 +2,16 @@
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include "modules/Config/config.h"
 
 #include "connect_wrapper.h"
 #include "tcp_connect_qt.h"
 
 ConnectWidget::ConnectWidget(QWidget* parent) : QWidget(parent) {
     m_endpoint = new QLineEdit(this);
-    m_endpoint->setPlaceholderText("127.0.0.1:9000");
+    // 从配置中读取默认 endpoint，若未设置则使用旧的硬编码默认
+    const QString epDefault = config::ConfigManager::instance().getOrDefault("Connect/endpoint", QVariant("127.0.0.1:9000")).toString();
+    m_endpoint->setPlaceholderText(epDefault);
     m_openBtn = new QPushButton("Open", this);
     m_sendBtn = new QPushButton("Send", this);
     m_log = new QTextEdit(this);

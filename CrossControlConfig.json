@@ -1,0 +1,13 @@
+﻿{
+	"Storage": {
+		"driver": "QSQLITE",
+		"database": "crosscontrol.db",
+		"foreignKeys": true
+	},
+	"Connect": {
+		"endpoint": "127.0.0.1:9000"
+	},
+	"Preferences": {
+		"theme": "auto"
+	}
+}

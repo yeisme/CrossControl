@@ -22,9 +22,15 @@ public:
     // 初始化（可选指定组织与应用名）
     void init(const QString& organization = QString(), const QString& application = QString());
 
+    // 从指定 JSON 文件加载配置（会覆盖当前同名键），返回是否成功解析并应用
+    bool loadFromJsonFile(const QString& path);
+
     // 读取/写入配置
     QVariant getValue(const QString& key, const QVariant& defaultValue = QVariant()) const;
     void setValue(const QString& key, const QVariant& value);
+    // 如果键不存在或为空则写入默认值并返回该默认值，否则返回现有值
+    QVariant setOrDefault(const QString& key, const QVariant& defaultValue = QVariant());
+    QVariant getOrDefault(const QString& key, const QVariant& defaultValue = QVariant()) const;
 
     // 移除键与同步
     void remove(const QString& key);

@@ -8,8 +8,8 @@ include(cmake/targets/Logging.cmake)
 include(cmake/targets/HumanRecognition.cmake)
 include(cmake/targets/AudioVideo.cmake)
 include(cmake/targets/Storage.cmake)
-include(cmake/targets/Connect.cmake)
 include(cmake/targets/Config.cmake)
+include(cmake/targets/Connect.cmake)
 
 target_link_libraries(
         CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
@@ -31,3 +31,12 @@ add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QM_FILES}
         "$<TARGET_FILE_DIR:CrossControl>/i18n"
         COMMENT "Copying translation files to runtime i18n directory")
+
+# Copy default CrossControlConfig.json next to executable so ConfigManager can auto-load it
+add_custom_command(
+        TARGET CrossControl
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                ${CMAKE_SOURCE_DIR}/CrossControlConfig.json
+                "$<TARGET_FILE_DIR:CrossControl>/CrossControlConfig.json"
+        COMMENT "Copy default CrossControlConfig.json to runtime directory")

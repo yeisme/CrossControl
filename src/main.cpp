@@ -8,7 +8,7 @@
 #include <QMessageLogContext>
 #include <QPalette>
 #include <QPushButton>
-#include <QSettings>
+#include "modules/Config/config.h"
 #include <QSplitter>
 #include <QTextEdit>
 #include <QTranslator>
@@ -82,6 +82,9 @@ int main(int argc, char* argv[]) {
     logging::LoggerManager::instance().init();
     qInstallMessageHandler(logging::LoggerManager::qtMessageHandler);
 
+    // 初始化全局配置管理（使用组织/应用名统一存储）
+    config::ConfigManager::instance().init("CrossControl", "CrossControl");
+
     logging::useAsDefault("App");
 
     spdlog::info("Application started");
@@ -97,8 +100,7 @@ int main(int argc, char* argv[]) {
 
     // 加载样式
     // 读取用户上次主题偏好（默认 auto 跟随系统）
-    QSettings settings("CrossControl", "Preferences");
-    const QString themePref = settings.value("theme", "auto").toString();
+    const QString themePref = config::ConfigManager::instance().getString("Preferences/theme", "auto");
     QString appliedTheme = themePref;
     if (themePref == "auto") { appliedTheme = detectSystemTheme(a); }
     const QString themePath =

@@ -4,42 +4,42 @@
 <context>
     <name>CrossControlWidget</name>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="66"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="67"/>
         <source>Dashboard</source>
         <translation>仪表盘</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="69"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="70"/>
         <source>Monitor</source>
         <translation>监控</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="72"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="73"/>
         <source>Remote Unlock</source>
         <translation>远程开锁</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="75"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="76"/>
         <source>Visit Records</source>
         <translation>来访记录</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="78"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="79"/>
         <source>Messages</source>
         <translation>留言</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="81"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="82"/>
         <source>System Settings</source>
         <translation>系统设置</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="84"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="85"/>
         <source>Logs</source>
         <translation>运行日志</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="95"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="96"/>
         <source>Logout</source>
         <translation>退出登录</translation>
     </message>
@@ -169,60 +169,60 @@
         <translation>自动登录</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="219"/>
-        <location filename="../widgets/loginwidget.cpp" line="283"/>
+        <location filename="../widgets/loginwidget.cpp" line="218"/>
+        <location filename="../widgets/loginwidget.cpp" line="280"/>
         <source>Please enter a valid email and a password with at least 8 characters</source>
         <translation>请输入有效的邮箱和至少 8 个字符的密码·</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="229"/>
-        <location filename="../widgets/loginwidget.cpp" line="238"/>
-        <location filename="../widgets/loginwidget.cpp" line="269"/>
+        <location filename="../widgets/loginwidget.cpp" line="228"/>
+        <location filename="../widgets/loginwidget.cpp" line="237"/>
+        <location filename="../widgets/loginwidget.cpp" line="266"/>
         <source>Login Failed</source>
         <translation>登录失败</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="230"/>
+        <location filename="../widgets/loginwidget.cpp" line="229"/>
         <source>This email is not registered. Please register first.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="232"/>
+        <location filename="../widgets/loginwidget.cpp" line="231"/>
         <source>Email not registered</source>
         <translation>邮箱未注册</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="239"/>
+        <location filename="../widgets/loginwidget.cpp" line="238"/>
         <source>Email does not match the registered account.</source>
         <translation>邮箱与注册账户不匹配。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="241"/>
+        <location filename="../widgets/loginwidget.cpp" line="240"/>
         <source>Email mismatch</source>
         <translation>邮箱不匹配</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="270"/>
+        <location filename="../widgets/loginwidget.cpp" line="267"/>
         <source>Incorrect password. Please try again.</source>
         <translation>密码错误，请重试。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="271"/>
+        <location filename="../widgets/loginwidget.cpp" line="268"/>
         <source>Incorrect password</source>
         <translation>密码错误</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="290"/>
+        <location filename="../widgets/loginwidget.cpp" line="287"/>
         <source>Registration Failed</source>
         <translation>注册失败</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="291"/>
+        <location filename="../widgets/loginwidget.cpp" line="288"/>
         <source>Passwords do not match.</source>
         <translation>密码不匹配。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="292"/>
+        <location filename="../widgets/loginwidget.cpp" line="289"/>
         <source>Passwords do not match</source>
         <translation>密码不匹配</translation>
     </message>

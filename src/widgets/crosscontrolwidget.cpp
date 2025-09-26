@@ -15,6 +15,7 @@
 
 #include "logging.h"
 #include "spdlog/spdlog.h"
+#include "modules/Config/config.h"
 
 CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     LogM::instance().init();  // 初始化日志系统
@@ -237,8 +238,7 @@ void CrossControlWidget::toggleTheme() {
     dark = !dark;
     const QString path = dark ? ":/themes/themes/dark.qss" : ":/themes/themes/light.qss";
     {
-        QSettings settings("CrossControl", "Preferences");
-        settings.setValue("theme", dark ? "dark" : "light");
+        config::ConfigManager::instance().setValue("Preferences/theme", dark ? "dark" : "light");
     }
     QFile f(path);
     if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
