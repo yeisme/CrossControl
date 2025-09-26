@@ -21,7 +21,10 @@ if(QT_VERSION_MAJOR EQUAL 6)
 
   # Install translation files
   if(QM_FILES)
-    install(FILES ${QM_FILES} DESTINATION ${CMAKE_INSTALL_BINDIR}/i18n COMPONENT Runtime)
+    install(
+      FILES ${QM_FILES}
+      DESTINATION ${CMAKE_INSTALL_BINDIR}/i18n
+      COMPONENT Runtime)
   endif()
 endif()
 

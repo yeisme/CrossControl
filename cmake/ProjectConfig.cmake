@@ -17,7 +17,7 @@ message(
   STATUS " * feature BUILD_HUMAN_RECOGNITION: ${BUILD_HUMAN_RECOGNITION}")
 option(BUILD_AUDIO_VIDEO "Build Audio Video module" ON)
 message(STATUS " * feature BUILD_AUDIO_VIDEO: ${BUILD_AUDIO_VIDEO}")
-option(BUILD_MQTT_CLIENT "Build MQTT Client module" ON)
+option(BUILD_MQTT_CLIENT "Build MQTT Client module" OFF) # TODO: 默认关闭，暂时不支持
 message(STATUS " * feature BUILD_MQTT_CLIENT: ${BUILD_MQTT_CLIENT}")
 
 # Storage module is required for the project; always enable it.

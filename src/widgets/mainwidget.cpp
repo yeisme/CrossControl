@@ -1,5 +1,7 @@
 ﻿#include "mainwidget.h"
 
+#include <qcoreapplication.h>
+
 #include <QDate>
 #include <QDateTime>
 #include <QFont>
@@ -120,13 +122,16 @@ MainWidget::MainWidget(QWidget* parent) : QWidget(parent), ui(new Ui::MainWidget
         }
 
         // Create new labels (same object names) so updateVisitorStats() can find them
-        QLabel* newToday = new QLabel(tr("Today: 0"), visitorStats);
+        QLabel* newToday =
+            new QLabel(QCoreApplication::translate("MainWidget", "Today: 0"), visitorStats);
         newToday->setObjectName("labelVisitorsToday");
         newToday->setAlignment(Qt::AlignCenter);
-        QLabel* newWeek = new QLabel(tr("Week: 0"), visitorStats);
+        QLabel* newWeek =
+            new QLabel(QCoreApplication::translate("MainWidget", "Week: 0"), visitorStats);
         newWeek->setObjectName("labelVisitorsWeek");
         newWeek->setAlignment(Qt::AlignCenter);
-        QLabel* newTotal = new QLabel(tr("Total: 0"), visitorStats);
+        QLabel* newTotal =
+            new QLabel(QCoreApplication::translate("MainWidget", "Total: 0"), visitorStats);
         newTotal->setObjectName("labelVisitorsTotal");
         newTotal->setAlignment(Qt::AlignCenter);
 
@@ -138,7 +143,8 @@ MainWidget::MainWidget(QWidget* parent) : QWidget(parent), ui(new Ui::MainWidget
         QVBoxLayout* v = new QVBoxLayout(visitorStats);
         v->setContentsMargins(0, 0, 0, 0);
         v->setSpacing(6);
-        QLabel* title = new QLabel(tr("Visitor Statistics"), visitorStats);
+        QLabel* title = new QLabel(QCoreApplication::translate("MainWidget", "Visitor Statistics"),
+                                   visitorStats);
         title->setObjectName("labelVisitorTitle");
         QFont f = title->font();
         f.setPointSize(12);
@@ -174,9 +180,11 @@ void MainWidget::updateVisitorStats() {
         QLabel* lblTotal = this->findChild<QLabel*>("labelVisitorsTotal");
         QLabel* lblToday = this->findChild<QLabel*>("labelVisitorsToday");
         QLabel* lblWeek = this->findChild<QLabel*>("labelVisitorsWeek");
-        if (lblTotal) lblTotal->setText(tr("Total: %1").arg(0));
-        if (lblToday) lblToday->setText(tr("Today: %1").arg(0));
-        if (lblWeek) lblWeek->setText(tr("Week: %1").arg(0));
+        if (lblTotal)
+            lblTotal->setText(QCoreApplication::translate("MainWidget", "Total: %1").arg(0));
+        if (lblToday)
+            lblToday->setText(QCoreApplication::translate("MainWidget", "Today: %1").arg(0));
+        if (lblWeek) lblWeek->setText(QCoreApplication::translate("MainWidget", "Week: %1").arg(0));
         return;
     }
 
@@ -186,7 +194,9 @@ void MainWidget::updateVisitorStats() {
         if (qTotal.next()) {
             int total = qTotal.value(0).toInt();
             QLabel* lblTotal = this->findChild<QLabel*>("labelVisitorsTotal");
-            if (lblTotal) lblTotal->setText(tr("Total: %1").arg(total));
+            if (lblTotal)
+                lblTotal->setText(
+                    QCoreApplication::translate("MainWidget", "Total: %1").arg(total));
         }
     }
 

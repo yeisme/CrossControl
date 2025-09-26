@@ -1,4 +1,5 @@
 ﻿#include "storage.h"
+#include "dbmanager.h"
 
 #include <QSqlDatabase>
 

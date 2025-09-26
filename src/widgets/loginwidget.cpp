@@ -1,11 +1,12 @@
 ﻿#include "loginwidget.h"
 
 #include <qcoreapplication.h>
-#include <qwindowdefs_win.h>
 
 #include <QAction>
+#include <QCheckBox>
 #include <QCoreApplication>
 #include <QCryptographicHash>
+#include <QHBoxLayout>
 #include <QIcon>
 #include <QLabel>
 #include <QLineEdit>
@@ -14,6 +15,7 @@
 #include <QPixmap>
 #include <QRegularExpression>
 #include <QSettings>
+#include <QTimer>
 #include <QVariant>
 
 #include "spdlog/spdlog.h"
@@ -32,7 +34,7 @@ LoginWidget::LoginWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LoginWid
         }
     }
 
-    // Connect real-time validation
+    // 绑定实时校验（输入变化时更新按钮状态）
     connect(ui->lineEditLoginEmail,
             &QLineEdit::textChanged,
             this,
@@ -96,9 +98,109 @@ LoginWidget::LoginWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LoginWid
         setupPasswordToggle(confirm);
     }
 
-    // Pre-fill login email if we have a stored one
+    // 如果之前保存过邮箱，则预填邮箱输入框
     QString savedEmail, savedHash;
     if (loadAccount(savedEmail, savedHash)) { ui->lineEditLoginEmail->setText(savedEmail); }
+
+    // --- 记住密码 / 自动登录 复选框 ---
+    // 在登录界面动态添加两个小的 QCheckBox：
+    //  * chkRememberPassword：是否在本机保存密码以便下次自动填充
+    //  * chkAutoLogin：是否在启动时自动尝试登录
+    // 实现要点：
+    //  - 我们把控件插入到登录 tab 使用的 QVBoxLayout 中，这样不需要修改 .ui 文件，
+    //    Designer 中的布局仍保持不变。插入时优先放在错误信息标签之前；若找不到则
+    //    放在密码输入框之后的合理位置。
+    //  - 偏好通过 QSettings("CrossControl","Auth") 存储（平台相关的位置）。
+    //  - 为了方便（但不安全），当用户勾选“记住密码”时，我们会把明文密码保存到
+    //    键 "passwordPlain" 中以便下次预填。生产环境请避免这样做，下面列出了更安全的替代方案。
+    // TODO: 考虑使用更安全的存储方式（见下方注释）。
+    //  推荐的替代方案包括：
+    //  - 使用操作系统提供的安全存储（Windows Credentials, Keychain等），
+    //  - 使用用户特定的密钥加密密码（需要密钥管理）。
+    //  - 如果启用了自动登录，则确保同时启用记住密码（自动登录需要本地存储的密码）。
+    //  - 如果启用了自动登录，则在 UI 初始化完成后安排一次短延迟的尝试登录。
+    if (auto vlay = findChild<QVBoxLayout*>(QStringLiteral("verticalLayoutLogin")); vlay) {
+        // create a small horizontal container to hold the two checkboxes
+        QWidget* boxHolder = new QWidget(this);
+        auto* h = new QHBoxLayout(boxHolder);
+        h->setContentsMargins(0, 0, 0, 0);
+        h->setSpacing(8);
+
+        // Create the "Remember password" checkbox (objectName used later)
+        auto* chkRemember = new QCheckBox(
+            QCoreApplication::translate("LoginWidget", "RememberPassword"), boxHolder);
+        chkRemember->setObjectName(QStringLiteral("chkRememberPassword"));
+
+        // Create the "Auto-login" checkbox
+        auto* chkAuto =
+            new QCheckBox(QCoreApplication::translate("LoginWidget", "AutoLogin"), boxHolder);
+        chkAuto->setObjectName(QStringLiteral("chkAutoLogin"));
+
+        // 使用小号字体以免复选框在视觉上过于突出
+        QFont smallF = chkRemember->font();
+        smallF.setPointSize(smallF.pointSize() - 1);
+        chkRemember->setFont(smallF);
+        chkAuto->setFont(smallF);
+
+        // Add into horizontal layout; addStretch to push them to the left
+        h->addWidget(chkRemember, 0, Qt::AlignLeft);
+        h->addWidget(chkAuto, 0, Qt::AlignLeft);
+        h->addStretch(1);
+
+        // Insert the boxHolder into the vertical layout for the login form.
+        // We try to place it before the error label if present, otherwise at
+        // index 2 (after the two input QLineEdit fields).
+        int insertIndex = -1;
+        if (auto lblErr = findChild<QLabel*>(QStringLiteral("labelLoginError")); lblErr) {
+            for (int i = 0; i < vlay->count(); ++i) {
+                QLayoutItem* it = vlay->itemAt(i);
+                if (it && it->widget() == lblErr) {
+                    insertIndex = i;
+                    break;
+                }
+            }
+        }
+        if (insertIndex >= 0)
+            vlay->insertWidget(insertIndex, boxHolder);
+        else
+            vlay->insertWidget(2, boxHolder);
+
+        // --- Load saved preferences from QSettings ---
+        // QSettings stores simple key/value pairs in a platform-specific
+        // location (registry on Windows). We namespace settings with the
+        // application and group to keep them organized.
+        QSettings settings("CrossControl", "Auth");
+        const bool remembered = settings.value("rememberPassword", false).toBool();
+        const bool autoLogin = settings.value("autoLogin", false).toBool();
+        chkRemember->setChecked(remembered);
+        chkAuto->setChecked(autoLogin);
+
+        // If rememberPassword was enabled previously, prefill the password.
+        // NOTE: storing plain passwords is insecure. This project currently
+        // uses plain storage for convenience; recommended alternatives:
+        //  - Store only a password hash and use it for verification (safer),
+        //  - Use OS-provided secure storage (Windows Credentials, Keychain),
+        //  - Encrypt password with a user-specific key (requires key mgmt).
+        if (remembered) {
+            const QString plain = settings.value("passwordPlain").toString();
+            if (!plain.isEmpty()) ui->lineEditLoginPassword->setText(plain);
+        }
+
+        // 如果之前启用了自动登录，则在 UI 初始化完成后安排一次短延迟的尝试登录。
+        // 会先验证输入是否有效，只有当登录按钮可用时才触发登录。
+        if (autoLogin) {
+            // small delay to let UI complete layout and widget initialization
+            QTimer::singleShot(200, this, [this]() {
+                updateLoginButtonState();
+                if (ui->pushButtonLogin->isEnabled()) on_pushButtonLogin_clicked();
+            });
+        }
+
+        // 交互逻辑：若启用自动登录，则确保同时启用记住密码（自动登录需要本地存储的密码）。
+        connect(chkAuto, &QCheckBox::toggled, this, [chkRemember](bool on) {
+            if (on && !chkRemember->isChecked()) chkRemember->setChecked(true);
+        });
+    }
 
     updateLoginButtonState();
     updateRegisterButtonState();
@@ -144,6 +246,23 @@ void LoginWidget::on_pushButtonLogin_clicked() {
     if (inputHash == savedHash) {
         clearLoginError();
         emit loginSuccess();
+        // Persist remember / auto-login preference and optionally password
+        if (auto chkRemember = findChild<QCheckBox*>(QStringLiteral("chkRememberPassword"));
+            chkRemember) {
+            QSettings settings("CrossControl", "Auth");
+            settings.setValue("rememberPassword", chkRemember->isChecked());
+            if (chkRemember->isChecked()) {
+                settings.setValue("passwordPlain", ui->lineEditLoginPassword->text());
+            } else {
+                settings.remove("passwordPlain");
+            }
+        }
+        if (auto chkAuto = findChild<QCheckBox*>(QStringLiteral("chkAutoLogin")); chkAuto) {
+            QSettings settings("CrossControl", "Auth");
+            settings.setValue("autoLogin", chkAuto->isChecked());
+            // If auto-login enabled but remember not checked, enable remember
+            if (chkAuto->isChecked()) settings.setValue("rememberPassword", true);
+        }
     } else {
         QMessageBox::warning(
             this,
@@ -177,7 +296,7 @@ void LoginWidget::on_pushButtonRegister_clicked() {
     const QString pwdHash = hashPassword(password);
     saveAccount(email, pwdHash);
 
-    // Auto switch to login and prefill
+    // 注册成功后自动切换到登录页并预填登录信息
     ui->lineEditLoginEmail->setText(email);
     ui->lineEditLoginPassword->setText(password);
     updateLoginButtonState();
@@ -185,7 +304,7 @@ void LoginWidget::on_pushButtonRegister_clicked() {
     emit loginSuccess();
 }
 
-// Realtime validation slots
+// 实时校验槽函数
 void LoginWidget::on_lineEditLoginEmail_textChanged(const QString& text) {
     Q_UNUSED(text);
     updateLoginButtonState();

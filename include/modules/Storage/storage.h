@@ -1,8 +1,13 @@
 ﻿#pragma once
 
 #include <QSqlDatabase>
+#include <QtGlobal>
 
-#include "dbmanager.h"
+#ifdef Storage_EXPORTS
+#define STORAGE_EXPORT Q_DECL_EXPORT
+#else
+#define STORAGE_EXPORT Q_DECL_IMPORT
+#endif
 
 namespace storage {
 
@@ -10,7 +15,7 @@ namespace storage {
  * @brief Facade-style helper for initializing and accessing the project's database
  *        using Qt's QSql API.
  */
-class Storage final {
+class STORAGE_EXPORT Storage final {
    public:
     // Initialize SQLite database (creates a connection if needed)
     static bool initSqlite(const QString& path);

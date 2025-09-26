@@ -88,5 +88,4 @@ CMakeLists.txt.user*
 
 CMakeUserPresets.json
 
-# 子模块源码
-src/modules/TinyORM 
+vcpkg_installed/

@@ -154,65 +154,75 @@
         <translation>登录</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="90"/>
+        <location filename="../widgets/loginwidget.cpp" line="92"/>
         <source>Show/Hide password</source>
         <translation>显示/隐藏密码</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="117"/>
-        <location filename="../widgets/loginwidget.cpp" line="164"/>
+        <location filename="../widgets/loginwidget.cpp" line="131"/>
+        <source>RememberPassword</source>
+        <translation>记住密码</translation>
+    </message>
+    <message>
+        <location filename="../widgets/loginwidget.cpp" line="136"/>
+        <source>AutoLogin</source>
+        <translation>自动登录</translation>
+    </message>
+    <message>
+        <location filename="../widgets/loginwidget.cpp" line="219"/>
+        <location filename="../widgets/loginwidget.cpp" line="283"/>
         <source>Please enter a valid email and a password with at least 8 characters</source>
         <translation>请输入有效的邮箱和至少 8 个字符的密码·</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="127"/>
-        <location filename="../widgets/loginwidget.cpp" line="136"/>
-        <location filename="../widgets/loginwidget.cpp" line="150"/>
+        <location filename="../widgets/loginwidget.cpp" line="229"/>
+        <location filename="../widgets/loginwidget.cpp" line="238"/>
+        <location filename="../widgets/loginwidget.cpp" line="269"/>
         <source>Login Failed</source>
         <translation>登录失败</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="128"/>
+        <location filename="../widgets/loginwidget.cpp" line="230"/>
         <source>This email is not registered. Please register first.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="130"/>
+        <location filename="../widgets/loginwidget.cpp" line="232"/>
         <source>Email not registered</source>
         <translation>邮箱未注册</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="137"/>
+        <location filename="../widgets/loginwidget.cpp" line="239"/>
         <source>Email does not match the registered account.</source>
         <translation>邮箱与注册账户不匹配。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="139"/>
+        <location filename="../widgets/loginwidget.cpp" line="241"/>
         <source>Email mismatch</source>
         <translation>邮箱不匹配</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="151"/>
+        <location filename="../widgets/loginwidget.cpp" line="270"/>
         <source>Incorrect password. Please try again.</source>
         <translation>密码错误，请重试。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="152"/>
+        <location filename="../widgets/loginwidget.cpp" line="271"/>
         <source>Incorrect password</source>
         <translation>密码错误</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="171"/>
+        <location filename="../widgets/loginwidget.cpp" line="290"/>
         <source>Registration Failed</source>
         <translation>注册失败</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="172"/>
+        <location filename="../widgets/loginwidget.cpp" line="291"/>
         <source>Passwords do not match.</source>
         <translation>密码不匹配。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="173"/>
+        <location filename="../widgets/loginwidget.cpp" line="292"/>
         <source>Passwords do not match</source>
         <translation>密码不匹配</translation>
     </message>
@@ -265,19 +275,19 @@
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="70"/>
-        <location filename="../widgets/mainwidget.cpp" line="123"/>
+        <location filename="../widgets/mainwidget.cpp" line="126"/>
         <source>Today: 0</source>
         <translation>今日: 0</translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="80"/>
-        <location filename="../widgets/mainwidget.cpp" line="126"/>
+        <location filename="../widgets/mainwidget.cpp" line="130"/>
         <source>Week: 0</source>
         <translation>本周: 0</translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="90"/>
-        <location filename="../widgets/mainwidget.cpp" line="129"/>
+        <location filename="../widgets/mainwidget.cpp" line="134"/>
         <source>Total: 0</source>
         <translation>今日: 0</translation>
     </message>
@@ -332,25 +342,25 @@
         <translation>运行日志</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.cpp" line="141"/>
+        <location filename="../widgets/mainwidget.cpp" line="146"/>
         <source>Visitor Statistics</source>
         <translation>访客统计</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.cpp" line="177"/>
-        <location filename="../widgets/mainwidget.cpp" line="189"/>
+        <location filename="../widgets/mainwidget.cpp" line="184"/>
+        <location filename="../widgets/mainwidget.cpp" line="199"/>
         <source>Total: %1</source>
         <translation>总计: %1</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.cpp" line="178"/>
-        <location filename="../widgets/mainwidget.cpp" line="204"/>
+        <location filename="../widgets/mainwidget.cpp" line="186"/>
+        <location filename="../widgets/mainwidget.cpp" line="214"/>
         <source>Today: %1</source>
         <translation>今日: %1</translation>
     </message>
     <message>
-        <location filename="../widgets/mainwidget.cpp" line="179"/>
-        <location filename="../widgets/mainwidget.cpp" line="217"/>
+        <location filename="../widgets/mainwidget.cpp" line="187"/>
+        <location filename="../widgets/mainwidget.cpp" line="227"/>
         <source>Week: %1</source>
         <translation>本周: %1</translation>
     </message>
@@ -398,13 +408,13 @@
         <translation>返回主页</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="234"/>
+        <location filename="../widgets/messagewidget.cpp" line="236"/>
         <source>Confirm Send</source>
         <translation>确认发送</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="253"/>
-        <location filename="../widgets/messagewidget.cpp" line="344"/>
+        <location filename="../widgets/messagewidget.cpp" line="255"/>
+        <location filename="../widgets/messagewidget.cpp" line="350"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
@@ -417,62 +427,63 @@
         <translation type="vanished">保存留言到数据库失败: %1</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="49"/>
-        <location filename="../widgets/messagewidget.cpp" line="61"/>
+        <location filename="../widgets/messagewidget.cpp" line="50"/>
+        <location filename="../widgets/messagewidget.cpp" line="62"/>
         <source>Database Error</source>
         <translation>数据库错误</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="50"/>
+        <location filename="../widgets/messagewidget.cpp" line="51"/>
         <source>Failed to initialize database. Message saving will be disabled.</source>
         <translation>初始化数据库失败。留言保存将被禁用。</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="62"/>
+        <location filename="../widgets/messagewidget.cpp" line="63"/>
         <source>Database opened but not available (not open). Message saving will be disabled.</source>
         <translation>数据库已打开但不可用（未打开）。留言保存将被禁用。</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="150"/>
-        <location filename="../widgets/messagewidget.cpp" line="280"/>
+        <location filename="../widgets/messagewidget.cpp" line="151"/>
+        <location filename="../widgets/messagewidget.cpp" line="284"/>
         <source>(Anonymous)</source>
         <translation>(匿名)</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="168"/>
-        <location filename="../widgets/messagewidget.cpp" line="295"/>
-        <location filename="../widgets/messagewidget.cpp" line="296"/>
+        <location filename="../widgets/messagewidget.cpp" line="169"/>
+        <location filename="../widgets/messagewidget.cpp" line="170"/>
+        <location filename="../widgets/messagewidget.cpp" line="300"/>
+        <location filename="../widgets/messagewidget.cpp" line="301"/>
         <source>-</source>
         <translation>-</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="254"/>
+        <location filename="../widgets/messagewidget.cpp" line="256"/>
         <source>Failed to save message to database:
 %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="326"/>
+        <location filename="../widgets/messagewidget.cpp" line="331"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="327"/>
+        <location filename="../widgets/messagewidget.cpp" line="332"/>
         <source>Please select a message to delete.</source>
         <translation>请选择要删除的留言。</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="334"/>
+        <location filename="../widgets/messagewidget.cpp" line="339"/>
         <source>Confirm Delete</source>
         <translation>确认删除</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="335"/>
+        <location filename="../widgets/messagewidget.cpp" line="340"/>
         <source>Delete selected message?</source>
         <translation>确认删除选中的留言吗？</translation>
     </message>
     <message>
-        <location filename="../widgets/messagewidget.cpp" line="344"/>
+        <location filename="../widgets/messagewidget.cpp" line="351"/>
         <source>Failed to delete message from database.</source>
         <translation>从数据库中删除留言失败。</translation>
     </message>
@@ -635,32 +646,32 @@
         <translation>加载中...</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="60"/>
+        <location filename="../widgets/weatherwidget.cpp" line="59"/>
         <source>Failed to fetch weather</source>
         <translation>获取天气失败</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="82"/>
+        <location filename="../widgets/weatherwidget.cpp" line="81"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="84"/>
+        <location filename="../widgets/weatherwidget.cpp" line="83"/>
         <source>Air quality: Unknown</source>
         <translation>空气质量：未知</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="136"/>
+        <location filename="../widgets/weatherwidget.cpp" line="121"/>
         <source>No weather data</source>
         <translation>无天气数据</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="140"/>
+        <location filename="../widgets/weatherwidget.cpp" line="125"/>
         <source>Failed to parse weather data</source>
         <translation>解析天气数据失败</translation>
     </message>
     <message>
-        <location filename="../widgets/weatherwidget.cpp" line="144"/>
+        <location filename="../widgets/weatherwidget.cpp" line="129"/>
         <source>Weather data error</source>
         <translation>天气数据异常</translation>
     </message>

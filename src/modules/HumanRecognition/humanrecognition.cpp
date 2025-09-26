@@ -12,7 +12,10 @@
 
 #include "humanrecognition.h"
 
+#include <QDir>
 #include <QRect>
+
+#include "opencv_backend.h"
 
 /**
  * @brief 构造函数实现。
@@ -23,9 +26,16 @@
  * @param parent 指向父QObject的指针，默认为nullptr。
  */
 HumanRecognition::HumanRecognition(QObject* parent) : QObject(parent), m_isInitialized(false) {
-    // 占位符初始化
-    MCLog.info("HumanRecognition module initialized (placeholder)");
-    m_isInitialized = true;
+    MCLog.info("HumanRecognition module constructing");
+    // 默认采用 OpenCV 后端（可在未来通过依赖注入切换）
+    m_service = std::make_unique<HumanRecognitionService>(
+        std::make_unique<OpenCVHumanRecognitionBackend>());
+    if (m_service->init()) {
+        m_isInitialized = true;
+        MCLog.info("HumanRecognition service initialized (OpenCV backend)");
+    } else {
+        MCLog.warn("HumanRecognition service failed to initialize");
+    }
 }
 
 /**
@@ -48,11 +58,10 @@ HumanRecognition::HumanRecognition(QObject* parent) : QObject(parent), m_isIniti
  * @see humanDetected() signal
  */
 bool HumanRecognition::detectHumans(const QImage& image) {
-    // 占位符实现
-    MCLog.info("Detecting humans in image (placeholder)");
-    // 通过发出带有示例边界框的信号来模拟检测
-    emit humanDetected(QRect(10, 10, 100, 100));  // 示例边界框
-    return true;
+    if (!m_isInitialized) return false;
+    auto dets = m_service->detect(image);
+    for (auto& d : dets) emit humanDetected(d.box);
+    return !dets.empty();
 }
 
 /**
@@ -74,12 +83,12 @@ bool HumanRecognition::detectHumans(const QImage& image) {
  * @see recognitionCompleted() signal
  */
 QString HumanRecognition::recognizePerson(const QImage& faceImage) {
-    // 占位符实现
-    MCLog.info("Recognizing person from face image (placeholder)");
-    // 模拟识别过程
-    QString personName = "Unknown Person";  // 占位符结果
-    emit recognitionCompleted(personName);
-    return personName;
+    if (!m_isInitialized) return {};
+    // 复用 detectAndRecognize 流程：将整张 faceImage 看做只有一个人脸
+    auto res = detectAndRecognize(faceImage);
+    QString name = res.empty() ? QStringLiteral("Unknown Person") : res.front().matchedPersonName;
+    emit recognitionCompleted(name);
+    return name;
 }
 
 /**
@@ -100,11 +109,45 @@ QString HumanRecognition::recognizePerson(const QImage& faceImage) {
  * @warning 此占位符不执行任何实际训练。
  */
 void HumanRecognition::trainModel(const QString& datasetPath) {
-    // 占位符实现
-    MCLog.info("Training model with dataset at: {} (placeholder)", datasetPath.toStdString());
-    // 在真实实现中，这将:
-    // 1. 从datasetPath加载图像
-    // 2. 提取面部特征
-    // 3. 训练分类器或神经网络
-    // 4. 保存训练好的模型
+    MCLog.info("Training( enrolling ) from dataset path: {}", datasetPath.toStdString());
+    // 简化：遍历 datasetPath 下子目录，每个子目录名视为 personId/name，图片文件注册。
+    QDir root(datasetPath);
+    if (!root.exists()) {
+        MCLog.warn("Dataset path not exists: {}", datasetPath.toStdString());
+        return;
+    }
+    QStringList subdirs = root.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    int total = 0;
+    for (const auto& sd : subdirs) {
+        QDir pd(root.filePath(sd));
+        QStringList imgs = pd.entryList(QStringList() << "*.jpg"
+                                                      << "*.png"
+                                                      << "*.jpeg",
+                                        QDir::Files);
+        std::vector<QImage> faceImgs;
+        for (const auto& f : imgs) {
+            QImage img(pd.filePath(f));
+            if (!img.isNull()) faceImgs.push_back(img);
+        }
+        PersonInfo p{sd, sd, {}};  // personId=name=目录名
+        total += enroll(p, faceImgs);
+    }
+    MCLog.info("Enroll finished, total embeddings added: {}", total);
+}
+
+std::vector<FaceDetectionResult> HumanRecognition::detectAndRecognize(const QImage& image) {
+    if (!m_isInitialized) return {};
+    return m_service->detectAndRecognize(image);
+}
+
+int HumanRecognition::enroll(const PersonInfo& info, const std::vector<QImage>& faces) {
+    if (!m_isInitialized) return 0;
+    return m_service->enroll(info, faces);
+}
+
+bool HumanRecognition::save() {
+    return m_isInitialized && m_service->save();
+}
+bool HumanRecognition::load() {
+    return m_isInitialized && m_service->load();
 }

@@ -41,7 +41,10 @@ set(PROJECT_SOURCES
 if(BUILD_HUMAN_RECOGNITION)
   set(HUMAN_RECOGNITION_SOURCES
       src/modules/HumanRecognition/humanrecognition.cpp
-      include/modules/HumanRecognition/humanrecognition.h)
+    src/modules/HumanRecognition/opencv_backend.cpp
+    include/modules/HumanRecognition/humanrecognition.h
+    include/modules/HumanRecognition/iface_human_recognition.h
+    include/modules/HumanRecognition/opencv_backend.h)
 endif()
 
 if(BUILD_AUDIO_VIDEO)
