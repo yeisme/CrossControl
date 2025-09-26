@@ -1,41 +1,61 @@
-# 依赖项
-# QT 6 或 QT 5
-# TODO: 未来支持 vcpkg 安装的 QT
-find_package(QT NAMES Qt6 Qt5 REQUIRED
-  COMPONENTS CoreTools Widgets LinguistTools Network)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED
-  COMPONENTS CoreTools Widgets LinguistTools Network)
+# 依赖项 仅支持 Qt6：如果未找到 Qt6 则报错并提供如何指向 Qt6 的说明。
+find_package(Qt6 REQUIRED COMPONENTS CoreTools Widgets LinguistTools Network)
+if(NOT Qt6_FOUND)
+  message(
+    FATAL_ERROR
+      "Qt6 was not found. This project requires Qt6.\n"
+      "Please install Qt6 or set CMAKE_PREFIX_PATH to your Qt6 installation (for example: -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x.x).\n"
+      "You can also use your platform package manager or vcpkg to install Qt6.")
+endif()
+set(QT_VERSION_MAJOR 6)
+message(STATUS "Found and using Qt6 (QT_VERSION_MAJOR=${QT_VERSION_MAJOR})")
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS CoreTools Widgets LinguistTools
+                                              Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS CoreTools Widgets
+                                                       LinguistTools Network)
 
 # 输出 QT 版本相关信息和库路径
 message(STATUS "Using Qt version: ${Qt${QT_VERSION_MAJOR}_VERSION}")
-message(STATUS "Qt${QT_VERSION_MAJOR} CoreTools library: ${Qt${QT_VERSION_MAJOR}_CoreTools_LIBRARIES}")
-message(STATUS "Qt${QT_VERSION_MAJOR} Widgets library: ${Qt${QT_VERSION_MAJOR}_Widgets_LIBRARIES}")
-message(STATUS "Qt${QT_VERSION_MAJOR} LinguistTools library: ${Qt${QT_VERSION_MAJOR}_LinguistTools_LIBRARIES}")
-message(STATUS "Qt${QT_VERSION_MAJOR} Network library: ${Qt${QT_VERSION_MAJOR}_Network_LIBRARIES}")
+message(
+  STATUS
+    "Qt${QT_VERSION_MAJOR} CoreTools library: ${Qt${QT_VERSION_MAJOR}_CoreTools_LIBRARIES}"
+)
+message(
+  STATUS
+    "Qt${QT_VERSION_MAJOR} Widgets library: ${Qt${QT_VERSION_MAJOR}_Widgets_LIBRARIES}"
+)
+message(
+  STATUS
+    "Qt${QT_VERSION_MAJOR} LinguistTools library: ${Qt${QT_VERSION_MAJOR}_LinguistTools_LIBRARIES}"
+)
+message(
+  STATUS
+    "Qt${QT_VERSION_MAJOR} Network library: ${Qt${QT_VERSION_MAJOR}_Network_LIBRARIES}"
+)
 
 # message 状态：CMAKE_TOOLCHAIN_FILE
 message(STATUS "CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
 
-# # 允许用户通过环境变量或 CMake 缓存变量指定系统 OpenCV 根目录。
-# OpenCV 查找优先级：
-# 1) CMake 变量 `OpenCV_ROOT`（例如 -DOpenCV_ROOT=...）
-# 2) 环境变量 OPENCV_ROOT
-# 3) 使用 find_package 在系统位置找到的 OpenCV
-# 4) 如果存在 VCPKG_ROOT，则使用 vcpkg 安装的 OpenCV
+# # 允许用户通过环境变量或 CMake 缓存变量指定系统 OpenCV 根目录。 OpenCV 查找优先级： 1) CMake 变量
+# `OpenCV_ROOT`（例如 -DOpenCV_ROOT=...） 2) 环境变量 OPENCV_ROOT 3) 使用 find_package
+# 在系统位置找到的 OpenCV 4) 如果存在 VCPKG_ROOT，则使用 vcpkg 安装的 OpenCV
 if(DEFINED ENV{OPENCV_ROOT} AND NOT DEFINED OpenCV_ROOT)
   message(STATUS "Using OPENCV_ROOT environment variable: $ENV{OPENCV_ROOT}")
-  set(OpenCV_ROOT "$ENV{OPENCV_ROOT}" CACHE PATH "Path to system OpenCV (share/opencv4 or lib/cmake/opencv4)")
+  set(OpenCV_ROOT
+      "$ENV{OPENCV_ROOT}"
+      CACHE PATH "Path to system OpenCV (share/opencv4 or lib/cmake/opencv4)")
 endif()
 
 if(DEFINED ENV{VCPKG_ROOT})
   message(STATUS "Using VCPKG from environment variable: $ENV{VCPKG_ROOT}")
   set(CMAKE_TOOLCHAIN_FILE
-    "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-    CACHE STRING "")
+      "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      CACHE STRING "")
 
   # 仅在用户/系统未提供 OpenCV_ROOT 时设置 vcpkg 的 OpenCV 候选路径
   if(NOT DEFINED OpenCV_ROOT)
-    set(_VCPKG_OPENCV_ROOT "$ENV{VCPKG_ROOT}/installed/x64-windows/share/opencv4")
+    set(_VCPKG_OPENCV_ROOT
+        "$ENV{VCPKG_ROOT}/installed/x64-windows/share/opencv4")
 
     # store candidate in OpenCV_ROOT so later find_package can use it as a hint
     set(OpenCV_ROOT "${_VCPKG_OPENCV_ROOT}")
@@ -60,13 +80,20 @@ if(BUILD_HUMAN_RECOGNITION)
     message(STATUS "Trying OpenCV from OpenCV_ROOT: ${_OpenCV_ROOT_PATH}")
 
     # 在提供的根路径下尝试常见的配置位置
-    find_package(OpenCV QUIET CONFIG
-      PATHS "${_OpenCV_ROOT_PATH}/share/opencv4" "${_OpenCV_ROOT_PATH}/lib/cmake/opencv4" "${_OpenCV_ROOT_PATH}"
-    )
+    find_package(
+      OpenCV
+      QUIET
+      CONFIG
+      PATHS
+      "${_OpenCV_ROOT_PATH}/share/opencv4"
+      "${_OpenCV_ROOT_PATH}/lib/cmake/opencv4"
+      "${_OpenCV_ROOT_PATH}")
 
     if(OpenCV_FOUND)
       set(_opencv_found TRUE)
-      message(STATUS "Found OpenCV (from OpenCV_ROOT): ${OpenCV_VERSION} @ ${OpenCV_DIR}")
+      message(
+        STATUS
+          "Found OpenCV (from OpenCV_ROOT): ${OpenCV_VERSION} @ ${OpenCV_DIR}")
     endif()
   endif()
 
@@ -93,14 +120,20 @@ if(BUILD_HUMAN_RECOGNITION)
     if(OpenCV_FOUND)
       set(_opencv_found TRUE)
 
-      # ensure OpenCV_ROOT reflects the actual used config (useful for other scripts)
-      set(OpenCV_ROOT "${_vcpkg_ocv}" CACHE PATH "Path to OpenCV used (vcpkg)")
+      # ensure OpenCV_ROOT reflects the actual used config (useful for other
+      # scripts)
+      set(OpenCV_ROOT
+          "${_vcpkg_ocv}"
+          CACHE PATH "Path to OpenCV used (vcpkg)")
       message(STATUS "Found OpenCV (vcpkg): ${OpenCV_VERSION} @ ${OpenCV_DIR}")
     endif()
   endif()
 
   if(NOT _opencv_found)
-    message(FATAL_ERROR "OpenCV not found. Please install OpenCV system-wide or set OPENCV_ROOT / -DOpenCV_ROOT to the OpenCV config directory, or enable vcpkg and let it install OpenCV.")
+    message(
+      FATAL_ERROR
+        "OpenCV not found. Please install OpenCV system-wide or set OPENCV_ROOT / -DOpenCV_ROOT to the OpenCV config directory, or enable vcpkg and let it install OpenCV."
+    )
   endif()
 endif()
 
@@ -109,7 +142,10 @@ if(BUILD_MQTT_CLIENT)
   if(PahoMqttCpp_FOUND)
     message(STATUS "Found Paho MQTT C++ client: ${PahoMqttCpp_VERSION}")
   else()
-    message(FATAL_ERROR "PahoMqttCpp not found but BUILD_MQTT_CLIENT is enabled.\nPlease install paho-mqttpp3 via vcpkg (vcpkg install paho-mqttpp3) or disable BUILD_MQTT_CLIENT.")
+    message(
+      FATAL_ERROR
+        "PahoMqttCpp not found but BUILD_MQTT_CLIENT is enabled.\nPlease install paho-mqttpp3 via vcpkg (vcpkg install paho-mqttpp3) or disable BUILD_MQTT_CLIENT."
+    )
     set(BUILD_MQTT_CLIENT OFF) # 没有找到 mqtt 库，直接禁用
   endif()
 endif()

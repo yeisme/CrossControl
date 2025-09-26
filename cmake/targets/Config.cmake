@@ -12,7 +12,10 @@ set_target_properties(config PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${_cfg_bin_dir}"
     LIBRARY_OUTPUT_DIRECTORY "${_cfg_bin_dir}"
     ARCHIVE_OUTPUT_DIRECTORY "${_cfg_lib_dir}")
-target_link_libraries(config PUBLIC Qt${QT_VERSION_MAJOR}::Core)
+if(NOT TARGET Qt6::Core)
+    message(FATAL_ERROR "Qt6::Core target not found. Ensure cmake/Dependencies.cmake found Qt6.")
+endif()
+target_link_libraries(config PUBLIC Qt6::Core)
 
 install(
   TARGETS config

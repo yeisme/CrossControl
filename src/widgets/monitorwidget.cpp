@@ -17,6 +17,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonValue>
+#include <QMetaType>
 
 MonitorWidget::MonitorWidget(QWidget* parent) : QWidget(parent), ui(new Ui::MonitorWidget) {
     ui->setupUi(this);
@@ -33,7 +34,7 @@ MonitorWidget::MonitorWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Moni
     QVariant devs = cfg.getOrDefault("Connect/devices", QVariant());
     if (devs.isValid()) {
         // devices may be stored as JSON string or QStringList
-        if (devs.type() == QVariant::String) {
+    if (devs.typeId() == QMetaType::QString) {
             // try parse as json array
             QJsonDocument doc = QJsonDocument::fromJson(devs.toString().toUtf8());
             if (doc.isArray()) {

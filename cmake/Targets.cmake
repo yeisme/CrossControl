@@ -11,9 +11,11 @@ include(cmake/targets/Storage.cmake)
 include(cmake/targets/Config.cmake)
 include(cmake/targets/Connect.cmake)
 
+if(NOT TARGET Qt6::Widgets)
+  message(FATAL_ERROR "Qt6::Widgets target not found. Ensure cmake/Dependencies.cmake found Qt6.")
+endif()
 target_link_libraries(
-        CrossControl PRIVATE Qt${QT_VERSION_MAJOR}::Widgets
-        Qt${QT_VERSION_MAJOR}::Network logging)
+        CrossControl PRIVATE Qt6::Widgets Qt6::Network logging)
 target_include_directories(CrossControl PRIVATE include/widgets include/logging)
 
 # 输出/MSVC 专用设置放到单独文件中，便于管理

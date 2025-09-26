@@ -9,9 +9,14 @@
   endif()
   target_link_libraries(
     HumanRecognition
-    PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network
-            Qt${QT_VERSION_MAJOR}::Sql)
+    PRIVATE Qt6::Widgets Qt6::Network Qt6::Sql)
   target_link_libraries(HumanRecognition PRIVATE logging)
+
+  # Ensure Qt6 targets are available (Dependencies.cmake should provide them)
+  if(NOT TARGET Qt6::Widgets)
+    message(FATAL_ERROR "HumanRecognition requires Qt6 (Qt6::Widgets target not found).\n"
+      "Ensure cmake/Dependencies.cmake configured Qt6 or set CMAKE_PREFIX_PATH to your Qt6 installation.")
+  endif()
   # OpenCV - ensure we locate OpenCV and provide include dirs to the target
   find_package(OpenCV REQUIRED COMPONENTS core imgproc objdetect)
   message(STATUS "HumanRecognition: OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")

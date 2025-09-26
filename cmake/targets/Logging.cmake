@@ -12,8 +12,10 @@ set_target_properties(logging PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${_log_bin_dir}"
     LIBRARY_OUTPUT_DIRECTORY "${_log_bin_dir}"
     ARCHIVE_OUTPUT_DIRECTORY "${_log_lib_dir}")
-target_link_libraries(logging PUBLIC spdlog::spdlog fmt::fmt
-                                     Qt${QT_VERSION_MAJOR}::Widgets)
+if(NOT TARGET Qt6::Widgets)
+    message(FATAL_ERROR "Qt6::Widgets target not found. Ensure cmake/Dependencies.cmake found Qt6.")
+endif()
+target_link_libraries(logging PUBLIC spdlog::spdlog fmt::fmt Qt6::Widgets)
 
                                      
 install(

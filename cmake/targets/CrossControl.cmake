@@ -1,32 +1,20 @@
-﻿if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-  qt_add_executable(CrossControl MANUAL_FINALIZATION ${PROJECT_SOURCES})
+﻿qt_add_executable(CrossControl MANUAL_FINALIZATION ${PROJECT_SOURCES})
 
-  # 仅对项目源生成 QM，避免 autogen 循环
-  qt_create_translation(QM_FILES ${TS_FILES} ${PROJECT_SOURCES})
+# 仅使用 Qt6 API 生成翻译文件
+qt_create_translation(QM_FILES ${TS_FILES} ${PROJECT_SOURCES})
 
-  if(QM_FILES)
-    add_custom_target(translations ALL DEPENDS ${QM_FILES})
-    add_dependencies(CrossControl translations)
-  endif()
-else()
-  if(ANDROID)
-    add_library(CrossControl SHARED ${PROJECT_SOURCES})
-  else()
-    add_executable(CrossControl ${PROJECT_SOURCES})
-  endif()
+if(QM_FILES)
+  add_custom_target(translations ALL DEPENDS ${QM_FILES})
+  add_dependencies(CrossControl translations)
+endif()
 
-  qt5_create_translation(QM_FILES ${PROJECT_SOURCES} ${TS_FILES})
-
-  if(QM_FILES)
-    add_custom_target(translations ALL DEPENDS ${QM_FILES})
-    add_dependencies(CrossControl translations)
-  endif()
+if(NOT TARGET Qt6::Widgets)
+  message(FATAL_ERROR "Qt6::Widgets target not found. Ensure cmake/Dependencies.cmake found Qt6.")
 endif()
 
 target_link_libraries(
   CrossControl
-  PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network
-          Qt${QT_VERSION_MAJOR}::Sql logging config)
+  PRIVATE Qt6::Widgets Qt6::Network Qt6::Sql logging config)
 target_include_directories(
   CrossControl
   PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/include/widgets

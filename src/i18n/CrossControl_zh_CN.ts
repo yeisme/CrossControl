@@ -541,7 +541,7 @@
         <translation>返回主页</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="77"/>
+        <location filename="../widgets/monitorwidget.cpp" line="78"/>
         <source>Choose save path</source>
         <translation type="unfinished"></translation>
     </message>
