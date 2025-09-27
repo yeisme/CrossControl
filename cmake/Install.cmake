@@ -1,13 +1,16 @@
-# 安装
+# 安装 - 组织成多个小函数以提高可维护性
 include(GNUInstallDirs)
+
+# 基本 install：程序目标
 install(
   TARGETS CrossControl
   BUNDLE DESTINATION .
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime)
 
-# 控制 windeployqt 以及其输出中哪些内容会被安装。默认情况下（如果可用）会运行 windeployqt， 但会避免将 MSVC
-# 可再发行安装程序和调试符号 (.pdb) 文件复制到安装目录中。
+# ----------------------------------------------------------------------------
+# 选项：windeployqt 行为控制
+# ----------------------------------------------------------------------------
 option(ENABLE_WINDEPLOYQT_INSTALL "Run windeployqt during install" ON)
 option(INSTALL_WINDEPLOYQT_OUTPUT_FULL
        "Install the full windeployqt_output directory (no exclusions)" OFF)
@@ -18,110 +21,152 @@ option(
   "Exclude MSVC redist (vc_redist*.exe) from windeployqt output installation"
   ON)
 
-if(QT_VERSION_MAJOR EQUAL 6)
-  find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS ${Qt6_DIR}/../../../bin)
-  if(WINDEPLOYQT_EXECUTABLE AND ENABLE_WINDEPLOYQT_INSTALL)
-    # 运行 windeployqt，将 Qt 运行时文件收集到安装前缀附近的目录中。
+# ----------------------------------------------------------------------------
+# Helpers: windeployqt
+# ----------------------------------------------------------------------------
+function(cc_find_windeployqt OUT_VAR)
+  # 尝试常见位置和环境变量以提高命中率
+  find_program(
+    _cc_windeployqt
+    NAMES windeployqt.exe windeployqt
+    HINTS ${Qt6_DIR}/../../../bin ${Qt6_DIR}/bin $ENV{QTDIR}/bin)
+  if(_cc_windeployqt)
+    set(${OUT_VAR}
+        "${_cc_windeployqt}"
+        PARENT_SCOPE)
+  else()
+    set(${OUT_VAR}
+        ""
+        PARENT_SCOPE)
+  endif()
+endfunction()
+
+function(cc_install_windeployqt_run WINDEPLOYQT_EXECUTABLE)
+  if(NOT WINDEPLOYQT_EXECUTABLE)
+    install(CODE "message(STATUS \"windeployqt not found; skipping run.\")")
+    return()
+  endif()
+
+  # 在 install 时运行 windeployqt。执行结果在 install 时检查并报告。
+  install(
+    CODE "message(STATUS \"windeployqt found: ${WINDEPLOYQT_EXECUTABLE}; running to gather Qt runtimes before other install steps.\")"
+  )
+  install(
+    CODE "execute_process(COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --dir \"${CMAKE_BINARY_DIR}/windeployqt_output\" \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/CrossControl.exe\" RESULT_VARIABLE _cc_windeployqt_rv OUTPUT_QUIET ERROR_QUIET)"
+  )
+  install(
+    CODE "
+if(NOT \${_cc_windeployqt_rv} EQUAL 0)
+  message(WARNING \"windeployqt returned non-zero exit code: \${_cc_windeployqt_rv}\")
+endif()")
+endfunction()
+
+function(cc_install_windeployqt_output)
+  # 仅当用户允许将 windeployqt 输出包含到安装中时执行复制操作
+  if(NOT ENABLE_WINDEPLOYQT_INSTALL)
+    return()
+  endif()
+
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/windeployqt_output")
     install(
-      CODE "execute_process(COMMAND ${WINDEPLOYQT_EXECUTABLE} --dir ${CMAKE_BINARY_DIR}/windeployqt_output \${CMAKE_INSTALL_PREFIX}/bin/CrossControl.exe)"
+      CODE "message(STATUS \"windeployqt_output directory does not exist; skipping copy to install tree.\")"
     )
+    return()
+  endif()
 
-    # 安装 windeployqt 的输出。默认会排除已知的大文件或不希望包含的文件 （如 vc_redist*.exe，以及可选的 .pdb），以避免把
-    # MSVC 可再发行安装程序 和调试符号包含到运行时包中。如果需要原始行为，可设置
-    # INSTALL_WINDEPLOYQT_OUTPUT_FULL=ON。
-    if(INSTALL_WINDEPLOYQT_OUTPUT_FULL)
-      install(
-        DIRECTORY ${CMAKE_BINARY_DIR}/windeployqt_output/
-        DESTINATION ${CMAKE_INSTALL_BINDIR}
-        COMPONENT Runtime)
-    else()
-      install(
-        DIRECTORY ${CMAKE_BINARY_DIR}/windeployqt_output/
-        DESTINATION ${CMAKE_INSTALL_BINDIR}
-        COMPONENT Runtime
-        PATTERN "vc_redist*.exe" EXCLUDE
-        PATTERN "*~" EXCLUDE
-        PATTERN "*.pdb" EXCLUDE)
+  if(INSTALL_WINDEPLOYQT_OUTPUT_FULL)
+    install(
+      DIRECTORY ${CMAKE_BINARY_DIR}/windeployqt_output/
+      DESTINATION ${CMAKE_INSTALL_BINDIR}
+      COMPONENT Runtime)
+  else()
+    install(
+      DIRECTORY ${CMAKE_BINARY_DIR}/windeployqt_output/
+      DESTINATION ${CMAKE_INSTALL_BINDIR}
+      COMPONENT Runtime
+      PATTERN "vc_redist*.exe" EXCLUDE
+      PATTERN "*~" EXCLUDE
+      PATTERN "*.pdb" EXCLUDE)
 
-      # 额外安全检查：在安装时尝试删除通过其它机制（如 InstallRequiredSystemLibraries） 放到安装前缀中的任何
-      # vc_redist 文件。
-      if(INSTALL_WINDEPLOYQT_EXCLUDE_VC_REDIST)
-        install(
-          CODE "
+    if(INSTALL_WINDEPLOYQT_EXCLUDE_VC_REDIST)
+      install(
+        CODE "
           file(GLOB __cc_vc_redist \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/vc_redist*.exe\")
           foreach(_cc_vc \${__cc_vc_redist})
             if(EXISTS \${_cc_vc})
               file(REMOVE \${_cc_vc})
             endif()
           endforeach()")
-      endif()
+    endif()
 
-      # 可选：移除 .pdb 文件（调试符号）以减小包体积。
-      if(INSTALL_WINDEPLOYQT_EXCLUDE_PDB)
-        install(
-          CODE "
+    if(INSTALL_WINDEPLOYQT_EXCLUDE_PDB)
+      install(
+        CODE "
           file(GLOB __cc_pdbs \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/*.pdb\")
           foreach(_cc_pdb \${__cc_pdbs})
             if(EXISTS \${_cc_pdb})
               file(REMOVE \${_cc_pdb})
             endif()
           endforeach()")
-      endif()
     endif()
   endif()
+endfunction()
 
-  # 安装翻译文件
+# ----------------------------------------------------------------------------
+# Helpers: translations (QM files)
+# ----------------------------------------------------------------------------
+function(cc_install_qm_files)
   if(QM_FILES)
     install(
       FILES ${QM_FILES}
       DESTINATION ${CMAKE_INSTALL_BINDIR}/i18n
       COMPONENT Runtime)
   endif()
-endif()
+endfunction()
 
-if(MINGW)
-  get_filename_component(MINGW_BIN_DIR ${CMAKE_CXX_COMPILER} DIRECTORY)
-  install(
-    FILES ${MINGW_BIN_DIR}/libc++.dll ${MINGW_BIN_DIR}/libunwind.dll
-          ${MINGW_BIN_DIR}/libwinpthread-1.dll
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT Runtime)
-endif()
+# ----------------------------------------------------------------------------
+# Helpers: MinGW runtime copy
+# ----------------------------------------------------------------------------
+function(cc_install_mingw_runtimes)
+  if(MINGW)
+    get_filename_component(MINGW_BIN_DIR ${CMAKE_CXX_COMPILER} DIRECTORY)
+    install(
+      FILES ${MINGW_BIN_DIR}/libc++.dll ${MINGW_BIN_DIR}/libunwind.dll
+            ${MINGW_BIN_DIR}/libwinpthread-1.dll
+      DESTINATION ${CMAKE_INSTALL_BINDIR}
+      COMPONENT Runtime)
+  endif()
+endfunction()
 
-# 安装常用的第三方运行时 DLL（例如 vcpkg 提供的库）。这确保非系统运行时 的 DLL（如 spdlog/fmt）会被复制到安装树，从而被 CPack
-# 打包。使用生成器表达式 可确保无论目标是导入目标还是在同一项目内构建的目标都能正确解析。OPTIONAL 选项避免在某些配置下目标不可用导致配置失败。
-if(TARGET spdlog::spdlog)
-  install(
-    FILES $<TARGET_FILE:spdlog::spdlog>
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT Runtime
-    OPTIONAL)
-else()
-  message(
-    STATUS
-      "spdlog target not available at install-time; skipping explicit spdlog DLL install"
-  )
-endif()
+# ----------------------------------------------------------------------------
+# Helpers: third-party runtime DLLs (spdlog, fmt)
+# ----------------------------------------------------------------------------
+function(cc_install_thirdparty_dll TARGET_NAME)
+  if(TARGET ${TARGET_NAME})
+    install(
+      FILES $<TARGET_FILE:${TARGET_NAME}>
+      DESTINATION ${CMAKE_INSTALL_BINDIR}
+      COMPONENT Runtime
+      OPTIONAL)
+  else()
+    message(
+      STATUS
+        "${TARGET_NAME} target not available at install-time; skipping explicit DLL install"
+    )
+  endif()
+endfunction()
 
-if(TARGET fmt::fmt)
-  install(
-    FILES $<TARGET_FILE:fmt::fmt>
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    COMPONENT Runtime
-    OPTIONAL)
-else()
-  message(
-    STATUS
-      "fmt target not available at install-time; skipping explicit fmt DLL install"
-  )
-endif()
+# ----------------------------------------------------------------------------
+# Helpers: OpenCV runtime installation (imported targets first, then fallbacks)
+# ----------------------------------------------------------------------------
+function(cc_install_opencv_runtime)
+  if(NOT
+     (BUILD_HUMAN_RECOGNITION
+      AND DEFINED OpenCV_FOUND
+      AND OpenCV_FOUND))
+    return()
+  endif()
 
-# 当启用 HumanRecognition 模块且找到 OpenCV 时，安装 OpenCV 的运行时库（DLL / 共享对象）。
-# 优先使用导入目标（imported targets），这样无需硬编码库文件名。作为回退，会尝试 基于 OpenCV_DIR 或 vcpkg 路径的一些常见
-# bin 目录。
-if(BUILD_HUMAN_RECOGNITION
-   AND DEFINED OpenCV_FOUND
-   AND OpenCV_FOUND)
   if(DEFINED OpenCV_LIBS)
     foreach(_oclib IN LISTS OpenCV_LIBS)
       if(TARGET ${_oclib})
@@ -134,24 +179,19 @@ if(BUILD_HUMAN_RECOGNITION
     endforeach()
   endif()
 
-  # 回退方案：如果没有通过导入目标安装文件，则尝试从可能的 OpenCV bin 目录 （vcpkg 或系统路径）复制共享库。根据 OpenCV_DIR 和
-  # VCPKG_ROOT 计算候选 bin 目录。
+  # 回退：基于 OpenCV_DIR / VCPKG_ROOT 查找 bin 目录并复制匹配的共享库
   if(NOT DEFINED OpenCV_DIR)
     set(OpenCV_DIR "")
   endif()
 
   set(_opencv_bin_candidates "")
   if(OpenCV_DIR)
-    # OpenCV_DIR often looks like <prefix>/lib/cmake/opencv4 or
-    # <prefix>/share/opencv4 Try a couple of relative locations to reach the
-    # 'bin' directory.
     get_filename_component(_od_parent "${OpenCV_DIR}" DIRECTORY)
     list(APPEND _opencv_bin_candidates "${_od_parent}/bin"
          "${OpenCV_DIR}/../bin" "${OpenCV_DIR}/../../bin")
   endif()
 
   if(DEFINED ENV{VCPKG_ROOT})
-    # vcpkg usually places runtime DLLs in installed/<triplet>/bin
     if(WIN32)
       list(APPEND _opencv_bin_candidates
            "$ENV{VCPKG_ROOT}/installed/x64-windows/bin")
@@ -161,22 +201,24 @@ if(BUILD_HUMAN_RECOGNITION
     endif()
   endif()
 
-  # Try candidates and install matching shared libs
   foreach(_cand IN LISTS _opencv_bin_candidates)
     if(EXISTS "${_cand}")
-      # 仅复制与 OpenCV 相关的共享库，避免打包不相关的二进制文件。
-      # Copy OpenCV-related runtime files from the candidate bin directory.
       install(
         DIRECTORY "${_cand}/"
         DESTINATION ${CMAKE_INSTALL_BINDIR}
         COMPONENT Runtime
         OPTIONAL FILES_MATCHING
-        # OpenCV runtime libs
         PATTERN "*opencv*.dll"
         PATTERN "*opencv*.so"
         PATTERN "*opencv*.dylib"
-        # 常见的 OpenCV 第三方依赖可能和 OpenCV DLL 放在同一目录（如 protobuf、jpeg、zlib、tbb、webp
-        # 等）。 这些 PATTERN 是回退方案；当 CMake 版本支持时，我们会在下方尝试更稳健的运行时依赖解析。
+        # common additional libs sometimes colocated with OpenCV
+        PATTERN "*sharpyuv*.dll"
+        PATTERN "*libsharpyuv*.so*"
+        PATTERN "*openjp2*.so*"
+        PATTERN "*openjpeg*.so*"
+        PATTERN "*szip*.so*"
+        PATTERN "*tesseract*.so*"
+        PATTERN "*absl*.so*"
         PATTERN "*protobuf*.dll"
         PATTERN "*libprotobuf*.dll"
         PATTERN "*jpeg*.dll"
@@ -187,14 +229,12 @@ if(BUILD_HUMAN_RECOGNITION
         PATTERN "*png*.dll"
         PATTERN "*tbb*.dll"
         PATTERN "*ipp*.dll"
-        PATTERN "*webp*.dll")
+        PATTERN "*webp*.dll"
+        PATTERN "*gif*.dll"
+        PATTERN "*leptonica*.dll"
+        PATTERN "*leptonica-*.dll"
+        PATTERN "*leptonica*.so*")
 
-      # 试图解析并安装 OpenCV DLL 的实际二进制运行时依赖（如 libwebp*、libprotobuf、jpeg 等）。 原先计划使用
-      # file(GET_RUNTIME_DEPENDENCIES) 来检查 DLL 并返回解析出的依赖路径，
-      # 这种方式比基于文件名模式更准确。但由于该命令在部分环境中不可用或行为不一致， 所以这里也保留了基于路径/模式的回退机制。
-      # 作为稳健回退（并且考虑到 file(GET_RUNTIME_DEPENDENCIES) 在某些环境中可能不可用或行为不一致）， 如果存在则显式从
-      # vcpkg 的 bin 目录安装常见的 webp 相关 DLL。上面的 PATTERN "*webp*.dll" 在 DLL 与 OpenCV
-      # 放在同一目录时通常能捕获它们；但当 vcpkg 将这些库放在单独的 bin 目录时， 这个额外步骤可以确保 libwebp* 文件被包含。
       if(DEFINED ENV{VCPKG_ROOT} AND WIN32)
         set(_vcpkg_bin "$ENV{VCPKG_ROOT}/installed/x64-windows/bin")
         if(EXISTS "${_vcpkg_bin}")
@@ -202,9 +242,6 @@ if(BUILD_HUMAN_RECOGNITION
                "${_vcpkg_bin}/webp*.dll" "${_vcpkg_bin}/libwebpdecoder*.dll"
                "${_vcpkg_bin}/libwebpdemux*.dll")
           if(_webp_dlls)
-            # Normalize paths to use forward-slashes to avoid generating
-            # unescaped backslashes in the generated cmake_install.cmake (which
-            # causes warnings about invalid escape sequences like \U).
             set(_webp_dlls_normalized "")
             foreach(_p IN LISTS _webp_dlls)
               string(REPLACE "\\" "/" _p_norm "${_p}")
@@ -219,13 +256,163 @@ if(BUILD_HUMAN_RECOGNITION
         endif()
       endif()
 
+      # 额外：显式包含常见的 OpenCV 运行时依赖（例如 tiff, hdf5, harfbuzz, abseil 等），以防这些库 分开存放于
+      # vcpkg 或其它 bin 目录，未被上面的 PATTERN 捕获到。
+      set(_extra_dep_patterns
+          "*tiff*.dll"
+          "*libtiff*.dll"
+          "*hdf5*.dll"
+          "*harfbuzz*.dll"
+          "*abseil*.dll"
+          "*absl*.dll"
+          "*openjp2*.dll"
+          "*openjpeg*.dll"
+          "*szip*.dll"
+          "*libszip*.dll"
+          "*tesseract*.dll"
+          "*libtesseract*.dll"
+          "*tesseract55*.dll"
+          "*sharpyuv*.dll"
+          "*libsharpyuv*.dll"
+          # FFmpeg and multimedia related runtimes
+          "*avcodec*.dll"
+          "*avformat*.dll"
+          "*avutil*.dll"
+          "*swresample*.dll"
+          "*swscale*.dll"
+          "*libcrypto*.dll"
+          "*libssl*.dll"
+          "*libcurl*.dll"
+          # Linux/Unix .so patterns
+          "*tiff*.so*"
+          "*libtiff*.so*"
+          "*hdf5*.so*"
+          "*harfbuzz*.so*"
+          "*abseil*.so*"
+          "*absl*.so*"
+          "*openjp2*.so*"
+          "*openjpeg*.so*"
+          "*szip*.so*"
+          "*libszip*.so*"
+          "*gif*.so*"
+          "*tesseract*.so*"
+          "*libtesseract*.so*"
+          "*libsharpyuv*.so*")
+      set(_extra_deps_found "")
+      foreach(_pat IN LISTS _extra_dep_patterns)
+        # expand pattern variable when globbing the candidate directory
+        file(GLOB _matches "${_cand}/${_pat}")
+        if(_matches)
+          foreach(_m IN LISTS _matches)
+            string(REPLACE "\\" "/" _m_norm "${_m}")
+            list(APPEND _extra_deps_found "${_m_norm}")
+          endforeach()
+        endif()
+      endforeach()
+
+      if(DEFINED ENV{VCPKG_ROOT} AND WIN32)
+        # check both windows and linux vcpkg bin directories for common deps
+        set(_vcpkg_bin_win "$ENV{VCPKG_ROOT}/installed/x64-windows/bin")
+        set(_vcpkg_bin_linux "$ENV{VCPKG_ROOT}/installed/x64-linux/bin")
+        set(_vcpkg_globs "")
+        list(
+          APPEND
+          _vcpkg_globs
+          "${_vcpkg_bin}/tiff*.dll"
+          "${_vcpkg_bin}/libtiff*.dll"
+          "${_vcpkg_bin}/hdf5*.dll"
+          "${_vcpkg_bin}/harfbuzz*.dll"
+          "${_vcpkg_bin}/abseil*.dll"
+          "${_vcpkg_bin}/absl*.dll"
+          "${_vcpkg_bin}/openjp2*.dll"
+          "${_vcpkg_bin}/openjpeg*.dll"
+          "${_vcpkg_bin}/szip*.dll"
+          "${_vcpkg_bin}/libszip*.dll"
+          "${_vcpkg_bin}/tesseract*.dll"
+          "${_vcpkg_bin}/libtesseract*.dll"
+          "${_vcpkg_bin}/tesseract55*.dll"
+          "${_vcpkg_bin}/sharpyuv*.dll"
+          "${_vcpkg_bin}/libsharpyuv*.dll")
+        list(APPEND _vcpkg_globs "${_vcpkg_bin}/leptonica*.dll"
+             "${_vcpkg_bin}/libleptonica*.dll" "${_vcpkg_bin}/leptonica-*.dll")
+        if(EXISTS "${_vcpkg_bin_linux}")
+          list(
+            APPEND
+            _vcpkg_globs
+            "${_vcpkg_bin_linux}/tiff*.so*"
+            "${_vcpkg_bin_linux}/libtiff*.so*"
+            "${_vcpkg_bin_linux}/hdf5*.so*"
+            "${_vcpkg_bin_linux}/harfbuzz*.so*"
+            "${_vcpkg_bin_linux}/absl*.so*"
+            "${_vcpkg_bin_linux}/openjp2*.so*"
+            "${_vcpkg_bin_linux}/openjpeg*.so*"
+            "${_vcpkg_bin_linux}/szip*.so*"
+            "${_vcpkg_bin_linux}/libszip*.so*"
+            "${_vcpkg_bin_linux}/tesseract*.so*"
+            "${_vcpkg_bin_linux}/libtesseract*.so*"
+            "${_vcpkg_bin_linux}/libsharpyuv*.so*")
+          list(APPEND _vcpkg_globs "${_vcpkg_bin_linux}/leptonica*.so*"
+               "${_vcpkg_bin_linux}/libleptonica*.so*")
+        endif()
+        file(GLOB _vcpkg_extra ${_vcpkg_globs})
+        if(_vcpkg_extra)
+          foreach(_p IN LISTS _vcpkg_extra)
+            string(REPLACE "\\" "/" _p_norm "${_p}")
+            list(APPEND _extra_deps_found "${_p_norm}")
+          endforeach()
+        endif()
+      endif()
+
+      if(_extra_deps_found)
+        # 去重
+        list(REMOVE_DUPLICATES _extra_deps_found)
+        install(
+          FILES ${_extra_deps_found}
+          DESTINATION ${CMAKE_INSTALL_BINDIR}
+          COMPONENT Runtime
+          OPTIONAL)
+      endif()
+
       break()
     endif()
   endforeach()
+endfunction()
+
+# ----------------------------------------------------------------------------
+# 执行各模块（按功能顺序，减少嵌套）
+# ----------------------------------------------------------------------------
+
+if(QT_VERSION_MAJOR EQUAL 6)
+  # 仅在 Windows 上才运行 windeployqt（windeployqt 是 Windows 工具），避免在 Unix 系统上触发错误
+  if(WIN32)
+    # 查找并在 install 时运行 windeployqt（若可用）以收集 Qt 运行时
+    cc_find_windeployqt(_CC_WINDEPLOYQT)
+    # 使用带引号的参数传递，确保即使变量为空也作为单个参数传递给函数，避免 CMake 参数解析问题
+    cc_install_windeployqt_run("${_CC_WINDEPLOYQT}")
+
+    # 将 windeployqt 的输出并入安装（受 ENABLE_WINDEPLOYQT_INSTALL 等选项控制）
+    cc_install_windeployqt_output()
+  else()
+    install(
+      CODE "message(STATUS \"Non-Windows system detected; skipping windeployqt run and output merge.\")"
+    )
+  endif()
+
+  # 安装翻译文件（跨平台）
+  cc_install_qm_files()
 endif()
 
+# MinGW 特定 runtime
+cc_install_mingw_runtimes()
+
+# 第三方运行时（spdlog, fmt）
+cc_install_thirdparty_dll(spdlog::spdlog)
+cc_install_thirdparty_dll(fmt::fmt)
+
+# OpenCV 运行时（HumanRecognition 模块回退逻辑）
+cc_install_opencv_runtime()
+
 # 无论是否运行 windeployqt，都尝试通过安装我们依赖的 Qt6 目标文件来确保必要的 Qt 运行时库存在。
-# 使用 OPTIONAL 防止在某些环境下未找到导入目标时导致配置失败。
 if(QT_VERSION_MAJOR EQUAL 6)
   foreach(_qtcomp IN ITEMS Core Widgets Network Sql Multimedia)
     if(TARGET Qt6::${_qtcomp})

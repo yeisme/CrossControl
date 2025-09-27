@@ -22,15 +22,30 @@ SettingWidget::SettingWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Sett
         addSettingRow(QCoreApplication::translate("SettingWidget", "Theme"), toggleBtn);
         connect(toggleBtn, &QPushButton::clicked, this, &SettingWidget::on_btnToggleTheme_clicked);
 
-        auto* placeholder1 = new QPushButton(
+        // Storage controls: show current DB file and allow selecting new one
+        auto* storageBtn = new QPushButton(
             QCoreApplication::translate("SettingWidget", "Configure Storage"), this);
-        placeholder1->setEnabled(false);
-        addSettingRow(QCoreApplication::translate("SettingWidget", "Storage"), placeholder1);
+        storageBtn->setObjectName("btnConfigureStorage");
+        addSettingRow(QCoreApplication::translate("SettingWidget", "Storage"), storageBtn);
+        connect(storageBtn,
+                &QPushButton::clicked,
+                this,
+                &SettingWidget::on_btnConfigureStorage_clicked);
 
-        auto* placeholder2 =
+        // Accounts management button
+        auto* accountsBtn =
             new QPushButton(QCoreApplication::translate("SettingWidget", "Manage Accounts"), this);
-        placeholder2->setEnabled(false);
-        addSettingRow(QCoreApplication::translate("SettingWidget", "Accounts"), placeholder2);
+        accountsBtn->setObjectName("btnManageAccounts");
+        addSettingRow(QCoreApplication::translate("SettingWidget", "Accounts"), accountsBtn);
+        connect(
+            accountsBtn, &QPushButton::clicked, this, &SettingWidget::on_btnManageAccounts_clicked);
+
+        // Advanced: JSON editor for power users
+        auto* jsonEditBtn = new QPushButton(
+            QCoreApplication::translate("SettingWidget", "Advanced: Edit JSON"), this);
+        jsonEditBtn->setObjectName("btnJsonEditor");
+        addSettingRow(QCoreApplication::translate("SettingWidget", "Advanced"), jsonEditBtn);
+        connect(jsonEditBtn, &QPushButton::clicked, this, &SettingWidget::on_btnJsonEditor_clicked);
     }
     spdlog::debug("SettingWidget initialized");
 
@@ -116,6 +131,120 @@ void SettingWidget::populateSettingsTable() {
         auto* itemVal = new QTableWidgetItem(s);
         table->setItem(r, 1, itemVal);
         ++r;
+    }
+}
+
+void SettingWidget::on_btnConfigureStorage_clicked() {
+    auto& cfg = config::ConfigManager::instance();
+    const QString current = cfg.getString("Storage/database", QString("crosscontrol.db"));
+    QString file = QFileDialog::getSaveFileName(
+        this,
+        QCoreApplication::translate("SettingWidget", "Select database file"),
+        QDir::current().filePath(current),
+        QCoreApplication::translate("SettingWidget", "SQLite DB (*.db);;All Files (*)"));
+    if (file.isEmpty()) return;
+    cfg.setValue("Storage/database", file);
+    cfg.sync();
+    QMessageBox::information(
+        this,
+        QCoreApplication::translate("SettingWidget", "Storage"),
+        QCoreApplication::translate("SettingWidget", "Storage database path updated."));
+    populateSettingsTable();
+}
+
+void SettingWidget::on_btnManageAccounts_clicked() {
+    // For now, manage simple saved Auth keys under Auth/*
+    auto& cfg = config::ConfigManager::instance();
+    QStringList keys = cfg.allKeys();
+    QStringList authKeys;
+    for (const QString& k : keys)
+        if (k.startsWith("Auth/")) authKeys << k;
+
+    if (authKeys.empty()) {
+        QMessageBox::information(
+            this,
+            QCoreApplication::translate("SettingWidget", "Accounts"),
+            QCoreApplication::translate("SettingWidget", "No saved accounts found."));
+        return;
+    }
+
+    // Build a simple dialog to list keys and allow removal
+    QDialog dlg(this);
+    dlg.setWindowTitle(QCoreApplication::translate("SettingWidget", "Manage Accounts"));
+    QVBoxLayout* layout = new QVBoxLayout(&dlg);
+    QListWidget* list = new QListWidget(&dlg);
+    for (const QString& k : authKeys) {
+        QString display = k + " = " + cfg.getString(k, QString());
+        list->addItem(display);
+    }
+    layout->addWidget(list);
+    QHBoxLayout* h = new QHBoxLayout();
+    QPushButton* btnRemove =
+        new QPushButton(QCoreApplication::translate("SettingWidget", "Remove Selected"), &dlg);
+    QPushButton* btnClose =
+        new QPushButton(QCoreApplication::translate("SettingWidget", "Close"), &dlg);
+    h->addWidget(btnRemove);
+    h->addStretch(1);
+    h->addWidget(btnClose);
+    layout->addLayout(h);
+
+    connect(btnClose, &QPushButton::clicked, &dlg, &QDialog::accept);
+    connect(btnRemove, &QPushButton::clicked, [&]() {
+        auto items = list->selectedItems();
+        if (items.isEmpty()) return;
+        for (QListWidgetItem* it : items) {
+            const QString text = it->text();
+            const QString key = text.section(' ', 0, 0);
+            cfg.remove(key);
+            delete it;
+        }
+        cfg.sync();
+    });
+
+    dlg.exec();
+    populateSettingsTable();
+}
+
+void SettingWidget::on_btnJsonEditor_clicked() {
+    auto& cfg = config::ConfigManager::instance();
+    const QString currentJson = cfg.toJsonString();
+    QDialog dlg(this);
+    dlg.setWindowTitle(QCoreApplication::translate("SettingWidget", "Edit Configuration JSON"));
+    QVBoxLayout* layout = new QVBoxLayout(&dlg);
+    QTextEdit* editor = new QTextEdit(&dlg);
+    editor->setPlainText(currentJson);
+    layout->addWidget(editor);
+    QHBoxLayout* h = new QHBoxLayout();
+    QPushButton* btnOk =
+        new QPushButton(QCoreApplication::translate("SettingWidget", "Apply"), &dlg);
+    QPushButton* btnCancel =
+        new QPushButton(QCoreApplication::translate("SettingWidget", "Cancel"), &dlg);
+    h->addWidget(btnOk);
+    h->addStretch(1);
+    h->addWidget(btnCancel);
+    layout->addLayout(h);
+
+    connect(btnCancel, &QPushButton::clicked, &dlg, &QDialog::reject);
+    connect(btnOk, &QPushButton::clicked, [&]() {
+        const QString newJson = editor->toPlainText();
+        if (!cfg.loadFromJsonString(newJson, true)) {
+            QMessageBox::warning(
+                &dlg,
+                QCoreApplication::translate("SettingWidget", "JSON Error"),
+                QCoreApplication::translate("SettingWidget",
+                                            "Failed to parse provided JSON. No changes applied."));
+            return;
+        }
+        cfg.sync();
+        dlg.accept();
+    });
+
+    if (dlg.exec() == QDialog::Accepted) {
+        QMessageBox::information(
+            this,
+            QCoreApplication::translate("SettingWidget", "JSON"),
+            QCoreApplication::translate("SettingWidget", "Configuration updated from JSON."));
+        populateSettingsTable();
     }
 }
 

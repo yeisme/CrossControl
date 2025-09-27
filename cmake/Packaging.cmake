@@ -15,15 +15,44 @@ if(WIN32)
   set(CPACK_COMPONENTS_ALL Runtime)
 endif()
 
-# Allow optional exclusion of certain runtime files from the NSIS installer.
-# CPACK_RUNTIME_EXCLUDE_PATTERN is a semicolon-separated list of glob patterns
-# relative to the install ${CMAKE_INSTALL_BINDIR} which will be removed from the
-# packaged Runtime during install-time. By default we remove the MSVC
-# redistributable installers and common FFmpeg DLL names which are often pulled
-# in by vcpkg.
+# On Linux (non-Apple) we may want to bundle third-party runtime libraries
+# inside the generated .deb instead of relying on the distribution's shlibdeps.
+# To do that we disable dpkg-shlibdeps (so shlibdeps doesn't rewrite Depends
+# based on system libs) and keep a very small conservative Depends list (libc).
+# The actual runtime files are expected to be installed into
+# ${CMAKE_INSTALL_BINDIR} by the install rules (see cmake/Install.cmake) so they
+# will be packaged into the Debian payload.
+if(UNIX AND NOT APPLE)
+  # Use DEB as primary generator for Linux packaging
+  set(CPACK_GENERATOR "DEB;TGZ")
+
+  # Disable automatic shlibdeps resolution so the .deb will contain the bundled
+  # shared libraries from the install tree instead of trying to reference
+  # system-wide ones. This allows distributing a self-contained deb that
+  # includes libraries from vcpkg / local build.
+  set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS OFF)
+
+  # Conservative baseline dependency; adjust if you intentionally want the
+  # package to depend on distro Qt packages instead of shipping them.
+  if(NOT DEFINED CPACK_DEBIAN_PACKAGE_DEPENDS)
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.29)")
+  endif()
+
+  # Ensure we include Runtime files by default
+  if(NOT DEFINED CPACK_COMPONENTS_ALL)
+    set(CPACK_COMPONENTS_ALL Runtime)
+  endif()
+endif()
+
+# 允许可选地从 NSIS 安装程序中排除某些运行时文件。CPACK_RUNTIME_EXCLUDE_PATTERN 是以分号分隔的全局模式列表，相对于安装路径
+# ${CMAKE_INSTALL_BINDIR}，这些文件将在安装时从打包的运行时中删除。默认情况下，我们会移除 MSVC 可再发行安装程序以及常见的
+# FFmpeg DLL 名称，这些通常会被 vcpkg 引入。
 if(WIN32 AND NOT DEFINED CPACK_RUNTIME_EXCLUDE_PATTERN)
-  set(CPACK_RUNTIME_EXCLUDE_PATTERN
-      "vc_redist*.exe;avcodec-*.dll;avformat-*.dll;avutil-*.dll")
+  # By default we only exclude MSVC redistributable installers from the Runtime
+  # payload (they should not be embedded in the application's runtime
+  # directory). Do NOT exclude FFmpeg/OpenCV DLLs by default because many users
+  # expect the installer to deploy these runtime libraries.
+  set(CPACK_RUNTIME_EXCLUDE_PATTERN "vc_redist*.exe")
 endif()
 
 # If building NSIS installer, inject extra NSIS commands to delete matching

@@ -2,6 +2,10 @@
 #define SETTINGWIDGET_H
 
 #include <QWidget>
+#include <QFileDialog>
+#include <QListWidget>
+#include <QTextEdit>
+#include <QDir>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -23,6 +27,11 @@ class SettingWidget : public QWidget {
      public slots:
         void on_btnReloadSettings_clicked();
         void on_btnSaveSettings_clicked();
+
+        // New slots for enhanced settings
+        void on_btnConfigureStorage_clicked();
+        void on_btnManageAccounts_clicked();
+        void on_btnJsonEditor_clicked();
 
    private slots:
     void on_btnBackFromSetting_clicked();
