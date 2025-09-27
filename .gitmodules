@@ -1,0 +1,3 @@
+[submodule "docs/ppt"]
+	path = docs/ppt
+	url = https://github.com/yeisme/CrossControlPPT.git
