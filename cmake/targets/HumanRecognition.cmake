@@ -19,12 +19,16 @@
         "Ensure cmake/Dependencies.cmake configured Qt6 or set CMAKE_PREFIX_PATH to your Qt6 installation."
     )
   endif()
-  # OpenCV - delegate all link choices to ${OpenCV_LIBS} provided by find_package.
-  # Do NOT hardcode component target names here; let the find_package implementation
-  # (FindOpenCV or OpenCVConfig) populate ${OpenCV_LIBS} appropriately.
+  # OpenCV - delegate all link choices to ${OpenCV_LIBS} provided by
+  # find_package. Do NOT hardcode component target names here; let the
+  # find_package implementation (FindOpenCV or OpenCVConfig) populate
+  # ${OpenCV_LIBS} appropriately.
   find_package(OpenCV REQUIRED COMPONENTS core imgproc objdetect)
-  message(STATUS "HumanRecognition: OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
-  message(STATUS "HumanRecognition: linking with OpenCV libs variable: ${OpenCV_LIBS}")
+  message(
+    STATUS "HumanRecognition: OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
+  message(
+    STATUS "HumanRecognition: linking with OpenCV libs variable: ${OpenCV_LIBS}"
+  )
   target_link_libraries(HumanRecognition PRIVATE ${OpenCV_LIBS})
   target_include_directories(
     HumanRecognition

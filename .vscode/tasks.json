@@ -47,18 +47,6 @@
 		},
 		{
 			"type": "shell",
-			"label": "CMake: Package  MSVC 2022 Release",
-			"command": "cmake",
-			"args": [
-				"--package",
-				"--preset",
-				"msvc-release"
-			],
-			"group": "build",
-			"detail": "打包 MSVC 2022 发布版本"
-		},
-		{
-			"type": "shell",
 			"label": "CMake: Clean Build Files",
 			"command": "cmake",
 			"args": [
@@ -91,6 +79,35 @@
 				]
 			},
 			"group": "none",
-		}
-	]
+		},
+		{
+			"type": "shell",
+			"label": "CPack: Create MSVC Release Package",
+			"command": "cpack",
+			"windows": {
+				"args": [
+					"--preset",
+					"msvc-release-package"
+				]
+			},
+		},
+		{
+			"type": "shell",
+			"label": "CPack: Create Clang Release Package",
+			"command": "cpack",
+			"args": [
+				"--preset",
+				"clang-release-package"
+			]
+		},
+		{
+			"type": "shell",
+			"label": "CPack: Create GCC Release Package",
+			"command": "cpack",
+			"args": [
+				"--preset",
+				"gcc-release-package"
+			]
+		},
+	],
 }

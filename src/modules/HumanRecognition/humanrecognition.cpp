@@ -29,7 +29,9 @@ HumanRecognition::HumanRecognition(QObject* parent) : QObject(parent), m_isIniti
     MCLog.info("HumanRecognition module constructing");
     // 默认采用 OpenCV 后端（可在未来通过依赖注入切换）
     m_service = std::make_unique<HumanRecognitionService>(
-        std::make_unique<OpenCVHumanRecognitionBackend>());
+        std::make_unique<OpenCVHumanRecognitionBackend>());  // 通过修改这里的
+                                                             // OpenCVHumanRecognitionBackend
+                                                             // 可以切换不同后端
     if (m_service->init()) {
         m_isInitialized = true;
         MCLog.info("HumanRecognition service initialized (OpenCV backend)");

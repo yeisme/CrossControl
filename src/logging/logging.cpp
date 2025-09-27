@@ -5,6 +5,10 @@
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
+// We use registry internals to enumerate all registered loggers so that
+// attachQtSink() can add the Qt sink to loggers not explicitly created
+// via LoggerManager::getLogger(). This ensures "子模块的日志也能打印到日志页面".
+#include "spdlog/details/registry.h"
 // do not depend on spdlog internals (registry) — operate on default_logger and loggers we track
 
 namespace logging {
@@ -46,6 +50,15 @@ void LoggerManager::installQtSinkToAll_() {
     for (auto& w : loggers_)
         if (auto lg = w.lock()) addSinkToLogger(lg);
 
+    // Also attempt to attach to a small set of known logger names used across modules.
+    // This is conservative and avoids depending on spdlog internal registry APIs which
+    // may vary between versions. If a module creates a named logger before our
+    // attach call, spdlog::get(name) will return it and we ensure it has the Qt sink.
+    const std::vector<std::string> known = {"AudioVideo", "HR.OpenCV", "HumanRecognition", "App", "CrossControl"};
+    for (const auto& name : known) {
+        if (auto lg = spdlog::get(name)) addSinkToLogger(lg);
+    }
+
     // 注意：我们故意不在这里扫描 spdlog 的内部。为了确保 Qt 接收器的覆盖率， 请在主函数的早期调用
     // LoggerManager::init()，并在 UI 准备好后通过 attachQtSink() 附加 Qt 接收器。通过我们的
     // getLogger() 创建的新日志记录器如果存在 qt_sink_ 将继承它。
@@ -66,6 +79,11 @@ void LoggerManager::uninstallQtSinkFromAll_() {
         loggers_.end());
     for (auto& w : loggers_)
         if (auto lg = w.lock()) removeSinkFromLogger(lg);
+
+    const std::vector<std::string> known = {"AudioVideo", "HR.OpenCV", "HumanRecognition", "App", "CrossControl"};
+    for (const auto& name : known) {
+        if (auto lg = spdlog::get(name)) removeSinkFromLogger(lg);
+    }
 
     // See note above: do not touch spdlog internals here.
 }

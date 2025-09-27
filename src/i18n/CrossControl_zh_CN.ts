@@ -772,6 +772,7 @@
     </message>
     <message>
         <location filename="../widgets/monitorwidget.ui" line="35"/>
+        <location filename="../widgets/monitorwidget.cpp" line="152"/>
         <source>Listen</source>
         <translation>监听</translation>
     </message>
@@ -821,7 +822,17 @@
         <translation>返回主页</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="221"/>
+        <location filename="../widgets/monitorwidget.cpp" line="130"/>
+        <source>Listening...</source>
+        <translation>正在监听...</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.cpp" line="137"/>
+        <source>Listen Failed</source>
+        <translation>监听失败</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.cpp" line="222"/>
         <source>Sent</source>
         <translation>已发送</translation>
     </message>
@@ -830,7 +841,7 @@
         <translation type="vanished">没有连接的客户端</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="267"/>
+        <location filename="../widgets/monitorwidget.cpp" line="273"/>
         <source>Choose save path</source>
         <translation>选择保存路径</translation>
     </message>

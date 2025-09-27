@@ -127,13 +127,14 @@ void MonitorWidget::startListening() {
     if (!ok) port = 8086;
     if (m_server->listen(QHostAddress::Any, port)) {
         spdlog::info("listening on port {}", port);
-    ui->btnListen->setText("Listening...");
-    // Use a yellow with black text and subtle border to ensure readability in
-    // light themes (white-on-yellow has poor contrast).
-    ui->btnListen->setStyleSheet("background-color: #FFD54F; color: black; border: 1px solid #b38f00");
+        ui->btnListen->setText(QCoreApplication::translate("MonitorWidget", "Listening..."));
+        // Use a yellow with black text and subtle border to ensure readability in
+        // light themes (white-on-yellow has poor contrast).
+        ui->btnListen->setStyleSheet(
+            "background-color: #FFD54F; color: black; border: 1px solid #b38f00");
     } else {
         spdlog::error("failed to listen on port {}", port);
-        ui->btnListen->setText("Listen Failed");
+        ui->btnListen->setText(QCoreApplication::translate("MonitorWidget", "Listen Failed"));
         ui->btnListen->setStyleSheet("background-color: red; color: white");
     }
 }
@@ -148,7 +149,7 @@ void MonitorWidget::stopListening() {
         }
     }
     m_clientBuffers.clear();
-    ui->btnListen->setText("Listen");
+    ui->btnListen->setText(QCoreApplication::translate("MonitorWidget", "Listen"));
     ui->btnListen->setStyleSheet("");
 }
 
@@ -229,7 +230,8 @@ void MonitorWidget::on_btnSendText_clicked() {
             QString old = sendBtn->text();
             sendBtn->setText(QStringLiteral("未连接设备"));
             // red background to indicate error
-            sendBtn->setStyleSheet("background-color: #e57373; color: white; border: 1px solid #b00020");
+            sendBtn->setStyleSheet(
+                "background-color: #e57373; color: white; border: 1px solid #b00020");
             QTimer::singleShot(1000, this, [sendBtn, old]() {
                 sendBtn->setText(old);
                 sendBtn->setStyleSheet("");
@@ -247,10 +249,14 @@ int MonitorWidget::broadcastToClients(const QByteArray& data) {
             s->flush();
             if (n > 0) {
                 ++cnt;
-                spdlog::debug("Sent {} bytes to client {}:{}", n,
-                              s->peerAddress().toString().toStdString(), s->peerPort());
+                spdlog::debug("Sent {} bytes to client {}:{}",
+                              n,
+                              s->peerAddress().toString().toStdString(),
+                              s->peerPort());
             } else {
-                spdlog::warn("Failed to send to client {}:{}", s->peerAddress().toString().toStdString(), s->peerPort());
+                spdlog::warn("Failed to send to client {}:{}",
+                             s->peerAddress().toString().toStdString(),
+                             s->peerPort());
             }
         }
     }
