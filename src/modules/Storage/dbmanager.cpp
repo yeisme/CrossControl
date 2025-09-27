@@ -58,13 +58,44 @@ bool DbManager::init(bool force) noexcept {
 
         if (!m_db.open()) {
             l.warn("Failed to open database: {}", m_db.lastError().text().toStdString());
-
-            // 如果打开失败则直接失败（不再 fallback 到程序目录）
-            l.warn("Failed to open database (no fallback). Error: {}",
+            // 如果打开失败，尝试回退到用户可写位置（例如 AppDataLocation）以避免在 Program Files 下无写权限导致失败
+            l.warn("Initial DB open failed, attempting fallback to user data directory. Error: {}",
                    m_db.lastError().text().toStdString());
-            QSqlDatabase::removeDatabase(m_connectionName);
-            m_connectionName.clear();
-            return false;
+
+            const QString fallbackDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+            if (!fallbackDir.isEmpty()) {
+                QDir fd(fallbackDir);
+                if (!fd.exists()) fd.mkpath(".");
+                const QString fallbackDb = fd.filePath("crosscontrol.db");
+                l.info("Attempting fallback DB at {}", fallbackDb.toStdString());
+
+                // remove the failing connection and create a fresh one with same name
+                if (m_db.isOpen()) m_db.close();
+                QSqlDatabase::removeDatabase(m_connectionName);
+                m_db = QSqlDatabase::addDatabase(driver, m_connectionName);
+                m_db.setDatabaseName(fallbackDb);
+                if (m_db.open()) {
+                    l.info("Fallback DB opened successfully at {}", fallbackDb.toStdString());
+                    // persist this new path to config for future runs
+                    try {
+                        auto &cfgm = config::ConfigManager::instance();
+                        cfgm.setValue("Storage/database", fallbackDb);
+                        cfgm.sync();
+                    } catch (...) {
+                        l.warn("Failed to persist fallback DB path to config");
+                    }
+                } else {
+                    l.warn("Fallback DB open also failed: {}", m_db.lastError().text().toStdString());
+                    QSqlDatabase::removeDatabase(m_connectionName);
+                    m_connectionName.clear();
+                    return false;
+                }
+            } else {
+                l.warn("No writable AppDataLocation available for fallback");
+                QSqlDatabase::removeDatabase(m_connectionName);
+                m_connectionName.clear();
+                return false;
+            }
         }
 
         // Set PRAGMA foreign_keys = ON for SQLite if requested

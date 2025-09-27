@@ -855,13 +855,13 @@
     </message>
     <message>
         <location filename="../widgets/settingwidget.ui" line="46"/>
-        <location filename="../widgets/settingwidget.cpp" line="61"/>
+        <location filename="../widgets/settingwidget.cpp" line="65"/>
         <source>Key</source>
         <translation>键</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.ui" line="51"/>
-        <location filename="../widgets/settingwidget.cpp" line="62"/>
+        <location filename="../widgets/settingwidget.cpp" line="66"/>
         <source>Value</source>
         <translation>值</translation>
     </message>
@@ -897,114 +897,114 @@
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="29"/>
-        <location filename="../widgets/settingwidget.cpp" line="143"/>
+        <location filename="../widgets/settingwidget.cpp" line="150"/>
         <source>Storage</source>
         <translation>存储</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="34"/>
-        <location filename="../widgets/settingwidget.cpp" line="161"/>
+        <location filename="../widgets/settingwidget.cpp" line="37"/>
+        <location filename="../widgets/settingwidget.cpp" line="173"/>
         <source>Manage Accounts</source>
         <translation>管理账户</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="36"/>
-        <location filename="../widgets/settingwidget.cpp" line="155"/>
+        <location filename="../widgets/settingwidget.cpp" line="39"/>
+        <location filename="../widgets/settingwidget.cpp" line="166"/>
         <source>Accounts</source>
         <translation>账户</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="41"/>
+        <location filename="../widgets/settingwidget.cpp" line="45"/>
         <source>Advanced: Edit JSON</source>
-        <translation type="unfinished"></translation>
+        <translation>高级: 编辑 JSON</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="43"/>
+        <location filename="../widgets/settingwidget.cpp" line="47"/>
         <source>Advanced</source>
-        <translation type="unfinished"></translation>
+        <translation>高级</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="137"/>
+        <location filename="../widgets/settingwidget.cpp" line="142"/>
         <source>Select database file</source>
-        <translation type="unfinished"></translation>
+        <translation>选择数据库文件</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="139"/>
+        <location filename="../widgets/settingwidget.cpp" line="144"/>
         <source>SQLite DB (*.db);;All Files (*)</source>
-        <translation type="unfinished"></translation>
+        <translation>SQLite 数据库 (*.db);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="143"/>
+        <location filename="../widgets/settingwidget.cpp" line="151"/>
         <source>Storage database path updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>存储数据库路径已更新。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="155"/>
+        <location filename="../widgets/settingwidget.cpp" line="167"/>
         <source>No saved accounts found.</source>
-        <translation type="unfinished"></translation>
+        <translation>未找到保存的账户。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="170"/>
+        <location filename="../widgets/settingwidget.cpp" line="183"/>
         <source>Remove Selected</source>
-        <translation type="unfinished"></translation>
+        <translation>移除选中项</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="171"/>
+        <location filename="../widgets/settingwidget.cpp" line="185"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="198"/>
+        <location filename="../widgets/settingwidget.cpp" line="212"/>
         <source>Edit Configuration JSON</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑配置 JSON</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="204"/>
+        <location filename="../widgets/settingwidget.cpp" line="219"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>应用</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="205"/>
+        <location filename="../widgets/settingwidget.cpp" line="221"/>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation>取消</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="215"/>
+        <location filename="../widgets/settingwidget.cpp" line="233"/>
         <source>JSON Error</source>
-        <translation type="unfinished"></translation>
+        <translation>JSON 错误</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="215"/>
+        <location filename="../widgets/settingwidget.cpp" line="234"/>
         <source>Failed to parse provided JSON. No changes applied.</source>
-        <translation type="unfinished"></translation>
+        <translation>无法解析提供的 JSON。未应用任何更改。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="223"/>
+        <location filename="../widgets/settingwidget.cpp" line="245"/>
         <source>JSON</source>
-        <translation type="unfinished"></translation>
+        <translation>JSON</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="223"/>
+        <location filename="../widgets/settingwidget.cpp" line="246"/>
         <source>Configuration updated from JSON.</source>
-        <translation type="unfinished"></translation>
+        <translation>配置已从 JSON 更新。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="268"/>
+        <location filename="../widgets/settingwidget.cpp" line="291"/>
         <source>Save Failed</source>
         <translation>保存失败</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="269"/>
+        <location filename="../widgets/settingwidget.cpp" line="292"/>
         <source>Failed to save some configuration keys. Check permissions or file locks.</source>
         <translation>无法保存某些配置键。请检查权限或文件锁。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="275"/>
+        <location filename="../widgets/settingwidget.cpp" line="298"/>
         <source>Saved</source>
         <translation>已保存</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="276"/>
+        <location filename="../widgets/settingwidget.cpp" line="299"/>
         <source>Settings saved successfully.</source>
         <translation>设置已成功保存。</translation>
     </message>
