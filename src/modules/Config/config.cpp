@@ -212,7 +212,7 @@ QString ConfigManager::toJsonString() const {
     for (const QString& fullKey : keys) {
         QVariant v = settings_->value(fullKey);
         QJsonValue jsonVal;
-        if (v.type() == QVariant::String) {
+    if (v.typeId() == QMetaType::QString) {
             const QString s = v.toString();
             QJsonParseError perr;
             QJsonDocument doc = QJsonDocument::fromJson(s.toUtf8(), &perr);
@@ -223,7 +223,7 @@ QString ConfigManager::toJsonString() const {
             } else {
                 jsonVal = QJsonValue(s);
             }
-        } else if (v.type() == QVariant::Bool) {
+    } else if (v.typeId() == QMetaType::Bool) {
             jsonVal = QJsonValue(v.toBool());
         } else if (v.canConvert<double>()) {
             jsonVal = QJsonValue(v.toDouble());
@@ -256,7 +256,7 @@ bool ConfigManager::saveToJsonFile(const QString& path) const {
 
         QJsonValue jsonVal;
         // try to parse strings that are JSON
-        if (v.type() == QVariant::String) {
+    if (v.typeId() == QMetaType::QString) {
             const QString s = v.toString();
             QJsonParseError perr;
             QJsonDocument doc = QJsonDocument::fromJson(s.toUtf8(), &perr);
@@ -267,7 +267,7 @@ bool ConfigManager::saveToJsonFile(const QString& path) const {
             } else {
                 jsonVal = QJsonValue(s);
             }
-        } else if (v.type() == QVariant::Bool) {
+    } else if (v.typeId() == QMetaType::Bool) {
             jsonVal = QJsonValue(v.toBool());
         } else if (v.canConvert<double>()) {
             jsonVal = QJsonValue(v.toDouble());
@@ -309,7 +309,7 @@ bool ConfigManager::saveToJsonFile(const QString& path) const {
     for (const QString& fullKey : keys) {
         QVariant v = settings_->value(fullKey);
         QJsonValue jsonVal;
-        if (v.type() == QVariant::String) {
+    if (v.typeId() == QMetaType::QString) {
             const QString s = v.toString();
             QJsonParseError perr;
             QJsonDocument doc = QJsonDocument::fromJson(s.toUtf8(), &perr);
@@ -320,7 +320,7 @@ bool ConfigManager::saveToJsonFile(const QString& path) const {
             } else {
                 jsonVal = QJsonValue(s);
             }
-        } else if (v.type() == QVariant::Bool) {
+    } else if (v.typeId() == QMetaType::Bool) {
             jsonVal = QJsonValue(v.toBool());
         } else if (v.canConvert<double>()) {
             jsonVal = QJsonValue(v.toDouble());
@@ -374,7 +374,7 @@ bool ConfigManager::saveToJsonFile(const QString& path) const {
     for (const QString& fullKey : keys) {
         QVariant v = settings_->value(fullKey);
         QJsonValue jsonVal;
-        if (v.type() == QVariant::String) {
+    if (v.typeId() == QMetaType::QString) {
             const QString s = v.toString();
             QJsonParseError perr;
             QJsonDocument doc = QJsonDocument::fromJson(s.toUtf8(), &perr);
@@ -385,7 +385,7 @@ bool ConfigManager::saveToJsonFile(const QString& path) const {
             } else {
                 jsonVal = QJsonValue(s);
             }
-        } else if (v.type() == QVariant::Bool) {
+    } else if (v.typeId() == QMetaType::Bool) {
             jsonVal = QJsonValue(v.toBool());
         } else if (v.canConvert<double>()) {
             jsonVal = QJsonValue(v.toDouble());

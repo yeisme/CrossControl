@@ -9,6 +9,7 @@ set(CPACK_PACKAGE_CONTACT "yefun2004@gmail.com")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 
 if(WIN32)
+  # TODO: 当前打包仍然无法运行
   set(CPACK_GENERATOR "NSIS64;7Z")
 
   # 明确指定要打包的组件 (确保包含Runtime组件)

@@ -213,8 +213,8 @@
             "configurePreset": "msvc-release",
             "packageDirectory": "../msvc-release",
             "generators": [
-                "ZIP",
-                "NSIS"
+                "7Z",
+                "NSIS64"
             ]
         }
     ],

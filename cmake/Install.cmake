@@ -231,6 +231,10 @@ function(cc_install_opencv_runtime)
         PATTERN "*ipp*.dll"
         PATTERN "*webp*.dll"
         PATTERN "*gif*.dll"
+        PATTERN "*freetype*.dll"
+        PATTERN "*lzma*.dll"
+        PATTERN "*liblzma*.dll"
+        PATTERN "*archive*.dll"
         PATTERN "*leptonica*.dll"
         PATTERN "*leptonica-*.dll"
         PATTERN "*leptonica*.so*")
@@ -286,6 +290,10 @@ function(cc_install_opencv_runtime)
           # Linux/Unix .so patterns
           "*tiff*.so*"
           "*libtiff*.so*"
+          "*freetype*.so*"
+          "*lzma*.so*"
+          "*liblzma*.so*"
+          "*archive*.so*"
           "*hdf5*.so*"
           "*harfbuzz*.so*"
           "*abseil*.so*"
