@@ -1,5 +1,6 @@
 # 依赖项：只支持 Qt6，Qt Multimedia 已列为必需组件
-find_package(Qt6 REQUIRED COMPONENTS CoreTools Widgets LinguistTools Network Multimedia)
+find_package(Qt6 REQUIRED COMPONENTS CoreTools Widgets LinguistTools Network
+                                     Multimedia)
 set(QT_VERSION_MAJOR 6)
 message(STATUS "Found and using Qt6 (QT_VERSION_MAJOR=${QT_VERSION_MAJOR})")
 
@@ -48,8 +49,17 @@ if(DEFINED ENV{VCPKG_ROOT})
 
   # 仅在用户/系统未提供 OpenCV_ROOT 时设置 vcpkg 的 OpenCV 候选路径
   if(NOT DEFINED OpenCV_ROOT)
-    set(_VCPKG_OPENCV_ROOT
-        "$ENV{VCPKG_ROOT}/installed/x64-windows/share/opencv4")
+    if(WIN32)
+      # Windows 下 vcpkg 通常安装在 VCPKG_ROOT 下的 installed/x64-windows 目录中，OpenCV 的
+      # cmake 配置文件位于 share/opencv4
+      set(_VCPKG_OPENCV_ROOT
+          "$ENV{VCPKG_ROOT}/installed/x64-windows/share/opencv4")
+    elseif(LINUX)
+      # Linux 下 vcpkg 通常安装在 VCPKG_ROOT 下的 installed/x64-linux 目录中，OpenCV 的 cmake
+      # 配置文件位于 share/opencv4
+      set(_VCPKG_OPENCV_ROOT
+          "$ENV{VCPKG_ROOT}/installed/x64-linux/share/opencv4")
+    endif()
 
     # store candidate in OpenCV_ROOT so later find_package can use it as a hint
     set(OpenCV_ROOT "${_VCPKG_OPENCV_ROOT}")
@@ -66,14 +76,44 @@ find_package(spdlog CONFIG REQUIRED) # 使用 spdlog 作为日志库，比 QDebu
 if(BUILD_HUMAN_RECOGNITION)
   # 按照上面描述的优先级尝试定位 OpenCV。
   set(_opencv_found FALSE)
+  # When searching for OpenCV prefer CONFIG mode (imported targets) so that
+  # vcpkg-provided opencv_world or exported targets are selected instead of
+  # falling back to older FindOpenCV behavior which populates ${OpenCV_LIBS}
+  # with component -lopencv_* flags.
+  if(DEFINED CMAKE_FIND_PACKAGE_PREFER_CONFIG)
+    set(_old_find_pref "${CMAKE_FIND_PACKAGE_PREFER_CONFIG}")
+  else()
+    set(_old_find_pref "")
+  endif()
+  set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
 
-  # 1) 如果提供了 OpenCV_ROOT（通过 -DOpenCV_ROOT 或 环境变量 OPENCV_ROOT），优先尝试该路径。
-  if(DEFINED OpenCV_ROOT)
-    # 规范化路径分隔符，避免 Windows 路径（反斜杠）在传入 CMake 命令时产生转义问题。
+  # 1) If vcpkg is available, try common vcpkg install paths first
+  # (linux/windows)
+  if(DEFINED ENV{VCPKG_ROOT})
+    set(_vcpkg_candidates
+        "$ENV{VCPKG_ROOT}/installed/x64-linux/share/opencv4"
+        "$ENV{VCPKG_ROOT}/installed/x64-windows/share/opencv4")
+    foreach(_cand IN LISTS _vcpkg_candidates)
+      file(TO_CMAKE_PATH "${_cand}" _cand_path)
+      message(STATUS "Trying vcpkg OpenCV candidate: ${_cand_path}")
+      find_package(OpenCV QUIET CONFIG PATHS "${_cand_path}")
+      if(OpenCV_FOUND)
+        set(_opencv_found TRUE)
+        set(OpenCV_ROOT
+            "${_cand}"
+            CACHE PATH "Path to OpenCV used (vcpkg)")
+        message(
+          STATUS "Found OpenCV (vcpkg): ${OpenCV_VERSION} @ ${OpenCV_DIR}")
+        message(STATUS "OpenCV components/targets: ${OpenCV_LIBS}")
+        break()
+      endif()
+    endforeach()
+  endif()
+
+  # 2) If user provided OpenCV_ROOT explicitly, try it next (config-mode)
+  if(NOT _opencv_found AND DEFINED OpenCV_ROOT)
     file(TO_CMAKE_PATH "${OpenCV_ROOT}" _OpenCV_ROOT_PATH)
     message(STATUS "Trying OpenCV from OpenCV_ROOT: ${_OpenCV_ROOT_PATH}")
-
-    # 在提供的根路径下尝试常见的配置位置
     find_package(
       OpenCV
       QUIET
@@ -82,7 +122,6 @@ if(BUILD_HUMAN_RECOGNITION)
       "${_OpenCV_ROOT_PATH}/share/opencv4"
       "${_OpenCV_ROOT_PATH}/lib/cmake/opencv4"
       "${_OpenCV_ROOT_PATH}")
-
     if(OpenCV_FOUND)
       set(_opencv_found TRUE)
       message(
@@ -91,39 +130,22 @@ if(BUILD_HUMAN_RECOGNITION)
     endif()
   endif()
 
-  # 2) 尝试系统默认位置
+  # 3) Finally try system default search (still with prefer_config ON so any
+  # exported config package will be preferred)
   if(NOT _opencv_found)
     message(STATUS "Trying system-installed OpenCV (default search paths)")
     find_package(OpenCV QUIET)
-
     if(OpenCV_FOUND)
       set(_opencv_found TRUE)
       message(STATUS "Found OpenCV (system): ${OpenCV_VERSION} @ ${OpenCV_DIR}")
     endif()
   endif()
 
-  # 3) 如果仍未找到，且已配置 vcpkg，则尝试使用 vcpkg 提供的 OpenCV
-  if(NOT _opencv_found AND DEFINED ENV{VCPKG_ROOT})
-    set(_vcpkg_ocv "$ENV{VCPKG_ROOT}/installed/x64-windows/share/opencv4")
-
-    # 为 CMake 规范化路径
-    file(TO_CMAKE_PATH "${_vcpkg_ocv}" _vcpkg_ocv_path)
-    message(STATUS "Falling back to vcpkg OpenCV candidate: ${_vcpkg_ocv_path}")
-    find_package(OpenCV QUIET CONFIG PATHS "${_vcpkg_ocv_path}")
-
-    if(OpenCV_FOUND)
-      set(_opencv_found TRUE)
-
-      # ensure OpenCV_ROOT reflects the actual used config (useful for other
-      # scripts)
-      set(OpenCV_ROOT
-          "${_vcpkg_ocv}"
-          CACHE PATH "Path to OpenCV used (vcpkg)")
-      message(STATUS "Found OpenCV (vcpkg): ${OpenCV_VERSION} @ ${OpenCV_DIR}")
-
-      # list all opencv components found
-      message(STATUS "OpenCV components: ${OpenCV_LIBS}")
-    endif()
+  # restore previous preference
+  if(NOT _old_find_pref STREQUAL "")
+    set(CMAKE_FIND_PACKAGE_PREFER_CONFIG "${_old_find_pref}")
+  else()
+    unset(CMAKE_FIND_PACKAGE_PREFER_CONFIG)
   endif()
 
   if(NOT _opencv_found)

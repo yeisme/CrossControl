@@ -1,11 +1,14 @@
 ﻿#include "opencv_backend.h"
 
 #include <QBuffer>
+#include <QCoreApplication>
+#include <QDir>
 #include <QImage>
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QVariant>
 #include <cmath>
+#include <opencv2/imgcodecs.hpp>
 
 #include "logging.h"
 #include "storage.h"
@@ -22,19 +25,59 @@ bool OpenCVHumanRecognitionBackend::initialize() {
 
     if (!ensureSchema_()) return false;
 
-    // 使用 OpenCV 自带 haarcascade (需用户提供或放在运行目录)；这里尝试常见文件名
-    const std::vector<std::string> candidates = {
-        "haarcascade_frontalface_default.xml",  // 放同目录或 PATH
-    };
+    // Try to locate the Haar cascade file in several common places:
+    //  - Qt resource path :/haarcascades/haarcascade_frontalface_default.xml
+    //  - Executable directory
+    //  - Current working directory
+    //  - Directory pointed by OPENCV_HAAR_DIR environment variable
+    //  - Common system paths (/usr/share/opencv4/haarcascades on Linux)
+    const QString fileName = QStringLiteral("haarcascade_frontalface_default.xml");
+    std::vector<QString> tryPaths;
+    tryPaths.push_back(QStringLiteral(":/haarcascades/") + fileName);
+    // executable dir
+    QString appDir = QCoreApplication::applicationDirPath();
+    if (!appDir.isEmpty()) tryPaths.push_back(QDir(appDir).filePath(fileName));
+    // cwd
+    tryPaths.push_back(QDir::current().filePath(fileName));
+#if 1
+    // env override: OPENCV_HAAR_DIR points to a folder containing cascade files
+    QByteArray envVal = qgetenv("OPENCV_HAAR_DIR");
+    if (!envVal.isEmpty())
+        tryPaths.push_back(QDir(QString::fromLocal8Bit(envVal)).filePath(fileName));
+
+    // 允许 OPENCV_DATA_DIR 指向 OpenCV 数据（share/opencv4），该数据可能包含在 "haarcascades"
+    // 子文件夹下的级联文件。
+    QByteArray dataDir = qgetenv("OPENCV_DATA_DIR");
+    if (!dataDir.isEmpty()) {
+        tryPaths.push_back(QDir(QString::fromLocal8Bit(dataDir))
+                               .filePath(QStringLiteral("haarcascades/") + fileName));
+    }
+#endif
+#ifdef Q_OS_UNIX
+    tryPaths.push_back(QStringLiteral("/usr/share/opencv4/haarcascades/") + fileName);
+#endif
+
     bool loaded = false;
-    for (const auto& c : candidates) {
-        if (m_faceCascade.load(c)) {
+    for (const auto& p : tryPaths) {
+        if (p.isEmpty()) continue;
+        std::string sp = p.toStdString();
+        if (m_faceCascade.load(sp)) {
             loaded = true;
+            HRLog.info("Loaded Haar cascade from {}", p.toStdString());
             break;
         }
     }
     if (!loaded) {
-        HRLog.warn("Failed to load Haar cascade, face detection will return empty results");
+        // Log tried locations to help the developer
+        QStringList attempted;
+        for (const auto& p : tryPaths) attempted << p;
+        HRLog.warn(
+            "Failed to load Haar cascade, face detection will return empty results. Tried: {}",
+            attempted.join(", ").toStdString());
+        HRLog.warn(
+            "Place '{}' into the application directory, a Qt resource ':/haarcascades/', or set "
+            "OPENCV_HAAR_DIR to point to the folder containing the cascade.",
+            fileName.toStdString());
     }
 
     loadFeatureDatabase();
@@ -51,7 +94,16 @@ void OpenCVHumanRecognitionBackend::shutdown() {
 std::vector<FaceDetectionResult> OpenCVHumanRecognitionBackend::detectFaces(const QImage& image) {
     std::vector<FaceDetectionResult> results;
     if (image.isNull()) return results;
-    if (m_faceCascade.empty()) return results;
+    if (m_faceCascade.empty()) {
+        static bool warned = false;
+        if (!warned) {
+            HRLog.warn(
+                "Haar cascade is not loaded; detectFaces will always return empty. See "
+                "documentation for where to place the cascade file.");
+            warned = true;
+        }
+        return results;
+    }
 
     cv::Mat mat = qimageToMat_(image);
     cv::Mat gray;
@@ -64,7 +116,21 @@ std::vector<FaceDetectionResult> OpenCVHumanRecognitionBackend::detectFaces(cons
     cv::equalizeHist(gray, gray);
 
     std::vector<cv::Rect> faces;
-    m_faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, cv::Size(30, 30));
+    // Relax parameters slightly to reduce missed detections on small/low-contrast frames.
+    const double scaleFactor = 1.1;  // pyramid scaling
+    const int minNeighbors = 2;  // fewer neighbors = more detections, possibly more false positives
+    const cv::Size minSize(30, 30);
+    m_faceCascade.detectMultiScale(gray, faces, scaleFactor, minNeighbors, 0, minSize);
+
+#ifdef QT_DEBUG
+    // If no faces found, dump a small debug image to help offline inspection
+    if (faces.empty()) {
+        static int dbg_cnt = 0;
+        QString dbgfn = QDir::temp().filePath(QStringLiteral("cc_hr_debug_%1.png").arg(dbg_cnt++));
+        cv::imwrite(dbgfn.toStdString(), gray);
+        HRLog.debug("No faces detected in frame; dumped gray image to {}", dbgfn.toStdString());
+    }
+#endif
     for (const auto& f : faces) {
         FaceDetectionResult r;
         r.box = QRect(f.x, f.y, f.width, f.height);
@@ -109,7 +175,8 @@ int OpenCVHumanRecognitionBackend::enrollPerson(const PersonInfo& info,
     qPerson.addBindValue(info.name);
     qPerson.addBindValue(info.extraJson);
     if (!qPerson.exec()) {
-        HRLog.warn("Upsert person failed during enroll: {}", qPerson.lastError().text().toStdString());
+        HRLog.warn("Upsert person failed during enroll: {}",
+                   qPerson.lastError().text().toStdString());
         // continue: still try to insert features
     }
     for (const auto& img : faceImages) {

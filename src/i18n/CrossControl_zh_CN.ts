@@ -821,7 +821,16 @@
         <translation>返回主页</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="231"/>
+        <location filename="../widgets/monitorwidget.cpp" line="221"/>
+        <source>Sent</source>
+        <translation>已发送</translation>
+    </message>
+    <message>
+        <source>No connected clients</source>
+        <translation type="vanished">没有连接的客户端</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.cpp" line="267"/>
         <source>Choose save path</source>
         <translation>选择保存路径</translation>
     </message>

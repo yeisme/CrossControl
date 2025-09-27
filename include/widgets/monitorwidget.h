@@ -178,7 +178,8 @@ class MonitorWidget : public QWidget {
      * @brief 将字节数据广播到当前所有已连接客户端
      * @param data 要发送的字节数据（通常为 UTF-8 文本或协议命令）
      */
-    void broadcastToClients(const QByteArray& data);
+    // Returns number of clients the data was written to
+    int broadcastToClients(const QByteArray& data);
     // device edit fields live in UI: editHost, editPort
 };
 

@@ -127,8 +127,10 @@ void MonitorWidget::startListening() {
     if (!ok) port = 8086;
     if (m_server->listen(QHostAddress::Any, port)) {
         spdlog::info("listening on port {}", port);
-        ui->btnListen->setText("Listening...");
-        ui->btnListen->setStyleSheet("background-color: yellow");
+    ui->btnListen->setText("Listening...");
+    // Use a yellow with black text and subtle border to ensure readability in
+    // light themes (white-on-yellow has poor contrast).
+    ui->btnListen->setStyleSheet("background-color: #FFD54F; color: black; border: 1px solid #b38f00");
     } else {
         spdlog::error("failed to listen on port {}", port);
         ui->btnListen->setText("Listen Failed");
@@ -209,16 +211,50 @@ void MonitorWidget::on_btnSendText_clicked() {
     QByteArray bytes = txt.toUtf8();
     // append newline if not present
     if (!bytes.endsWith('\n')) bytes.append('\n');
-    broadcastToClients(bytes);
-}
-
-void MonitorWidget::broadcastToClients(const QByteArray& data) {
-    for (QTcpSocket* s : m_clientBuffers.keys()) {
-        if (s && s->state() == QAbstractSocket::ConnectedState) {
-            s->write(data);
-            s->flush();
+    int written = broadcastToClients(bytes);
+    if (written > 0) {
+        spdlog::info("Broadcasted {} bytes to {} clients", bytes.size(), written);
+        // temporary UI feedback on the send button
+        auto sendBtn = this->findChild<QPushButton*>("btnSendText");
+        if (sendBtn) {
+            QString old = sendBtn->text();
+            sendBtn->setText(QCoreApplication::translate("MonitorWidget", "Sent"));
+            QTimer::singleShot(1000, this, [sendBtn, old]() { sendBtn->setText(old); });
+        }
+    } else {
+        spdlog::warn("Broadcast: no connected clients to send to");
+        // Provide explicit Chinese UI feedback: temporarily change button text and style
+        auto sendBtn = this->findChild<QPushButton*>("btnSendText");
+        if (sendBtn) {
+            QString old = sendBtn->text();
+            sendBtn->setText(QStringLiteral("未连接设备"));
+            // red background to indicate error
+            sendBtn->setStyleSheet("background-color: #e57373; color: white; border: 1px solid #b00020");
+            QTimer::singleShot(1000, this, [sendBtn, old]() {
+                sendBtn->setText(old);
+                sendBtn->setStyleSheet("");
+            });
+            sendBtn->setToolTip(QStringLiteral("未连接任何客户端，请先建立连接"));
         }
     }
+}
+
+int MonitorWidget::broadcastToClients(const QByteArray& data) {
+    int cnt = 0;
+    for (QTcpSocket* s : m_clientBuffers.keys()) {
+        if (s && s->state() == QAbstractSocket::ConnectedState) {
+            qint64 n = s->write(data);
+            s->flush();
+            if (n > 0) {
+                ++cnt;
+                spdlog::debug("Sent {} bytes to client {}:{}", n,
+                              s->peerAddress().toString().toStdString(), s->peerPort());
+            } else {
+                spdlog::warn("Failed to send to client {}:{}", s->peerAddress().toString().toStdString(), s->peerPort());
+            }
+        }
+    }
+    return cnt;
 }
 
 void MonitorWidget::on_btnBackFromMonitor_clicked() {

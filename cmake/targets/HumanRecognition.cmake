@@ -19,23 +19,13 @@
         "Ensure cmake/Dependencies.cmake configured Qt6 or set CMAKE_PREFIX_PATH to your Qt6 installation."
     )
   endif()
-  # OpenCV - ensure we locate OpenCV and provide include dirs to the target
+  # OpenCV - delegate all link choices to ${OpenCV_LIBS} provided by find_package.
+  # Do NOT hardcode component target names here; let the find_package implementation
+  # (FindOpenCV or OpenCVConfig) populate ${OpenCV_LIBS} appropriately.
   find_package(OpenCV REQUIRED COMPONENTS core imgproc objdetect)
   message(STATUS "HumanRecognition: OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
-  # Prefer linking OpenCV via exported CMake targets if available (vcpkg config
-  # provides OpenCV::opencv_world or per-component targets). Fall back to
-  # ${OpenCV_LIBS} for older OpenCV find modules.
-  if(TARGET OpenCV::opencv_world)
-    message(STATUS "HumanRecognition: linking with OpenCV::opencv_world target")
-    target_link_libraries(HumanRecognition PRIVATE OpenCV::opencv_world)
-  elseif(TARGET OpenCV::opencv_core)
-    message(STATUS "HumanRecognition: linking with OpenCV component targets (core,imgproc,objdetect)")
-    target_link_libraries(HumanRecognition PRIVATE OpenCV::opencv_core OpenCV::opencv_imgproc OpenCV::opencv_objdetect)
-  else()
-    message(STATUS "HumanRecognition: linking with OpenCV libs variable: ${OpenCV_LIBS}")
-    target_link_libraries(HumanRecognition PRIVATE ${OpenCV_LIBS})
-  endif()
-  target_include_directories(HumanRecognition PRIVATE ${OpenCV_INCLUDE_DIRS})
+  message(STATUS "HumanRecognition: linking with OpenCV libs variable: ${OpenCV_LIBS}")
+  target_link_libraries(HumanRecognition PRIVATE ${OpenCV_LIBS})
   target_include_directories(
     HumanRecognition
     PRIVATE ${CMAKE_SOURCE_DIR}/include include/modules/HumanRecognition
