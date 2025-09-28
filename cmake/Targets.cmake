@@ -10,6 +10,7 @@ include(cmake/targets/AudioVideo.cmake)
 include(cmake/targets/Storage.cmake)
 include(cmake/targets/Config.cmake)
 include(cmake/targets/Connect.cmake)
+include(cmake/targets/DeviceGateway.cmake)
 
 if(NOT TARGET Qt6::Widgets)
   message(FATAL_ERROR "Qt6::Widgets target not found. Ensure cmake/Dependencies.cmake found Qt6.")

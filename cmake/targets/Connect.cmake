@@ -42,5 +42,5 @@ if(TARGET CrossControl)
   target_link_libraries(CrossControl PUBLIC Connect)
 endif()
 
-# 使用 helper 安装目标并分配组件
-cc_install_target(Connect Connect)
+# 使用 helper 安装目标并分配到 Core 组件（Connect 功能作为 Core 的一部分）
+cc_install_target(Connect Core)

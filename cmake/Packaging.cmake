@@ -59,27 +59,8 @@ set(_cc_components)
 # Core application is always required
 list(APPEND _cc_components Core)
 
-# Optional modules: default ON/OFF depends on build options
-if(BUILD_HUMAN_RECOGNITION)
-  list(APPEND _cc_components HumanRecognition)
-  set(CPACK_COMPONENT_HumanRecognition_DISPLAY_NAME "Human Recognition")
-  set(CPACK_COMPONENT_HumanRecognition_DESCRIPTION
-      "Face/person recognition support (optional).")
-  # default install state mirrors build option
-  set(CPACK_COMPONENT_HumanRecognition_SELECTED TRUE)
-else()
-  set(CPACK_COMPONENT_HumanRecognition_SELECTED FALSE)
-endif()
-
-if(BUILD_AUDIO_VIDEO)
-  list(APPEND _cc_components AudioVideo)
-  set(CPACK_COMPONENT_AudioVideo_DISPLAY_NAME "Audio/Video")
-  set(CPACK_COMPONENT_AudioVideo_DESCRIPTION
-      "Camera and multimedia support (optional).")
-  set(CPACK_COMPONENT_AudioVideo_SELECTED TRUE)
-else()
-  set(CPACK_COMPONENT_AudioVideo_SELECTED FALSE)
-endif()
+# Optional DeviceGateway component (MQTT gateway/back-end for devices)
+list(APPEND _cc_components DeviceGateway)
 
 if(BUILD_MQTT_CLIENT)
   list(APPEND _cc_components Connect)
@@ -89,12 +70,18 @@ if(BUILD_MQTT_CLIENT)
   set(CPACK_COMPONENT_Connect_SELECTED TRUE)
 endif()
 
+# DeviceGateway optional component
+set(CPACK_COMPONENT_DeviceGateway_DISPLAY_NAME "Device Gateway (MQTT Gateway)")
+set(CPACK_COMPONENT_DeviceGateway_DESCRIPTION
+    "Optional Device Gateway module providing MQTT device connectivity.")
+set(CPACK_COMPONENT_DeviceGateway_SELECTED FALSE)
+
 # The following modules are required for the application to run and are
 # installed together with the Core application component (they are not presented
 # as separate selectable components in the installer):
 set(CPACK_COMPONENT_Core_DISPLAY_NAME "Core Application")
 set(CPACK_COMPONENT_Core_DESCRIPTION
-    "Main application plus required runtime modules (Storage, Logging, Config)."
+    "Main application plus required runtime modules (Storage, Logging, Config, HumanRecognition, AudioVideo)."
 )
 set(CPACK_COMPONENT_Core_REQUIRED TRUE)
 
@@ -139,6 +126,33 @@ if(UNIX AND NOT APPLE)
   if(NOT DEFINED CPACK_COMPONENTS_ALL)
     set(CPACK_COMPONENTS_ALL Runtime)
   endif()
+endif()
+
+# Enable component-based DEB packages so Connect can be produced as a separate
+# Debian package when BUILD_MQTT_CLIENT is enabled. This makes DEB installers
+# modular: core and optional Connect package(s).
+if(UNIX AND NOT APPLE)
+  # Tell CPack to generate one DEB per component instead of a single package
+  set(CPACK_DEB_COMPONENT_INSTALL ON)
+
+  if(BUILD_MQTT_CLIENT)
+    # Configure the Connect component Debian package metadata
+    set(CPACK_DEBIAN_Connect_PACKAGE_NAME "${PROJECT_NAME}-connect")
+    set(CPACK_DEBIAN_Connect_PACKAGE_DESCRIPTION
+        "${PROJECT_NAME} optional MQTT/connectivity components (Paho MQTT client libraries)")
+    # By default, make the connect package suggest the core package; adjust
+    # dependencies if you want a strict Depends relationship.
+    set(CPACK_DEBIAN_Connect_PACKAGE_DEPENDS "${CPACK_DEBIAN_PACKAGE_DEPENDS}")
+  endif()
+endif()
+
+if(UNIX AND NOT APPLE AND BUILD_MQTT_CLIENT)
+  # DeviceGateway DEB package metadata
+  set(CPACK_DEBIAN_DeviceGateway_PACKAGE_NAME "${PROJECT_NAME}-devicegateway")
+  set(CPACK_DEBIAN_DeviceGateway_PACKAGE_DESCRIPTION
+      "${PROJECT_NAME} Device Gateway module (optional MQTT gateway functionality)")
+  # DeviceGateway should depend on main package so it's clear core is required
+  set(CPACK_DEBIAN_DeviceGateway_PACKAGE_DEPENDS "${PROJECT_NAME} (${PROJECT_VERSION})")
 endif()
 
 # 允许可选地从 NSIS 安装程序中排除某些运行时文件。CPACK_RUNTIME_EXCLUDE_PATTERN 是以分号分隔的全局模式列表，相对于安装路径
@@ -235,7 +249,39 @@ if(WIN32)
     FILES_MATCHING
     PATTERN "*.exe"
     PATTERN "*.dll"
-    PATTERN "*.pdb")
+    PATTERN "*.pdb"
+    # Exclude MQTT / Paho runtime DLLs from Core so they can be offered as a
+    # separate optional component (Connect) in the installer when BUILD_MQTT_CLIENT is enabled.
+    PATTERN "*paho*.dll" EXCLUDE
+    PATTERN "*paho*.*" EXCLUDE)
+endif()
+
+if(WIN32 AND BUILD_MQTT_CLIENT)
+  # Install any paho/mqtt runtime DLLs into the Connect component so NSIS
+  # presents them as an optional feature. We intentionally match common
+  # naming patterns; if your installed runtime uses different names adjust
+  # the patterns accordingly.
+  install(
+    DIRECTORY "${CMAKE_BINARY_DIR}/bin/"
+    DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    COMPONENT Connect
+    FILES_MATCHING
+    PATTERN "*paho*.dll"
+    PATTERN "*paho*.pdb"
+    PATTERN "*paho*.*")
+endif()
+
+if(UNIX AND NOT APPLE AND BUILD_MQTT_CLIENT)
+  # Install any libpaho shared libraries into the Connect component for DEB
+  # packaging. Match soname and versioned shared objects (libpaho*.so*).
+  install(
+    DIRECTORY "${CMAKE_BINARY_DIR}/lib/"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    COMPONENT Connect
+    FILES_MATCHING
+    PATTERN "libpaho*.so"
+    PATTERN "libpaho*.so.*"
+  )
 endif()
 
 include(CPack)

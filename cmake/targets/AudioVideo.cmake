@@ -1,5 +1,4 @@
-﻿if(BUILD_AUDIO_VIDEO)
-  # AudioVideo 模块的源文件
+﻿  # AudioVideo module - always built and part of Core
   set(AUDIO_VIDEO_SOURCES src/modules/AudioVideo/audiovideo.cpp
                           include/modules/AudioVideo/audiovideo.h)
   if(BUILD_SHARED_MODULES)
@@ -8,19 +7,15 @@
   else()
     add_library(AudioVideo STATIC ${AUDIO_VIDEO_SOURCES})
   endif()
-  # 先链接项目的 logging 模块
+  # Link project logging
   target_link_libraries(AudioVideo PRIVATE logging)
 
-  # 使用 Qt Multimedia 作为音视频功能的默认后端。 这使得 Multimedia 成为 AudioVideo 目标的显式依赖。
-  find_package(
-    Qt6
-    COMPONENTS Multimedia
-    REQUIRED)
+  # Use Qt Multimedia for audio/video functionality
+  find_package(Qt6 COMPONENTS Multimedia REQUIRED)
   target_link_libraries(AudioVideo PRIVATE Qt6::Multimedia)
   target_include_directories(AudioVideo PRIVATE ${CMAKE_SOURCE_DIR}/include
                                                 include/modules/AudioVideo)
 
-  # Ensure Qt Multimedia target is available
   if(NOT TARGET Qt6::Multimedia)
     message(
       FATAL_ERROR
@@ -30,6 +25,5 @@
   endif()
   target_link_libraries(CrossControl PRIVATE AudioVideo)
 
-  cc_install_target(AudioVideo AudioVideo)
-
-endif()
+  # Install the AudioVideo module as part of the Core application component
+  cc_install_target(AudioVideo Core)

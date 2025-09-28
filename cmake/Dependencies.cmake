@@ -34,18 +34,6 @@ if(BUILD_MQTT_CLIENT)
 endif()
 
 # 人脸识别功能需要 OpenCV。倾向于快速失败并给出有帮助的提示信息。
-if(BUILD_HUMAN_RECOGNITION)
-  find_package(OpenCV CONFIG QUIET)
-  if(OpenCV_FOUND)
-    message(STATUS "Found OpenCV: ${OpenCV_VERSION}")
-  # 将包含目录和库以变量形式暴露，供 Targets.cmake 使用
-    set(PROJECT_HAS_OPENCV
-        ON
-        CACHE BOOL "OpenCV found for project" FORCE)
-  else()
-    message(
-      FATAL_ERROR
-        "OpenCV not found but BUILD_HUMAN_RECOGNITION is enabled.\nPlease enable the 'opencv' feature in vcpkg (ensure vcpkg.json lists opencv4) or install opencv4 via vcpkg.\nIf you don't need the human recognition module, set -DBUILD_HUMAN_RECOGNITION=OFF when configuring."
-    )
-  endif()
-endif()
+find_package(OpenCV CONFIG REQUIRED COMPONENTS core imgproc objdetect)
+message(STATUS "Found OpenCV: ${OpenCV_VERSION}")
+set(PROJECT_HAS_OPENCV ON CACHE BOOL "OpenCV found for project" FORCE)

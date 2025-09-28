@@ -1,5 +1,4 @@
-﻿if(BUILD_HUMAN_RECOGNITION)
-  # HumanRecognition 模块的源文件
+﻿  # HumanRecognition module - always built (no BUILD_HUMAN_RECOGNITION guard)
   set(HUMAN_RECOGNITION_SOURCES
       src/modules/HumanRecognition/humanrecognition.cpp
       src/modules/HumanRecognition/opencv_backend.cpp
@@ -8,7 +7,7 @@
       include/modules/HumanRecognition/opencv_backend.h)
   if(BUILD_SHARED_MODULES)
     add_library(HumanRecognition SHARED ${HUMAN_RECOGNITION_SOURCES})
-    # 允许在未显式标注导出符号时仍输出所有符号（已有显式宏时也不冲突）
+    # Ensure exported symbols on MSVC builds when no explicit export macro
     set_target_properties(HumanRecognition PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS
                                                       ON)
   else()
@@ -18,7 +17,7 @@
                                                  Qt6::Sql)
   target_link_libraries(HumanRecognition PRIVATE logging)
 
-  # 确保 Qt6 目标可用（Dependencies.cmake 应当提供这些）
+  # Ensure Qt6 dependencies are available; fail early with a clear message
   if(NOT TARGET Qt6::Widgets)
     message(
       FATAL_ERROR
@@ -26,16 +25,11 @@
         "Ensure cmake/Dependencies.cmake configured Qt6 or set CMAKE_PREFIX_PATH to your Qt6 installation."
     )
   endif()
-  # OpenCV - delegate all link choices to ${OpenCV_LIBS} provided by
-  # find_package. Do NOT hardcode component target names here; let the
-  # find_package implementation (FindOpenCV or OpenCVConfig) populate
-  # ${OpenCV_LIBS} appropriately.
+
+  # OpenCV - require it and let find_package populate ${OpenCV_LIBS}
   find_package(OpenCV REQUIRED COMPONENTS core imgproc objdetect)
-  message(
-    STATUS "HumanRecognition: OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
-  message(
-    STATUS "HumanRecognition: linking with OpenCV libs variable: ${OpenCV_LIBS}"
-  )
+  message(STATUS "HumanRecognition: OpenCV include dirs: ${OpenCV_INCLUDE_DIRS}")
+  message(STATUS "HumanRecognition: linking with OpenCV libs variable: ${OpenCV_LIBS}")
   target_link_libraries(HumanRecognition PRIVATE ${OpenCV_LIBS})
   target_include_directories(
     HumanRecognition
@@ -44,8 +38,6 @@
   target_link_libraries(HumanRecognition PRIVATE Storage)
   target_link_libraries(CrossControl PRIVATE HumanRecognition)
 
-  # register installation with component (output dirs are handled by
-  # Output.cmake)
-  cc_install_target(HumanRecognition HumanRecognition)
-
-endif()
+  # Register installation as part of the Core component so the module is
+  # installed together with the main application.
+  cc_install_target(HumanRecognition Core)

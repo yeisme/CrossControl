@@ -12,18 +12,12 @@ set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS
     CACHE BOOL "" FORCE)
 
 # 模块可扩展性选项
-option(BUILD_HUMAN_RECOGNITION "Build Human Recognition module" ON)
-message(STATUS " * feature BUILD_HUMAN_RECOGNITION: ${BUILD_HUMAN_RECOGNITION}")
-option(BUILD_AUDIO_VIDEO "Build Audio Video module" ON)
-message(STATUS " * feature BUILD_AUDIO_VIDEO: ${BUILD_AUDIO_VIDEO}")
+# HumanRecognition and AudioVideo are required and installed as part of Core.
+# These modules are always built and not exposed as configuration options.
 option(BUILD_MQTT_CLIENT "Build MQTT Client module" OFF) # TODO: 默认关闭，暂时不支持
 message(STATUS " * feature BUILD_MQTT_CLIENT: ${BUILD_MQTT_CLIENT}")
 
-# Storage 模块为项目必需；始终启用。
-set(BUILD_STORAGE
-    ON
-    CACHE BOOL "Build Storage (data storage) module" FORCE)
-message(STATUS " * feature BUILD_STORAGE: ON (required)")
+# Storage module is required and always built; not exposed as a configuration option.
 option(BUILD_SHARED_MODULES "Build modules as shared libraries" ON)
 message(STATUS " * feature BUILD_SHARED_MODULES: ${BUILD_SHARED_MODULES}")
 
