@@ -89,4 +89,4 @@ CMakeLists.txt.user*
 CMakeUserPresets.json
 
 vcpkg_installed/
-lvgl_Basic_demo/
+third_party/

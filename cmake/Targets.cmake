@@ -1,4 +1,4 @@
-# Targets
+## 目标配置
 include(cmake/targets/CrossControl.cmake)
 
 # logging 单独放到文件中，便于管理
@@ -21,10 +21,10 @@ target_include_directories(CrossControl PRIVATE include/widgets include/logging)
 # 输出/MSVC 专用设置放到单独文件中，便于管理
 include(cmake/Output.cmake)
 
-# Keep Windows subsystem flag for GUI app
+# 保持 Windows 子系统标志以支持 GUI 应用
 set_target_properties(CrossControl PROPERTIES WIN32_EXECUTABLE TRUE)
 
-# Copy translation QM files next to executable under i18n/ for runtime lookup
+# 将翻译 QM 文件复制到可执行文件旁的 i18n/ 目录下以供运行时查找
 add_custom_command(
         TARGET CrossControl
         POST_BUILD
@@ -34,7 +34,7 @@ add_custom_command(
         "$<TARGET_FILE_DIR:CrossControl>/i18n"
         COMMENT "Copying translation files to runtime i18n directory")
 
-# Copy default CrossControlConfig.json next to executable so ConfigManager can auto-load it
+# 将默认的 CrossControlConfig.json 复制到可执行文件旁边，以便 ConfigManager 可以自动加载它
 add_custom_command(
         TARGET CrossControl
         POST_BUILD

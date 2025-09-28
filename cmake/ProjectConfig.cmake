@@ -1,17 +1,17 @@
-# Project Configuration
+# 项目配置
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Suppress developer warnings to avoid FFmpeg package name mismatch warnings
+# 抑制开发者警告以避免 FFmpeg 包名不匹配的提示
 set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS
     ON
     CACHE BOOL "" FORCE)
 
-# Module options for extensibility
+# 模块可扩展性选项
 option(BUILD_HUMAN_RECOGNITION "Build Human Recognition module" ON)
 message(STATUS " * feature BUILD_HUMAN_RECOGNITION: ${BUILD_HUMAN_RECOGNITION}")
 option(BUILD_AUDIO_VIDEO "Build Audio Video module" ON)
@@ -19,7 +19,7 @@ message(STATUS " * feature BUILD_AUDIO_VIDEO: ${BUILD_AUDIO_VIDEO}")
 option(BUILD_MQTT_CLIENT "Build MQTT Client module" OFF) # TODO: 默认关闭，暂时不支持
 message(STATUS " * feature BUILD_MQTT_CLIENT: ${BUILD_MQTT_CLIENT}")
 
-# Storage module is required for the project; always enable it.
+# Storage 模块为项目必需；始终启用。
 set(BUILD_STORAGE
     ON
     CACHE BOOL "Build Storage (data storage) module" FORCE)

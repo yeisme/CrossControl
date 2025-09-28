@@ -1,29 +1,46 @@
-﻿if(BUILD_SHARED_MODULES)
+﻿# Connect 模块的源文件
+set(CONNECT_SOURCES
+    src/modules/Connect/tcp_connect.cpp
+    src/modules/Connect/connect_factory.cpp
+    include/modules/Connect/iface_connect.h
+    include/modules/Connect/tcp_connect.h
+    include/modules/Connect/connect_factory.h
+    include/modules/Connect/connect_wrapper.h
+    include/widgets/connectwidget.h
+    src/widgets/connectwidget.cpp)
+
+if(BUILD_SHARED_MODULES)
   add_library(Connect SHARED ${CONNECT_SOURCES})
   set_target_properties(Connect PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 else()
   add_library(Connect STATIC ${CONNECT_SOURCES})
 endif()
 
-set(_connect_bin_dir "${CMAKE_BINARY_DIR}/bin")
-set(_connect_lib_dir "${CMAKE_BINARY_DIR}/lib")
-set_target_properties(
-  Connect
-  PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${_connect_bin_dir}"
-             LIBRARY_OUTPUT_DIRECTORY "${_connect_bin_dir}"
-             ARCHIVE_OUTPUT_DIRECTORY "${_connect_lib_dir}")
+# 使用 helper 将输出目录设置为一致的 bin/lib 布局
+cc_set_output_dirs(Connect)
 
-target_include_directories(Connect PUBLIC "${CMAKE_BINARY_DIR}/include")
-target_include_directories(Connect PUBLIC ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/include/widgets)
-target_include_directories(Connect PUBLIC include/modules/Connect)
+target_include_directories(
+  Connect PUBLIC "${CMAKE_BINARY_DIR}/include" "${CMAKE_SOURCE_DIR}/include"
+                 "${CMAKE_SOURCE_DIR}/include/widgets" include/modules/Connect)
 
-find_package(Qt6 COMPONENTS Network Widgets REQUIRED)
+# 确保需要的 Qt6 组件存在
+find_package(
+  Qt6
+  COMPONENTS Network Widgets
+  REQUIRED)
+if(NOT TARGET Qt6::Network OR NOT TARGET Qt6::Widgets)
+  message(
+    FATAL_ERROR
+      "Connect module requires Qt6::Network and Qt6::Widgets targets. Ensure cmake/Dependencies.cmake configured Qt6."
+  )
+endif()
+
 target_link_libraries(Connect PRIVATE Qt6::Network Qt6::Widgets logging config)
 
-target_link_libraries(CrossControl PUBLIC Connect)
+# 仅当 CrossControl 目标存在时才将 Connect 链接到它
+if(TARGET CrossControl)
+  target_link_libraries(CrossControl PUBLIC Connect)
+endif()
 
-install(
-  TARGETS Connect
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime)
+# 使用 helper 安装目标并分配组件
+cc_install_target(Connect Connect)

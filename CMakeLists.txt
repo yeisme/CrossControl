@@ -5,9 +5,10 @@ project(
   VERSION 0.1
   LANGUAGES CXX)
 
-include(cmake/ProjectConfig.cmake)
 include(cmake/Dependencies.cmake)
-include(cmake/Sources.cmake)
-include(cmake/Targets.cmake)
+include(cmake/Helper.cmake)
 include(cmake/Install.cmake)
+include(cmake/Output.cmake)
 include(cmake/Packaging.cmake)
+include(cmake/ProjectConfig.cmake)
+include(cmake/Targets.cmake)

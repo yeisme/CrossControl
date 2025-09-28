@@ -1,4 +1,22 @@
-# Packaging
+# Packaging 打包配置 可选项：控制是否将第三方运行时库（来自 vcpkg 或本地构建）打包到生成的安装程序中。 在使用 vcpkg manifest
+# 模式进行开发时，通常不会将运行时库打包进安装程序（开发机器会通过 vcpkg 提供这些库）。 设置 -DENABLE_BUNDLE_RUNTIME=ON
+# 可以生成包含第三方共享库的自包含安装程序。 为 CPack/NSIS 定义安装程序组件。每个组件对应一组已安装的目标和文件。 这些组件会在 NSIS
+# 安装界面中展示给用户，并可以在安装时选择。 Core 应用程序始终为必选项 可选模块：默认的开/关状态取决于构建选项 以下模块为应用运行所必需，会与
+# Core 应用组件一并安装（不会在安装程序中作为单独可选组件展示）： 将计算得到的组件列表暴露给 CPack。如果 CPACK_COMPONENTS_ALL
+# 已经定义（例如在 ENABLE_BUNDLE_RUNTIME=ON 时包含 Runtime）， 我们将避免重复地追加组件，否则直接设置该变量。 在
+# Linux（非 Apple）平台上，我们可能希望将第三方运行时库打包进生成的 .deb 中，而不是依赖发行版的 shlibdeps。 为此我们会禁用
+# dpkg-shlibdeps（以防其基于系统库改写 Depends），并保留一个非常保守的 Depends 列表（如 libc）。 实际的运行时文件应由
+# install 规则安装到 ${CMAKE_INSTALL_BINDIR}（见 cmake/Install.cmake），这样它们会被打包进 Debian
+# 包中。 允许可选地从 NSIS 安装程序中排除某些运行时文件。CPACK_RUNTIME_EXCLUDE_PATTERN 是一个以分号分隔的全局模式列表，
+# 相对于安装路径 ${CMAKE_INSTALL_BINDIR}，这些文件将在安装时从打包的运行时中被删除。默认情况下我们会移除 MSVC
+# 可再发行安装程序及常见的 FFmpeg DLL 名称，这些通常会被 vcpkg 引入。 如果构建 NSIS 安装程序，在安装时注入额外的 NSIS
+# 命令以删除运行时目录中匹配的文件。 这样可以保持安装程序体积小，并避免将可再发行安装程序嵌入到应用运行时中。 默认情况下确保包含 Runtime 文件
+# 默认情况下从 Runtime 载荷中排除 MSVC 可再发行安装程序。当 ENABLE_BUNDLE_RUNTIME=OFF
+# 时，这些模式通常无效，因为我们不会生成 Runtime 组件。 构建额外的 NSIS
+# 命令以在安装时删除不需要的运行时文件。跳过任何空的列表项并去除空白，以避免生成没有参数的 'Delete' 导致 makensis 失败。
+# 转义模式中的双引号（尽管不太可能出现）以保持 NSIS 语法有效。 对反斜杠和双引号进行转义，这样该值就可以安全地写入生成的
+# CPackConfig.cmake，而不会产生无效的 CMake 字符串字面量（此前可能生成类似 Delete "$INSTDIR\bin..."
+# 的未转义行并导致解析错误）。 确保系统运行时库被包含 Packaging
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 set(CPACK_PACKAGE_VERSION_MAJOR "${PROJECT_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${PROJECT_VERSION_MINOR}")
@@ -8,12 +26,90 @@ set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 set(CPACK_PACKAGE_CONTACT "yefun2004@gmail.com")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 
+# 选项：控制是否将第三方运行时库（来自 vcpkg 或本地构建）捆绑到生成的安装程序中。在使用 vcpkg
+# 清单模式开发时，通常不会将运行时库捆绑到安装程序中（它们由开发者机器上的 vcpkg 提供）。设置 -DENABLE_BUNDLE_RUNTIME=ON
+# 可生成包含第三方共享库的自包含安装程序。
+option(ENABLE_BUNDLE_RUNTIME
+       "Bundle third-party runtime libraries into installers" OFF)
+
+# Enable running platform deployment tools
+# (windeployqt/macdeployqt/linuxdeployqt) after build. Default ON to make local
+# development and debugging convenient.
+option(
+  ENABLE_DEPLOY_QT
+  "Run Qt deployment tools (windeployqt / macdeployqt / linuxdeployqt) after build"
+  ON)
+
 if(WIN32)
-  # TODO: 当前打包仍然无法运行
+  # Default Windows generators
   set(CPACK_GENERATOR "NSIS64;7Z")
 
-  # 明确指定要打包的组件 (确保包含Runtime组件)
-  set(CPACK_COMPONENTS_ALL Runtime)
+  # Only include a Runtime component if we're bundling runtimes. In development
+  # with vcpkg manifest mode we typically don't bundle runtime libraries into
+  # installers, so avoid creating the Runtime component by default.
+  if(ENABLE_BUNDLE_RUNTIME)
+    set(CPACK_COMPONENTS_ALL Runtime)
+  endif()
+endif()
+
+# 为 CPack/NSIS 定义安装程序组件。每个组件对应一组已安装的目标和文件。 这些组件会通过 NSIS 安装程序界面展示给用户，
+# 并可以在安装时进行选择。
+set(_cc_components)
+
+# Core application is always required
+list(APPEND _cc_components Core)
+
+# Optional modules: default ON/OFF depends on build options
+if(BUILD_HUMAN_RECOGNITION)
+  list(APPEND _cc_components HumanRecognition)
+  set(CPACK_COMPONENT_HumanRecognition_DISPLAY_NAME "Human Recognition")
+  set(CPACK_COMPONENT_HumanRecognition_DESCRIPTION
+      "Face/person recognition support (optional).")
+  # default install state mirrors build option
+  set(CPACK_COMPONENT_HumanRecognition_SELECTED TRUE)
+else()
+  set(CPACK_COMPONENT_HumanRecognition_SELECTED FALSE)
+endif()
+
+if(BUILD_AUDIO_VIDEO)
+  list(APPEND _cc_components AudioVideo)
+  set(CPACK_COMPONENT_AudioVideo_DISPLAY_NAME "Audio/Video")
+  set(CPACK_COMPONENT_AudioVideo_DESCRIPTION
+      "Camera and multimedia support (optional).")
+  set(CPACK_COMPONENT_AudioVideo_SELECTED TRUE)
+else()
+  set(CPACK_COMPONENT_AudioVideo_SELECTED FALSE)
+endif()
+
+if(BUILD_MQTT_CLIENT)
+  list(APPEND _cc_components Connect)
+  set(CPACK_COMPONENT_Connect_DISPLAY_NAME "Connect (MQTT/Network)")
+  set(CPACK_COMPONENT_Connect_DESCRIPTION
+      "Network connectivity plugins and connectors.")
+  set(CPACK_COMPONENT_Connect_SELECTED TRUE)
+endif()
+
+# The following modules are required for the application to run and are
+# installed together with the Core application component (they are not presented
+# as separate selectable components in the installer):
+set(CPACK_COMPONENT_Core_DISPLAY_NAME "Core Application")
+set(CPACK_COMPONENT_Core_DESCRIPTION
+    "Main application plus required runtime modules (Storage, Logging, Config)."
+)
+set(CPACK_COMPONENT_Core_REQUIRED TRUE)
+
+# Expose the computed component list to CPack. If CPACK_COMPONENTS_ALL was
+# already defined (for example Runtime when ENABLE_BUNDLE_RUNTIME=ON), append
+# our components while avoiding duplicates. Otherwise set it directly.
+if(DEFINED CPACK_COMPONENTS_ALL)
+  foreach(_c IN LISTS _cc_components)
+    list(FIND CPACK_COMPONENTS_ALL ${_c} _found)
+    if(_found EQUAL -1)
+      list(APPEND CPACK_COMPONENTS_ALL ${_c})
+    endif()
+  endforeach()
+else()
+  set(CPACK_COMPONENTS_ALL ${_cc_components})
 endif()
 
 # On Linux (non-Apple) we may want to bundle third-party runtime libraries
@@ -49,10 +145,9 @@ endif()
 # ${CMAKE_INSTALL_BINDIR}，这些文件将在安装时从打包的运行时中删除。默认情况下，我们会移除 MSVC 可再发行安装程序以及常见的
 # FFmpeg DLL 名称，这些通常会被 vcpkg 引入。
 if(WIN32 AND NOT DEFINED CPACK_RUNTIME_EXCLUDE_PATTERN)
-  # By default we only exclude MSVC redistributable installers from the Runtime
-  # payload (they should not be embedded in the application's runtime
-  # directory). Do NOT exclude FFmpeg/OpenCV DLLs by default because many users
-  # expect the installer to deploy these runtime libraries.
+  # By default exclude MSVC redistributable installers from the Runtime payload.
+  # When ENABLE_BUNDLE_RUNTIME=OFF these patterns are mostly irrelevant because
+  # we won't produce a Runtime component.
   set(CPACK_RUNTIME_EXCLUDE_PATTERN "vc_redist*.exe")
 endif()
 
@@ -123,15 +218,24 @@ if(NOT DEFINED CPACK_DEBIAN_PACKAGE_SHLIBDEPS)
   set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 endif()
 
-# If automatic shlibdeps is not suitable (cross-builds, missing dpkg tools),
-# projects can still explicitly provide a dependency list by setting
-# CPACK_DEBIAN_PACKAGE_DEPENDS. Provide a sensible conservative fallback so that
-# packages built on systems without shlibdeps are still usable.
+# TODO: 待测试
 if(NOT DEFINED CPACK_DEBIAN_PACKAGE_DEPENDS)
-  # conservative baseline: libc and Qt6 runtime packages commonly needed by a
-  # Qt6/OpenCV application. Adjust or override for your distribution as needed.
+
   set(CPACK_DEBIAN_PACKAGE_DEPENDS
       "libc6 (>= 2.29), libqt6core6, libqt6widgets6, libqt6network6, libqt6sql6, libqt6multimedia6"
   )
 endif()
+# 确保放置在构建树的 bin/ 目录中的任何生成的运行时文件都记录在 Core 组件中，以便像 NSIS 这样的生成器能够将它们包含在包中。当部署工具（如
+# windeployqt）在构建过程中将 DLL 放置在 ${CMAKE_BINARY_DIR}/bin 与生成的 EXE 同目录下时，这一点尤为重要。
+if(WIN32)
+  install(
+    DIRECTORY "${CMAKE_BINARY_DIR}/bin/"
+    DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    COMPONENT Core
+    FILES_MATCHING
+    PATTERN "*.exe"
+    PATTERN "*.dll"
+    PATTERN "*.pdb")
+endif()
+
 include(CPack)

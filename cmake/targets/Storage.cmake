@@ -1,23 +1,17 @@
-﻿if(BUILD_SHARED_MODULES)
-  add_library(Storage SHARED ${STORAGE_SOURCES})
+﻿## 存储模块
+## Storage module
+set(STORAGE_SOURCES
+  src/modules/Storage/storage.cpp
+  include/modules/Storage/storage.h
+  src/modules/Storage/dbmanager.cpp
+  include/modules/Storage/dbmanager.h)
 
-  # Ensure MSVC generates an import library even if there are no explicit
-  # dllexport symbols
-  set_target_properties(Storage PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-else()
-  add_library(Storage STATIC ${STORAGE_SOURCES})
-endif()
+cc_create_module(Storage ${STORAGE_SOURCES})
 
-# Ensure Storage outputs go to the same bin/lib layout as other project-local
-# targets Use single-config paths; Output.cmake normally handles this for other
-# targets, but set explicitly here to avoid missing implib issues.
+# 确保 Storage 的输出与其它项目本地目标使用相同的 bin/lib 布局
+# 使用单配置路径；Output.cmake 通常会为其它目标处理这些，但在这里显式设置以避免缺失导入库的问题。
 set(_storage_bin_dir "${CMAKE_BINARY_DIR}/bin")
 set(_storage_lib_dir "${CMAKE_BINARY_DIR}/lib")
-set_target_properties(
-  Storage
-  PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${_storage_bin_dir}"
-             LIBRARY_OUTPUT_DIRECTORY "${_storage_bin_dir}"
-             ARCHIVE_OUTPUT_DIRECTORY "${_storage_lib_dir}")
 
 # 确保生成的头文件目录对使用者可用。使用 ${CMAKE_BINARY_DIR}/include 作为生成头文件的公共位置。
 target_include_directories(Storage PUBLIC "${CMAKE_BINARY_DIR}/include")
@@ -34,8 +28,4 @@ target_include_directories(Storage PUBLIC include/modules/Storage)
 target_include_directories(Storage PUBLIC include/modules/Config)
 target_link_libraries(CrossControl PUBLIC Storage)
 
-install(
-  TARGETS Storage
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT Runtime
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT Runtime)
+cc_install_target(Storage Core)
