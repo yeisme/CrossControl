@@ -1,5 +1,4 @@
-﻿# 项目源文件（已从 cmake/Sources.cmake 移动）
-set(TS_FILES src/i18n/CrossControl_zh_CN.ts)
+﻿set(TS_FILES src/i18n/CrossControl_zh_CN.ts)
 set(PROJECT_SOURCES
     src/main.cpp
     src/widgets/crosscontrolwidget.cpp

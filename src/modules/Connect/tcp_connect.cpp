@@ -5,6 +5,10 @@
 
 TcpConnect::TcpConnect() = default;
 
+TcpConnect::TcpConnect(const QString& endpoint, bool autoOpen) : TcpConnect() {
+    if (autoOpen) open(endpoint);
+}
+
 TcpConnect::~TcpConnect() {
     close();
 }

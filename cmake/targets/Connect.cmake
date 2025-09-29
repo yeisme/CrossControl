@@ -1,6 +1,8 @@
 ﻿# Connect 模块的源文件
 set(CONNECT_SOURCES
     src/modules/Connect/tcp_connect.cpp
+    src/modules/Connect/udp_connect.cpp
+    src/modules/Connect/serial_connect.cpp
     src/modules/Connect/connect_factory.cpp
     include/modules/Connect/iface_connect.h
     include/modules/Connect/tcp_connect.h
@@ -26,16 +28,17 @@ target_include_directories(
 # 确保需要的 Qt6 组件存在
 find_package(
   Qt6
-  COMPONENTS Network Widgets
+  COMPONENTS Network Widgets SerialPort
   REQUIRED)
 if(NOT TARGET Qt6::Network OR NOT TARGET Qt6::Widgets)
   message(
     FATAL_ERROR
-      "Connect module requires Qt6::Network and Qt6::Widgets targets. Ensure cmake/Dependencies.cmake configured Qt6."
+      "Connect module requires Qt6::Network, Qt6::Widgets and Qt6::SerialPort targets. Ensure cmake/Dependencies.cmake configured Qt6."
   )
 endif()
 
-target_link_libraries(Connect PRIVATE Qt6::Network Qt6::Widgets logging config)
+target_link_libraries(Connect PRIVATE Qt6::Network Qt6::Widgets Qt6::SerialPort
+                                      logging config)
 
 # 仅当 CrossControl 目标存在时才将 Connect 链接到它
 if(TARGET CrossControl)

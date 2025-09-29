@@ -44,7 +44,7 @@
         <translation>人脸识别</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="100"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="106"/>
         <source>Logout</source>
         <translation>退出登录</translation>
     </message>
@@ -428,60 +428,60 @@
         <translation>自动登录</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="218"/>
-        <location filename="../widgets/loginwidget.cpp" line="280"/>
+        <location filename="../widgets/loginwidget.cpp" line="220"/>
+        <location filename="../widgets/loginwidget.cpp" line="285"/>
         <source>Please enter a valid email and a password with at least 8 characters</source>
         <translation>请输入有效的邮箱和至少 8 个字符的密码·</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="228"/>
-        <location filename="../widgets/loginwidget.cpp" line="237"/>
-        <location filename="../widgets/loginwidget.cpp" line="266"/>
+        <location filename="../widgets/loginwidget.cpp" line="230"/>
+        <location filename="../widgets/loginwidget.cpp" line="239"/>
+        <location filename="../widgets/loginwidget.cpp" line="271"/>
         <source>Login Failed</source>
         <translation>登录失败</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="229"/>
+        <location filename="../widgets/loginwidget.cpp" line="231"/>
         <source>This email is not registered. Please register first.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="231"/>
+        <location filename="../widgets/loginwidget.cpp" line="233"/>
         <source>Email not registered</source>
         <translation>邮箱未注册</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="238"/>
+        <location filename="../widgets/loginwidget.cpp" line="240"/>
         <source>Email does not match the registered account.</source>
         <translation>邮箱与注册账户不匹配。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="240"/>
+        <location filename="../widgets/loginwidget.cpp" line="242"/>
         <source>Email mismatch</source>
         <translation>邮箱不匹配</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="267"/>
+        <location filename="../widgets/loginwidget.cpp" line="272"/>
         <source>Incorrect password. Please try again.</source>
         <translation>密码错误，请重试。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="268"/>
+        <location filename="../widgets/loginwidget.cpp" line="273"/>
         <source>Incorrect password</source>
         <translation>密码错误</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="287"/>
+        <location filename="../widgets/loginwidget.cpp" line="292"/>
         <source>Registration Failed</source>
         <translation>注册失败</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="288"/>
+        <location filename="../widgets/loginwidget.cpp" line="293"/>
         <source>Passwords do not match.</source>
         <translation>密码不匹配。</translation>
     </message>
     <message>
-        <location filename="../widgets/loginwidget.cpp" line="289"/>
+        <location filename="../widgets/loginwidget.cpp" line="294"/>
         <source>Passwords do not match</source>
         <translation>密码不匹配</translation>
     </message>

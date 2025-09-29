@@ -20,6 +20,13 @@ class TcpConnect : public IConnect {
     TcpConnect();
 
     /**
+     * @brief 构造并可选择直接根据 endpoint 打开连接
+     * @param endpoint host:port 格式
+     * @param autoOpen 若为 true 则在构造时尝试 open(endpoint)
+     */
+    explicit TcpConnect(const QString& endpoint, bool autoOpen = true);
+
+    /**
      * @brief 析构函数，会自动关闭套接字并释放资源
      */
     ~TcpConnect() override;

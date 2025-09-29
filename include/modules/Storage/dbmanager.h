@@ -21,8 +21,8 @@ class DbManager {
     static DbManager& instance();
 
     // 初始化连接(可多次调用，后续重复调用将忽略除非 force=true)
-    // 现在从 config::ConfigManager 读取配置（Storage/driver, Storage/database, Storage/foreignKeys 等）
-    // 如果 config 不可用或必要配置缺失，init 会返回 false（应用应当停止启动）
+    // 现在从 config::ConfigManager 读取配置（Storage/driver, Storage/database, Storage/foreignKeys
+    // 等） 如果 config 不可用或必要配置缺失，init 会返回 false（应用应当停止启动）
     bool init(bool force = false) noexcept;
 
     // 是否已经初始化

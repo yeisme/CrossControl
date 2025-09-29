@@ -11,7 +11,7 @@ namespace storage {
 bool Storage::initSqlite(const QString& path) {
     // 将请求的路径写入 config，使得 DbManager 从统一的 config 中读取
     config::ConfigManager::instance().setValue("Storage/database", path);
-    
+
     return DbManager::instance().init();
 }
 

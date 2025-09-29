@@ -54,7 +54,8 @@ void LoggerManager::installQtSinkToAll_() {
     // This is conservative and avoids depending on spdlog internal registry APIs which
     // may vary between versions. If a module creates a named logger before our
     // attach call, spdlog::get(name) will return it and we ensure it has the Qt sink.
-    const std::vector<std::string> known = {"AudioVideo", "HR.OpenCV", "HumanRecognition", "App", "CrossControl"};
+    const std::vector<std::string> known = {
+        "AudioVideo", "HR.OpenCV", "HumanRecognition", "App", "CrossControl"};
     for (const auto& name : known) {
         if (auto lg = spdlog::get(name)) addSinkToLogger(lg);
     }
@@ -80,7 +81,8 @@ void LoggerManager::uninstallQtSinkFromAll_() {
     for (auto& w : loggers_)
         if (auto lg = w.lock()) removeSinkFromLogger(lg);
 
-    const std::vector<std::string> known = {"AudioVideo", "HR.OpenCV", "HumanRecognition", "App", "CrossControl"};
+    const std::vector<std::string> known = {
+        "AudioVideo", "HR.OpenCV", "HumanRecognition", "App", "CrossControl"};
     for (const auto& name : known) {
         if (auto lg = spdlog::get(name)) removeSinkFromLogger(lg);
     }

@@ -16,6 +16,9 @@
 #include <QtGlobal>
 #include <memory>
 
+class IConnect;
+using IConnectPtr = std::shared_ptr<IConnect>;
+
 /**
  * @brief IConnect 抽象类
  *
@@ -27,6 +30,26 @@
 class IConnect {
    public:
     virtual ~IConnect() = default;
+    IConnect() = default;
+
+    // 不可复制、不可移动
+    IConnect(const IConnect&) = delete;
+    IConnect& operator=(const IConnect&) = delete;
+    IConnect(IConnect&&) = delete;
+    IConnect& operator=(IConnect&&) = delete;
+
+    /**
+     * @brief 创建默认的 IConnect 实例（等同于 connect_factory::createDefaultConnect）
+     * @return 返回一个已分配的 IConnectPtr（不会为 nullptr）
+     */
+    static IConnectPtr createDefault();
+
+    /**
+     * @brief 根据 endpoint 字符串解析并创建对应的 IConnect 实例
+     * @param endpoint 支持类似 "tcp://host:port", "udp://host:port", "COM3:115200" 等格式
+     * @return 识别并创建成功则返回实例；无法识别可返回 nullptr
+     */
+    static IConnectPtr createFromEndpoint(const QString& endpoint);
 
     /**
      * @brief 建立连接
@@ -67,8 +90,3 @@ class IConnect {
      */
     virtual bool isOpen() const = 0;
 };
-
-/**
- * @brief IConnectPtr 简写类型，表示智能指针持有的 IConnect 实例
- */
-using IConnectPtr = std::unique_ptr<IConnect>;

@@ -1,11 +1,11 @@
 ﻿#ifndef SETTINGWIDGET_H
 #define SETTINGWIDGET_H
 
-#include <QWidget>
+#include <QDir>
 #include <QFileDialog>
 #include <QListWidget>
 #include <QTextEdit>
-#include <QDir>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,14 +24,14 @@ class SettingWidget : public QWidget {
     void backToMain();
     void toggleThemeRequested();  // 请求切换主题
 
-     public slots:
-        void on_btnReloadSettings_clicked();
-        void on_btnSaveSettings_clicked();
+   public slots:
+    void on_btnReloadSettings_clicked();
+    void on_btnSaveSettings_clicked();
 
-        // New slots for enhanced settings
-        void on_btnConfigureStorage_clicked();
-        void on_btnManageAccounts_clicked();
-        void on_btnJsonEditor_clicked();
+    // New slots for enhanced settings
+    void on_btnConfigureStorage_clicked();
+    void on_btnManageAccounts_clicked();
+    void on_btnJsonEditor_clicked();
 
    private slots:
     void on_btnBackFromSetting_clicked();

@@ -3,10 +3,10 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QTextEdit>
+#include <QTimer>
 #include <QWidget>
 
 #include "iface_connect.h"
-#include <QTimer>
 
 /**
  * @file connectwidget.h

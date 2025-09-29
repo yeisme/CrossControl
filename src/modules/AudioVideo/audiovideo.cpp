@@ -12,31 +12,36 @@
 
 #include "audiovideo.h"
 
-#include <QByteArray>
-#include <QImage>
-#include <QString>
-#include <QIODevice>
-
-#include <QMediaPlayer>
-#include <QAudioSource>
 #include <QAudioSink>
-#include <QMediaRecorder>
+#include <QAudioSource>
+#include <QByteArray>
 #include <QCamera>
-#include <QVideoSink>
+#include <QIODevice>
+#include <QImage>
+#include <QMediaPlayer>
+#include <QMediaRecorder>
+#include <QString>
 #include <QUrl>
+#include <QVideoSink>
 
 #include "logging.h"
 
 // Implementation of the private Impl struct and destructor management
 struct AudioVideo::Impl {
     Impl(AudioVideo* parent)
-        : parent(parent), player(nullptr), audioInput(nullptr), audioOutput(nullptr), camera(nullptr), recorder(nullptr), videoSink(nullptr) {
+        : parent(parent),
+          player(nullptr),
+          audioInput(nullptr),
+          audioOutput(nullptr),
+          camera(nullptr),
+          recorder(nullptr),
+          videoSink(nullptr) {
         // Create audio input/output and recorder if available
         player = new QMediaPlayer(parent);
-    audioOutput = new QAudioSink();
-    audioInput = new QAudioSource();
-    audioOutput->setParent(parent);
-    audioInput->setParent(parent);
+        audioOutput = new QAudioSink();
+        audioInput = new QAudioSource();
+        audioOutput->setParent(parent);
+        audioInput->setParent(parent);
 
         // Basic wiring between player and video sink if present
         videoSink = new QVideoSink(parent);
@@ -115,13 +120,9 @@ bool AudioVideo::startRecording(const QString& outputPath) {
  * @see startRecording()
  */
 void AudioVideo::stopRecording() {
-    logging::LoggerManager::instance()
-        .getLogger("AudioVideo")
-        ->info("Stopping recording");
+    logging::LoggerManager::instance().getLogger("AudioVideo")->info("Stopping recording");
 
-    if (m_impl->recorder) {
-        m_impl->recorder->stop();
-    }
+    if (m_impl->recorder) { m_impl->recorder->stop(); }
     m_isRecording = false;
     emit recordingStopped();
 }
@@ -173,9 +174,7 @@ bool AudioVideo::playVideo(const QString& filePath) {
  *       处理没有可用输入设备的情况。
  */
 bool AudioVideo::captureAudio() {
-    logging::LoggerManager::instance()
-        .getLogger("AudioVideo")
-        ->info("Starting audio capture");
+    logging::LoggerManager::instance().getLogger("AudioVideo")->info("Starting audio capture");
 
     if (!m_impl->audioInput) {
         emit errorOccurred("Audio input not available");

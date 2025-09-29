@@ -13,10 +13,10 @@
 #include <QStyle>
 #include <QVBoxLayout>
 
-#include "logging.h"
-#include "spdlog/spdlog.h"
-#include "modules/Config/config.h"
 #include "facerecognitionwidget.h"
+#include "logging.h"
+#include "modules/Config/config.h"
+#include "spdlog/spdlog.h"
 
 CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     LogM::instance().init();  // 初始化日志系统
@@ -90,8 +90,14 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
                          ":/icons/icons/app.svg",
                          "btnFaceRec");
 
-    for (auto* b :
-        {btnDashboard, btnMonitor, btnUnlock, btnVisitRecord, btnMessage, btnSetting, btnLogs, btnFaceRec}) {
+    for (auto* b : {btnDashboard,
+                    btnMonitor,
+                    btnUnlock,
+                    btnVisitRecord,
+                    btnMessage,
+                    btnSetting,
+                    btnLogs,
+                    btnFaceRec}) {
         sideLayout->addWidget(b);
     }
 
@@ -203,7 +209,8 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     connect(settingWidget, &SettingWidget::toggleThemeRequested, this, [this]() { toggleTheme(); });
     connect(unlockWidget, &UnlockWidget::cancelUnlock, this, &CrossControlWidget::showMainPage);
     connect(logWidget, &LogWidget::backToMain, this, &CrossControlWidget::showMainPage);
-    connect(faceRecWidget, &FaceRecognitionWidget::backToMain, this, &CrossControlWidget::showMainPage);
+    connect(
+        faceRecWidget, &FaceRecognitionWidget::backToMain, this, &CrossControlWidget::showMainPage);
 
     // 默认显示登录页
     rootStack->setCurrentWidget(loginWidget);
@@ -249,9 +256,7 @@ void CrossControlWidget::toggleTheme() {
     static bool dark = false;
     dark = !dark;
     const QString path = dark ? ":/themes/themes/dark.qss" : ":/themes/themes/light.qss";
-    {
-        config::ConfigManager::instance().setValue("Preferences/theme", dark ? "dark" : "light");
-    }
+    { config::ConfigManager::instance().setValue("Preferences/theme", dark ? "dark" : "light"); }
     QFile f(path);
     if (f.open(QIODevice::ReadOnly | QIODevice::Text)) {
         if (auto* core = QApplication::instance()) {

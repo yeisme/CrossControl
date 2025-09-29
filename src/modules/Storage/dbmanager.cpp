@@ -32,7 +32,7 @@ bool DbManager::init(bool force) noexcept {
             QStringLiteral("crosscontrol_connection_%1").arg(QUuid::createUuid().toString());
 
         // 从 config 模块读取 Storage 相关配置
-        auto &cfgm = config::ConfigManager::instance();
+        auto& cfgm = config::ConfigManager::instance();
         // 必要配置项：driver, database（如果缺失则写入默认值）
         const QString driver = cfgm.setOrDefault("Storage/driver", QString("QSQLITE")).toString();
         const QString database = cfgm.setOrDefault("Storage/database", QString()).toString();
@@ -43,7 +43,8 @@ bool DbManager::init(bool force) noexcept {
             return false;
         }
 
-        l.info("Initializing database with driver '{}' at '{}'", driver.toStdString(),
+        l.info("Initializing database with driver '{}' at '{}'",
+               driver.toStdString(),
                database.toStdString());
 
         // Ensure parent folder for file-based DB exists
@@ -58,11 +59,13 @@ bool DbManager::init(bool force) noexcept {
 
         if (!m_db.open()) {
             l.warn("Failed to open database: {}", m_db.lastError().text().toStdString());
-            // 如果打开失败，尝试回退到用户可写位置（例如 AppDataLocation）以避免在 Program Files 下无写权限导致失败
+            // 如果打开失败，尝试回退到用户可写位置（例如 AppDataLocation）以避免在 Program Files
+            // 下无写权限导致失败
             l.warn("Initial DB open failed, attempting fallback to user data directory. Error: {}",
                    m_db.lastError().text().toStdString());
 
-            const QString fallbackDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+            const QString fallbackDir =
+                QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
             if (!fallbackDir.isEmpty()) {
                 QDir fd(fallbackDir);
                 if (!fd.exists()) fd.mkpath(".");
@@ -78,14 +81,13 @@ bool DbManager::init(bool force) noexcept {
                     l.info("Fallback DB opened successfully at {}", fallbackDb.toStdString());
                     // persist this new path to config for future runs
                     try {
-                        auto &cfgm = config::ConfigManager::instance();
+                        auto& cfgm = config::ConfigManager::instance();
                         cfgm.setValue("Storage/database", fallbackDb);
                         cfgm.sync();
-                    } catch (...) {
-                        l.warn("Failed to persist fallback DB path to config");
-                    }
+                    } catch (...) { l.warn("Failed to persist fallback DB path to config"); }
                 } else {
-                    l.warn("Fallback DB open also failed: {}", m_db.lastError().text().toStdString());
+                    l.warn("Fallback DB open also failed: {}",
+                           m_db.lastError().text().toStdString());
                     QSqlDatabase::removeDatabase(m_connectionName);
                     m_connectionName.clear();
                     return false;
@@ -99,8 +101,9 @@ bool DbManager::init(bool force) noexcept {
         }
 
         // Set PRAGMA foreign_keys = ON for SQLite if requested
-        if (cfgm.getString("Storage/driver", QString("QSQLITE")).compare("QSQLITE", Qt::CaseInsensitive) ==
-            0 && foreignKeys) {
+        if (cfgm.getString("Storage/driver", QString("QSQLITE"))
+                    .compare("QSQLITE", Qt::CaseInsensitive) == 0 &&
+            foreignKeys) {
             QSqlQuery q(m_db);
             if (!q.exec("PRAGMA foreign_keys = ON;")) {
                 l.warn("Failed to enable foreign_keys: {}", q.lastError().text().toStdString());

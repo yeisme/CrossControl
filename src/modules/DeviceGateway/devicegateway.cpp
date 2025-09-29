@@ -1,4 +1,5 @@
 ﻿#include "modules/DeviceGateway/devicegateway.h"
+
 #include "spdlog/spdlog.h"
 
 namespace device_gateway {
@@ -18,4 +19,4 @@ void DeviceGateway::start() {
     spdlog::info("DeviceGateway start() called");
 }
 
-} // namespace device_gateway
+}  // namespace device_gateway

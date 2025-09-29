@@ -14,10 +14,10 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QRegularExpression>
-#include "modules/Config/config.h"
 #include <QTimer>
 #include <QVariant>
 
+#include "modules/Config/config.h"
 #include "spdlog/spdlog.h"
 #include "ui_loginwidget.h"
 
@@ -169,8 +169,9 @@ LoginWidget::LoginWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LoginWid
         // QSettings stores simple key/value pairs in a platform-specific
         // location (registry on Windows). We namespace settings with the
         // application and group to keep them organized.
-    const bool remembered = config::ConfigManager::instance().getBool("Auth/rememberPassword", false);
-    const bool autoLogin = config::ConfigManager::instance().getBool("Auth/autoLogin", false);
+        const bool remembered =
+            config::ConfigManager::instance().getBool("Auth/rememberPassword", false);
+        const bool autoLogin = config::ConfigManager::instance().getBool("Auth/autoLogin", false);
         chkRemember->setChecked(remembered);
         chkAuto->setChecked(autoLogin);
 
@@ -181,7 +182,8 @@ LoginWidget::LoginWidget(QWidget* parent) : QWidget(parent), ui(new Ui::LoginWid
         //  - Use OS-provided secure storage (Windows Credentials, Keychain),
         //  - Encrypt password with a user-specific key (requires key mgmt).
         if (remembered) {
-            const QString plain = config::ConfigManager::instance().getString("Auth/passwordPlain", QString());
+            const QString plain =
+                config::ConfigManager::instance().getString("Auth/passwordPlain", QString());
             if (!plain.isEmpty()) ui->lineEditLoginPassword->setText(plain);
         }
 
@@ -248,9 +250,11 @@ void LoginWidget::on_pushButtonLogin_clicked() {
         // Persist remember / auto-login preference and optionally password
         if (auto chkRemember = findChild<QCheckBox*>(QStringLiteral("chkRememberPassword"));
             chkRemember) {
-            config::ConfigManager::instance().setValue("Auth/rememberPassword", chkRemember->isChecked());
+            config::ConfigManager::instance().setValue("Auth/rememberPassword",
+                                                       chkRemember->isChecked());
             if (chkRemember->isChecked()) {
-                config::ConfigManager::instance().setValue("Auth/passwordPlain", ui->lineEditLoginPassword->text());
+                config::ConfigManager::instance().setValue("Auth/passwordPlain",
+                                                           ui->lineEditLoginPassword->text());
             } else {
                 config::ConfigManager::instance().remove("Auth/passwordPlain");
             }
@@ -258,7 +262,8 @@ void LoginWidget::on_pushButtonLogin_clicked() {
         if (auto chkAuto = findChild<QCheckBox*>(QStringLiteral("chkAutoLogin")); chkAuto) {
             config::ConfigManager::instance().setValue("Auth/autoLogin", chkAuto->isChecked());
             // If auto-login enabled but remember not checked, enable remember
-            if (chkAuto->isChecked()) config::ConfigManager::instance().setValue("Auth/rememberPassword", true);
+            if (chkAuto->isChecked())
+                config::ConfigManager::instance().setValue("Auth/rememberPassword", true);
         }
     } else {
         QMessageBox::warning(

@@ -1,9 +1,9 @@
 ﻿#ifndef CROSSCONTROL_CONFIG_H
 #define CROSSCONTROL_CONFIG_H
 
+#include <QSettings>
 #include <QString>
 #include <QVariant>
-#include <QSettings>
 
 // Export macro for config library when built as shared
 #ifdef config_EXPORTS
@@ -16,7 +16,7 @@ namespace config {
 
 // 简单的全局配置管理器，封装 QSettings，用于模块间统一配置访问
 class CONFIG_EXPORT ConfigManager {
-public:
+   public:
     static ConfigManager& instance();
 
     // 初始化（可选指定组织与应用名）
@@ -36,7 +36,8 @@ public:
     // Save current settings back to JSON file (if path omitted, use remembered path or app dir)
     bool saveToJsonFile(const QString& path = QString()) const;
 
-    // Parse JSON content from string and apply to settings (optionally remember as the config file path)
+    // Parse JSON content from string and apply to settings (optionally remember as the config file
+    // path)
     bool loadFromJsonString(const QString& json, bool rememberPath = false);
 
     // Export current settings to a JSON string (pretty-printed)
@@ -54,7 +55,7 @@ public:
     // Return all keys currently present in the underlying QSettings
     QStringList allKeys() const;
 
-private:
+   private:
     ConfigManager();
     ~ConfigManager();
 
@@ -69,6 +70,6 @@ private:
 // 方便别名
 using Config = ConfigManager;
 
-} // namespace config
+}  // namespace config
 
-#endif // CROSSCONTROL_CONFIG_H
+#endif  // CROSSCONTROL_CONFIG_H
