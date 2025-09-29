@@ -1,6 +1,11 @@
 ﻿#pragma once
 
-namespace device_gateway {
+#include <memory>
+
+namespace DeviceGateway {
+
+class DeviceRegistry; // forward-declare registry from device_registry.h
+class RestServer;     // forward-declare rest server from rest_server.h
 
 class DeviceGateway {
    public:
@@ -8,12 +13,19 @@ class DeviceGateway {
     ~DeviceGateway();
 
     void start();
+    void stop();
 
    private:
+    // Local in-memory registry for devices (defined in device_registry.h)
+    std::unique_ptr<DeviceRegistry> registry_;
+
+    // REST server for remote registration (defined in rest_server.h)
+    std::unique_ptr<RestServer> restServer_;
+
 #if BUILD_MQTT_CLIENT
     // Placeholder for MQTT client instance (implementation-specific)
     void* mqtt_client_{nullptr};
 #endif
 };
 
-}  // namespace device_gateway
+}  // namespace DeviceGateway

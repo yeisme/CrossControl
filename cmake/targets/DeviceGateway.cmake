@@ -1,11 +1,15 @@
 ﻿# DeviceGateway module - part of Core
 set(DEVICE_GATEWAY_SOURCES
-    src/modules/DeviceGateway/devicegateway.cpp
-    include/modules/DeviceGateway/devicegateway.h
+    src/modules/DeviceGateway/device_gateway.cpp
+    include/modules/DeviceGateway/device_gateway.h
     src/modules/DeviceGateway/device_registry.cpp)
 
+# REST server implementation for remote device registration
+list(APPEND DEVICE_GATEWAY_SOURCES src/modules/DeviceGateway/rest_server.cpp
+     include/modules/DeviceGateway/rest_server.h)
+
 # DeviceGateway is always built as a shared library to allow optional
-# installation and runtime loading as a separate module.
+# installation and runtime loading as a separate module. Don't change to STATIC.
 add_library(DeviceGateway SHARED ${DEVICE_GATEWAY_SOURCES})
 set_target_properties(DeviceGateway PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
@@ -22,6 +26,17 @@ target_include_directories(
 
 # Link to project libraries
 target_link_libraries(DeviceGateway PRIVATE config logging Storage)
+# optional: uWebSockets-based embedded REST API for device registration
+find_package(unofficial-uwebsockets CONFIG)
+if(TARGET unofficial::uwebsockets::uwebsockets)
+  target_link_libraries(DeviceGateway
+                        PRIVATE unofficial::uwebsockets::uwebsockets)
+else()
+  message(
+    STATUS
+      "unofficial-uwebsockets not found; REST device registration will not be available"
+  )
+endif()
 # DeviceGateway depends on Connect for networking functionality
 if(TARGET Connect)
   target_link_libraries(DeviceGateway PRIVATE Connect)

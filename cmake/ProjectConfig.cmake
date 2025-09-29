@@ -15,11 +15,19 @@ set(CMAKE_SUPPRESS_DEVELOPER_WARNINGS
 # HumanRecognition and AudioVideo are required and installed as part of Core.
 # These modules are always built and not exposed as configuration options.
 option(BUILD_MQTT_CLIENT "Build MQTT Client module" OFF) # TODO: 默认关闭，暂时不支持
-message(STATUS " * feature BUILD_MQTT_CLIENT: ${BUILD_MQTT_CLIENT}")
+if(BUILD_MQTT_CLIENT)
+  message(STATUS " * feature BUILD_MQTT_CLIENT: ON - MQTT gateway/client support will be compiled. Ensure Paho MQTT (paho-mqttpp3) is available through vcpkg or system packages.")
+else()
+  message(STATUS " * feature BUILD_MQTT_CLIENT: OFF - MQTT support disabled. Enable with -DBUILD_MQTT_CLIENT=ON to build MQTT client features.")
+endif()
 
 # Storage module is required and always built; not exposed as a configuration option.
 option(BUILD_SHARED_MODULES "Build modules as shared libraries" ON)
-message(STATUS " * feature BUILD_SHARED_MODULES: ${BUILD_SHARED_MODULES}")
+if(BUILD_SHARED_MODULES)
+  message(STATUS " * feature BUILD_SHARED_MODULES: ON - Modules will be built as shared libraries (recommended for plugin-style modules).")
+else()
+  message(STATUS " * feature BUILD_SHARED_MODULES: OFF - Modules will be linked statically into the main executable.")
+endif()
 
 # 启用编译缓存以加速重编译
 if(NOT MSVC)

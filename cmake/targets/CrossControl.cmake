@@ -110,14 +110,3 @@ if(ENABLE_DEPLOY_QT AND (WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Linux"))
   # Add automatic deploy step to copy Qt runtime and plugins into the runtime dir
   cc_deploy_qt_runtime(CrossControl)
 endif()
-
-# Link optional modules only if their targets were created
-foreach(_mod IN ITEMS HumanRecognition AudioVideo Storage Connect)
-  if(TARGET ${_mod})
-    target_link_libraries(CrossControl PRIVATE ${_mod})
-  else()
-    message(
-      STATUS
-        "Optional module '${_mod}' not present; skipping link to CrossControl.")
-  endif()
-endforeach()
