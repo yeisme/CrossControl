@@ -2,6 +2,7 @@
 set(CONNECT_SOURCES
     src/modules/Connect/tcp_connect.cpp
     src/modules/Connect/udp_connect.cpp
+    src/modules/Connect/mqtt_connect.cpp
     src/modules/Connect/serial_connect.cpp
     src/modules/Connect/connect_factory.cpp
     include/modules/Connect/iface_connect.h
@@ -39,6 +40,20 @@ endif()
 
 target_link_libraries(Connect PRIVATE Qt6::Network Qt6::Widgets Qt6::SerialPort
                                       logging config)
+
+if(BUILD_MQTT_CLIENT)
+  if(TARGET PahoMqttCpp::paho-mqttpp3)
+    target_link_libraries(Connect PRIVATE PahoMqttCpp::paho-mqttpp3)
+  elseif(TARGET PahoMqttCpp)
+    target_link_libraries(Connect PRIVATE PahoMqttCpp)
+  else()
+    message(
+      STATUS
+        "BUILD_MQTT_CLIENT is ON but PahoMqttCpp target not found; mqtt support in Connect will be limited."
+    )
+  endif()
+  target_compile_definitions(Connect PRIVATE BUILD_MQTT_CLIENT=1)
+endif()
 
 # 仅当 CrossControl 目标存在时才将 Connect 链接到它
 if(TARGET CrossControl)

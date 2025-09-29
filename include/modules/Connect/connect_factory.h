@@ -1,8 +1,9 @@
 ﻿#pragma once
 
-#include "iface_connect.h"
+#include <QNetworkAccessManager>
+#include <memory>
 
-class IConnect;
+#include "iface_connect.h"
 
 namespace connect_factory {
 
@@ -17,5 +18,26 @@ IConnectPtr createDefaultConnect();
 //  - "serial://COM3:115200" 或 "COM3:115200"
 // 返回 nullptr 表示无法识别或创建
 IConnectPtr createByEndpoint(const QString& endpoint);
+
+/**
+ * @brief Create a Network Access Manager object for HTTP/HTTPS requests.
+ *
+ * Returns a default, unconfigured QNetworkAccessManager wrapped in a shared_ptr.
+ */
+std::shared_ptr<QNetworkAccessManager> createNetworkAccessManager();
+
+/**
+ * @brief Create a Network Access Manager configured from an endpoint string.
+ *
+ * If the given endpoint appears to describe a proxy (for example:
+ *  - "proxy://host:port" or "http-proxy://host:port"
+ *  - "socks5://host:port" or "socks://host:port"
+ *  - plain "host:port"
+ * ), this function will set an appropriate QNetworkProxy on the returned
+ * QNetworkAccessManager. If the endpoint is empty or does not look like a
+ * proxy description, a default manager is returned (no proxy configured).
+ */
+std::shared_ptr<QNetworkAccessManager> createNetworkAccessManagerFromEndpoint(
+    const QString& endpoint);
 
 }  // namespace connect_factory

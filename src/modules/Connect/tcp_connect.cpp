@@ -2,6 +2,7 @@
 
 #include <QHostAddress>
 #include <QTimer>
+#include <QUrl>
 
 TcpConnect::TcpConnect() = default;
 
@@ -14,13 +15,32 @@ TcpConnect::~TcpConnect() {
 }
 
 bool TcpConnect::open(const QString& endpoint) {
-    // endpoint 格式：host:port
-    const auto parts = endpoint.split(':');
-    if (parts.size() != 2) return false;
-    const QString host = parts[0];
-    bool ok = false;
-    int port = parts[1].toInt(&ok);
-    if (!ok) return false;
+    // 支持的 endpoint 示例：
+    //  - "host:port"
+    //  - "host:port/path" (会忽略 path 部分用于建立 socket)
+    //  - 带 scheme 的 URL，例如 "http://host:port/path" 或 "tcp://host:port"
+
+    QString ep = endpoint.trimmed();
+    QString host;
+    int port = -1;
+
+    if (ep.contains("://")) {
+        // 使用 QUrl 解析完整 URL
+        QUrl url(ep);
+        host = url.host();
+        port = url.port(-1);
+        if (host.isEmpty() || port <= 0) return false;
+    } else {
+        // 可能含有 path（例如 "host:port/path"），先去掉 path
+        int slash = ep.indexOf('/');
+        QString authority = (slash >= 0) ? ep.left(slash) : ep;
+        const auto parts = authority.split(':');
+        if (parts.size() != 2) return false;
+        host = parts[0];
+        bool ok = false;
+        port = parts[1].toInt(&ok);
+        if (!ok || port <= 0) return false;
+    }
 
     m_socket.abort();
     m_socket.connectToHost(host, static_cast<quint16>(port));

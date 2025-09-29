@@ -1,4 +1,4 @@
-﻿#include "modules/DeviceGateway/devicegateway.h"
+﻿#include "modules/DeviceGateway/device_gateway.h"
 
 #include "spdlog/spdlog.h"
 

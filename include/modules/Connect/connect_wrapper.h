@@ -3,14 +3,17 @@
 /**
  * @file connect_wrapper.h
  * @author your name (you@domain.com)
- * @brief 连接工厂类
+ * @brief 连接工厂模板（ConnectFactory）声明
  * @version 0.1
  * @date 2025-09-26
- * ConnectFactory 用于在运行时隐藏具体实现类型，返回统一的
- * IConnectPtr 以便 UI 或其它组件解耦具体的连接实现。
+ *
+ * ConnectFactory 用于在运行时隐藏具体的连接实现类型，统一返回
+ * IConnectPtr，使 UI 或其它组件无需关心具体的传输实现（TCP/UDP/Serial）。
+ *
+ * 该文件使用 C++20 的概念（concepts）对实现类型进行约束，保证类型
+ * 派生自 IConnect 并默认可构造。
  *
  * @copyright Copyright (c) 2025
- *
  */
 
 #include <concepts>

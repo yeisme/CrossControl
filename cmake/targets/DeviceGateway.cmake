@@ -1,7 +1,8 @@
 ﻿# DeviceGateway module - part of Core
 set(DEVICE_GATEWAY_SOURCES
     src/modules/DeviceGateway/devicegateway.cpp
-    include/modules/DeviceGateway/devicegateway.h)
+    include/modules/DeviceGateway/devicegateway.h
+    src/modules/DeviceGateway/device_registry.cpp)
 
 # DeviceGateway is always built as a shared library to allow optional
 # installation and runtime loading as a separate module.
@@ -14,10 +15,10 @@ if(BUILD_MQTT_CLIENT)
   target_compile_definitions(DeviceGateway PRIVATE BUILD_MQTT_CLIENT=1)
 endif()
 
-target_include_directories(DeviceGateway PRIVATE ${CMAKE_SOURCE_DIR}/include
-                                                    include/modules/DeviceGateway
-                                                    include/modules/Storage
-                                                    include/modules/Config)
+target_include_directories(
+  DeviceGateway
+  PRIVATE ${CMAKE_SOURCE_DIR}/include include/modules/DeviceGateway
+          include/modules/Storage include/modules/Config)
 
 # Link to project libraries
 target_link_libraries(DeviceGateway PRIVATE config logging Storage)
@@ -33,11 +34,15 @@ if(BUILD_MQTT_CLIENT)
   elseif(TARGET PahoMqttCpp)
     target_link_libraries(DeviceGateway PRIVATE PahoMqttCpp)
   else()
-    message(STATUS "BUILD_MQTT_CLIENT is ON but PahoMqttCpp target not found; continuing without MQTT client.")
+    message(
+      STATUS
+        "BUILD_MQTT_CLIENT is ON but PahoMqttCpp target not found; continuing without MQTT client."
+    )
   endif()
 endif()
 
-# Ensure the main executable links with DeviceGateway so symbols are available at runtime
+# Ensure the main executable links with DeviceGateway so symbols are available
+# at runtime
 target_link_libraries(CrossControl PRIVATE DeviceGateway)
 
 # Register installing as a separate optional component named DeviceGateway

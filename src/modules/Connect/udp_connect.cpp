@@ -1,6 +1,7 @@
 ﻿#include "udp_connect.h"
 
 #include <QHostAddress>
+#include <QUrl>
 
 UdpConnect::UdpConnect() {
     m_remoteHost.clear();
@@ -18,13 +19,31 @@ UdpConnect::~UdpConnect() {
 }
 
 bool UdpConnect::open(const QString& endpoint) {
-    // endpoint 支持 host:port 或 :port 或 *:port
-    const auto parts = endpoint.split(':');
-    if (parts.size() != 2) return false;
-    const QString host = parts[0];
-    bool ok = false;
-    int port = parts[1].toInt(&ok);
-    if (!ok) return false;
+    // endpoint 支持多种形式：
+    //  - host:port
+    //  - host:port/path
+    //  - :port 或 *:port
+    //  - 带 scheme 的 URL，例如 "udp://host:port/path"
+
+    QString ep = endpoint.trimmed();
+    QString host;
+    int port = -1;
+
+    if (ep.contains("://")) {
+        QUrl url(ep);
+        host = url.host();
+        port = url.port(-1);
+        if (host.isEmpty() && port <= 0) return false;
+    } else {
+        int slash = ep.indexOf('/');
+        QString authority = (slash >= 0) ? ep.left(slash) : ep;
+        const auto parts = authority.split(':');
+        if (parts.size() != 2) return false;
+        host = parts[0];
+        bool ok = false;
+        port = parts[1].toInt(&ok);
+        if (!ok) return false;
+    }
 
     m_socket.abort();
     m_remoteHost.clear();
