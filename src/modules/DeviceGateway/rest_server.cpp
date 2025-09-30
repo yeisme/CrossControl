@@ -1,40 +1,256 @@
 ﻿#include "modules/DeviceGateway/rest_server.h"
 
+#include <drogon/HttpController.h>
+#include <drogon/drogon.h>
+#include <trantor/utils/Logger.h>
+
 #include <QByteArray>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QList>
 #include <atomic>
+#include <functional>
 #include <memory>
 #include <thread>
 
 #include "modules/DeviceGateway/device_registry.h"
 #include "spdlog/spdlog.h"
 
-// 要求项目中必须提供 unofficial-uwebsockets（uWebSockets）头文件。
-// 如果找不到头文件，使用 #error 在配置或编译阶段直接失败，避免静默回退。
-#if __has_include(<uwebsockets/App.h>)
-#define HAVE_UWS 1
-#include <uwebsockets/App.h>
-#else
-#define HAVE_UWS 0
-#endif
-
-#if !HAVE_UWS
-#error \
-    "uWebSockets headers not found; REST endpoints require unofficial-uwebsockets. Configure and enable it in CMake."
-#endif
-
 namespace DeviceGateway {
 
-// Impl: RestServer 的内部实现细节。封装 registry、监听端口和运行线程。
-// 该结构仅对本 cpp 文件可见，避免泄露内部实现到公有头文件。
+// 将 QString 写入 drogon 响应的帮助函数
+// 说明：drogon 使用 std::string 作为 HTTP body，工程内部使用 Qt 的 QString / QByteArray
+// 本函数负责做编码转换并创建一个 drogon::HttpResponsePtr。所有处理函数统一通过该函数返回文本或 JSON
+// 响应。 参数：
+//   - text: 要写入响应的 QString 文本（通常已经是 UTF-8 可表示的内容）
+//   - code: HTTP 状态码（默认 200 OK）
+//   - contentType: Content-Type 字符串（包含 charset）
+// 返回值：构造好的 drogon::HttpResponsePtr
+static drogon::HttpResponsePtr makeTextResponse(
+    const QString& text,
+    drogon::HttpStatusCode code = drogon::k200OK,
+    const std::string& contentType = "text/plain; charset=utf-8") {
+    auto resp = drogon::HttpResponse::newHttpResponse();
+    // 设置状态码和 Content-Type
+    resp->setStatusCode(code);
+    resp->setContentTypeString(contentType);
+    // 将 QString 转为 UTF-8 字节序列，再拷贝到 std::string（drogon 的 body 类型）
+    const QByteArray out = text.toUtf8();
+    resp->setBody(std::string(out.constData(), static_cast<size_t>(out.size())));
+    return resp;
+}
+
+// Drogon 控制器定义，集中路由
+// DGController: 使用 drogon::HttpController 实现所有 REST 路由
+// 设计说明：
+//  - 我们把所有 DeviceGateway 的 REST 路由集中在一个 Controller 中，便于管理路径和共享
+//  DeviceRegistry 指针。
+//  - 使用 drogon 的 ADD_METHOD_TO 宏将 URL 路径和 HTTP 方法绑定到成员函数。
+//  - 这些处理函数以非阻塞回调形式接收请求和响应回调（std::function<void(const
+//  HttpResponsePtr&)>）。
+//  - Controller 内部不直接管理线程池；真正的事件循环由 drogon::app().run() 驱动（见
+//  RestServer::start）。
+class DGController : public drogon::HttpController<DGController> {
+   public:
+    static DeviceRegistry* reg_;
+    static void setRegistry(DeviceRegistry* r) { reg_ = r; }
+
+    // 路由列表：通过 drogon 的宏将 URI 与成员函数绑定
+    // 例如：POST /register -> postRegister
+    // 占位语法 "/devices/{1}" 表示第一个 path segment 作为参数传递给对应的方法（方法签名须包含
+    // std::string 参数）
+    METHOD_LIST_BEGIN
+    ADD_METHOD_TO(DGController::postRegister, "/register", drogon::Post);
+    ADD_METHOD_TO(DGController::postDevices, "/devices", drogon::Post);
+    ADD_METHOD_TO(DGController::getDevices, "/devices", drogon::Get);
+    ADD_METHOD_TO(DGController::getDevicesCsv, "/devices.csv", drogon::Get);
+    ADD_METHOD_TO(DGController::getDevicesNd, "/devices.jsonnd", drogon::Get);
+    ADD_METHOD_TO(DGController::postImportCsv, "/devices/import/csv", drogon::Post);
+    ADD_METHOD_TO(DGController::postImportNd, "/devices/import/jsonnd", drogon::Post);
+    ADD_METHOD_TO(DGController::getDeviceById, "/devices/{1}", drogon::Get);
+    ADD_METHOD_TO(DGController::deleteDeviceById, "/devices/{1}", drogon::Delete);
+    METHOD_LIST_END
+
+    // POST /register: 设备上报或注册（复用 handleUpsert）
+    // 注意：drogon 的回调模型是异步回调风格，函数内直接调用 cb(...) 即发送响应。
+    void postRegister(const drogon::HttpRequestPtr& req,
+                      std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
+        handleUpsert(req, std::move(cb));
+    }
+    void postDevices(const drogon::HttpRequestPtr& req,
+                     std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
+        handleUpsert(req, std::move(cb));
+    }
+    // GET /devices: 返回全部设备的 JSON 数组
+    // 流程：检查注册表指针 -> 从 DeviceRegistry 获取设备列表 -> 将每个 DeviceInfo 转为 QJsonObject
+    // -> 序列化为 JSON 注意：这里将 Qt 的 JSON 文档转换为 QByteArray，再转换为 std::string 放入
+    // drogon 响应体
+    void getDevices(const drogon::HttpRequestPtr& /*req*/,
+                    std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
+        if (!reg_) {
+            cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
+            return;
+        }
+        // 从 registry 获取当前设备列表（返回 QList<DeviceInfo>）
+        const QList<DeviceInfo> list = reg_->list();
+        QJsonArray arr;
+        for (const auto& d : list) arr.append(d.toJson());
+        const QJsonDocument doc(arr);
+        const QByteArray out = doc.toJson(QJsonDocument::Compact);
+        auto resp = drogon::HttpResponse::newHttpResponse();
+        resp->setContentTypeString("application/json; charset=utf-8");
+        resp->setBody(std::string(out.constData(), static_cast<size_t>(out.size())));
+        cb(resp);
+    }
+    void getDevicesCsv(const drogon::HttpRequestPtr& /*req*/,
+                       std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
+        if (!reg_) {
+            cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
+            return;
+        }
+        const QString csv = reg_->exportCsv();
+        cb(makeTextResponse(csv, drogon::k200OK, "text/csv; charset=utf-8"));
+    }
+    void getDevicesNd(const drogon::HttpRequestPtr& /*req*/,
+                      std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
+        if (!reg_) {
+            cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
+            return;
+        }
+        const QString nd = reg_->exportJsonNd();
+        cb(makeTextResponse(nd, drogon::k200OK, "application/x-ndjson; charset=utf-8"));
+    }
+    // POST /devices/import/csv: 接收 CSV 文本并导入到 DeviceRegistry
+    // 关键点：drogon 的 getBody() 返回 string_view（引用底层缓冲区），这里要把它拷贝到 QByteArray /
+    // QString 以便使用 Qt 的 CSV 解析逻辑。完成导入后返回导入计数（JSON 格式）。
+    void postImportCsv(const drogon::HttpRequestPtr& req,
+                       std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
+        if (!reg_) {
+            cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
+            return;
+        }
+        const auto sv = req->getBody();
+        // 注意：sv.data() 可能不是以 '\0' 结尾，使用 fromUtf8(data, size) 来构造 QString
+        const QString csv = QString::fromUtf8(sv.data(), static_cast<int>(sv.size()));
+        const int imported = reg_->importCsv(csv);
+        QJsonObject outObj;
+        outObj["imported"] = imported;
+        const QJsonDocument doc(outObj);
+        const QByteArray out = doc.toJson(QJsonDocument::Compact);
+        auto resp = drogon::HttpResponse::newHttpResponse();
+        resp->setContentTypeString("application/json; charset=utf-8");
+        resp->setBody(std::string(out.constData(), static_cast<size_t>(out.size())));
+        cb(resp);
+    }
+    void postImportNd(const drogon::HttpRequestPtr& req,
+                      std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
+        if (!reg_) {
+            cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
+            return;
+        }
+        const auto sv = req->getBody();
+        const QString nd = QString::fromUtf8(sv.data(), static_cast<int>(sv.size()));
+        const int imported = reg_->importJsonNd(nd);
+        QJsonObject outObj;
+        outObj["imported"] = imported;
+        const QJsonDocument doc(outObj);
+        const QByteArray out = doc.toJson(QJsonDocument::Compact);
+        auto resp = drogon::HttpResponse::newHttpResponse();
+        resp->setContentTypeString("application/json; charset=utf-8");
+        resp->setBody(std::string(out.constData(), static_cast<size_t>(out.size())));
+        cb(resp);
+    }
+    // GET /devices/{id}: 按 ID 查询设备信息
+    // 路由中的 {1} 占位符会把路径段作为 std::string 参数传入（此处为 id）
+    void getDeviceById(const drogon::HttpRequestPtr& /*req*/,
+                       std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+                       std::string id) {
+        if (!reg_) {
+            cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
+            return;
+        }
+        const QString qid = QString::fromStdString(id);
+        auto opt = reg_->get(qid);
+        if (!opt) {
+            cb(makeTextResponse("Not Found\n", drogon::k404NotFound));
+            return;
+        }
+        const QJsonDocument doc(opt->toJson());
+        const QByteArray out = doc.toJson(QJsonDocument::Compact);
+        auto resp = drogon::HttpResponse::newHttpResponse();
+        resp->setContentTypeString("application/json; charset=utf-8");
+        resp->setBody(std::string(out.constData(), static_cast<size_t>(out.size())));
+        cb(resp);
+    }
+    // DELETE /devices/{id}: 删除指定设备
+    void deleteDeviceById(const drogon::HttpRequestPtr& /*req*/,
+                          std::function<void(const drogon::HttpResponsePtr&)>&& cb,
+                          std::string id) {
+        if (!reg_) {
+            cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
+            return;
+        }
+        const QString qid = QString::fromStdString(id);
+        const bool ok = reg_->remove(qid);
+        if (ok)
+            cb(makeTextResponse("OK\n", drogon::k200OK));
+        else
+            cb(makeTextResponse("Not Found\n", drogon::k404NotFound));
+    }
+
+   private:
+    // 处理注册或上报的通用函数（POST /register 和 POST /devices 复用）
+    // 步骤：
+    //  1. 检查 registry 是否就绪
+    //  2. 从请求体读取原始字节（drogon 返回 string_view），拷贝为 QByteArray 以交给 Qt JSON 解析
+    //  3. 解析 JSON，验证必需字段（deviceId）
+    //  4. 将 DeviceInfo 写入 registry（upsert），并处理可能的异常
+    // 注意：此函数为静态私有函数，所有路由共享同一套逻辑，避免代码重复
+    static void handleUpsert(const drogon::HttpRequestPtr& req,
+                             std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
+        if (!reg_) {
+            cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
+            return;
+        }
+        // drogon::HttpRequest::getBody() 返回 string_view，引用底层缓冲区
+        // 这里需要把内容拷贝到 QByteArray（或 std::string）以便 Qt 的 JSON 解析器使用
+        const auto sv = req->getBody();
+        const QByteArray body(sv.data(), static_cast<int>(sv.size()));
+        QJsonParseError err;
+        const QJsonDocument doc = QJsonDocument::fromJson(body, &err);
+        if (err.error != QJsonParseError::NoError || !doc.isObject()) {
+            // 返回 400：无效的 JSON
+            cb(makeTextResponse("Invalid JSON\n", drogon::k400BadRequest));
+            return;
+        }
+        // 将 JSON 对象转换为内部 DeviceInfo 表示
+        const DeviceInfo info = DeviceInfo::fromJson(doc.object());
+        if (info.deviceId.isEmpty()) {
+            // deviceId 是必须字段
+            cb(makeTextResponse("Missing deviceId\n", drogon::k400BadRequest));
+            return;
+        }
+        try {
+            // 写入 registry（可能触发磁盘/数据库持久化，视 DeviceRegistry 实现而定）
+            reg_->upsert(info);
+            cb(makeTextResponse("OK\n"));
+        } catch (const std::exception& ex) {
+            // 捕获异常并记录日志，避免抛出到 drogon 线程导致进程不稳定
+            spdlog::error("RestServer: upsert exception: {}", ex.what());
+            cb(makeTextResponse("Internal error\n", drogon::k500InternalServerError));
+        }
+    }
+};
+
+DeviceRegistry* DGController::reg_ = nullptr;
+
+// Impl: RestServer 内部实现
 struct RestServer::Impl {
-    DeviceRegistry& registry;  // 设备注册表（线程安全）
-    unsigned short port;       // REST 服务监听端口
-    std::thread worker;        // 运行 uWS::App 的后台线程
-    std::atomic<bool> running{false};
+    DeviceRegistry& registry;          // 设备注册表
+    unsigned short port;               // 监听端口
+    std::thread worker;                // 工作线程
+    std::atomic<bool> running{false};  // 是否正在运行
 
     Impl(DeviceRegistry& r, unsigned short p) : registry(r), port(p) {}
 };
@@ -46,170 +262,33 @@ RestServer::~RestServer() {
     stop();
 }
 
-// start(): 启动 REST 服务的后台线程并运行 uWebSockets 的事件循环。
-// 注意：uWS::App::run() 是阻塞的，因此我们在单独线程中运行它。
 void RestServer::start() {
     if (impl_->running.load()) return;
     impl_->running.store(true);
     impl_->worker = std::thread([this]() {
         try {
-            spdlog::info("RestServer starting on port {}", impl_->port);
-
-            uWS::App app;
-
-            // upsertHandler: 处理 POST /register 和 POST /devices
-            // 接收 JSON body，解析为 DeviceInfo 并 upsert 到 DeviceRegistry。
-            // 输入: JSON 对象 { deviceId, hwInfo, firmwareVersion, owner, group, lastSeen }
-            // 输出: 成功返回文本 "OK\n"，失败返回 "Invalid JSON" 或 "Missing deviceId"。
-            auto upsertHandler = [this](auto* res, auto* req) {
-                auto body = std::make_shared<std::string>();
-                res->onData([this, res, body](std::string_view chunk, bool last) {
-                    body->append(chunk.data(), chunk.size());
-                    if (!last) return;
-                    QJsonParseError err;
-                    QJsonDocument doc =
-                        QJsonDocument::fromJson(QByteArray::fromStdString(*body), &err);
-                    if (err.error != QJsonParseError::NoError || !doc.isObject()) {
-                        res->end("Invalid JSON\n");
-                        return;
-                    }
-                    DeviceInfo info = DeviceInfo::fromJson(doc.object());
-                    if (info.deviceId.isEmpty()) {
-                        res->end("Missing deviceId\n");
-                        return;
-                    }
-                    try {
-                        impl_->registry.upsert(info);
-                        res->end("OK\n");
-                    } catch (const std::exception& ex) {
-                        spdlog::error("RestServer: upsert exception: {}", ex.what());
-                        res->end("Internal error\n");
-                    }
-                });
-            };
-
-            // 向后兼容的注册接口
-            app.post("/register", upsertHandler);
-            // 更通用的设备管理接口：新增/更新设备
-            app.post("/devices", upsertHandler);
-
-            // GET /devices -> 返回所有设备的 JSON 数组，便于前端加载设备列表
-            app.get("/devices", [this](auto* res, auto* req) {
-                QList<DeviceInfo> list = impl_->registry.list();
-                QJsonArray arr;
-                for (const auto& d : list) arr.append(d.toJson());
-                QJsonDocument doc(arr);
-                QByteArray out = doc.toJson(QJsonDocument::Compact);
-                res->end(std::string(out.constData(), out.size()));
-            });
-
-            // GET /devices.csv -> 导出 CSV 文本，第一行为表头，供导出使用
-            app.get("/devices.csv", [this](auto* res, auto* req) {
-                QString csv = impl_->registry.exportCsv();
-                QByteArray out = csv.toUtf8();
-                res->end(std::string(out.constData(), out.size()));
-            });
-
-            // GET /devices.jsonnd -> 导出 ND-JSON（每行一个 JSON 对象），方便批量导入/流水线处理
-            app.get("/devices.jsonnd", [this](auto* res, auto* req) {
-                QString nd = impl_->registry.exportJsonNd();
-                QByteArray out = nd.toUtf8();
-                res->end(std::string(out.constData(), out.size()));
-            });
-
-            // POST /devices/import/csv -> 接收 CSV 文本并导入，返回 { imported: n }
-            // 前端可以直接上传 CSV 文件内容到此接口完成批量导入
-            app.post("/devices/import/csv", [this](auto* res, auto* req) {
-                auto body = std::make_shared<std::string>();
-                res->onData([this, res, body](std::string_view chunk, bool last) {
-                    body->append(chunk.data(), chunk.size());
-                    if (!last) return;
-                    QString csv = QString::fromStdString(*body);
-                    int imported = impl_->registry.importCsv(csv);
-                    QJsonObject outObj;
-                    outObj["imported"] = imported;
-                    QJsonDocument doc(outObj);
-                    QByteArray out = doc.toJson(QJsonDocument::Compact);
-                    res->end(std::string(out.constData(), out.size()));
-                });
-            });
-
-            // POST /devices/import/jsonnd -> 导入 newline-delimited JSON（每行一个 JSON 对象）
-            app.post("/devices/import/jsonnd", [this](auto* res, auto* req) {
-                auto body = std::make_shared<std::string>();
-                res->onData([this, res, body](std::string_view chunk, bool last) {
-                    body->append(chunk.data(), chunk.size());
-                    if (!last) return;
-                    QString nd = QString::fromStdString(*body);
-                    int imported = impl_->registry.importJsonNd(nd);
-                    QJsonObject outObj;
-                    outObj["imported"] = imported;
-                    QJsonDocument doc(outObj);
-                    QByteArray out = doc.toJson(QJsonDocument::Compact);
-                    res->end(std::string(out.constData(), out.size()));
-                });
-            });
-
-            // GET /devices/{id} -> 返回指定设备信息（JSON），若未找到返回 "Not found"
-            app.get("/devices/*", [this](auto* res, auto* req) {
-                auto url = std::string(req->getUrl().data(), req->getUrl().size());
-                const std::string prefix = "/devices/";
-                if (url.rfind(prefix, 0) == 0) {
-                    std::string id = url.substr(prefix.size());
-                    QString qid = QString::fromStdString(id);
-                    auto opt = impl_->registry.get(qid);
-                    if (!opt) {
-                        res->end("Not found\n");
-                        return;
-                    }
-                    QJsonDocument doc(opt->toJson());
-                    QByteArray out = doc.toJson(QJsonDocument::Compact);
-                    res->end(std::string(out.constData(), out.size()));
-                    return;
-                }
-                res->end("Not Found\n");
-            });
-
-            // DELETE /devices/{id} -> 删除设备，返回 OK 或 Not Found
-            app.del("/devices/*", [this](auto* res, auto* req) {
-                auto url = std::string(req->getUrl().data(), req->getUrl().size());
-                const std::string prefix = "/devices/";
-                if (url.rfind(prefix, 0) == 0) {
-                    std::string id = url.substr(prefix.size());
-                    QString qid = QString::fromStdString(id);
-                    bool ok = impl_->registry.remove(qid);
-                    if (ok)
-                        res->end("OK\n");
-                    else
-                        res->end("Not Found\n");
-                    return;
-                }
-                res->end("Not Found\n");
-            });
-
-            // 监听端口并运行事件循环；listen 回调会打印监听状态
-            app.listen(impl_->port,
-                       [&](auto* listen_socket) {
-                           if (listen_socket) {
-                               spdlog::info("RestServer listening on port {}", impl_->port);
-                           } else {
-                               spdlog::error("RestServer failed to listen on port {}", impl_->port);
-                           }
-                       })
+            spdlog::info("RestServer (drogon) starting on port {}", impl_->port);
+            DGController::setRegistry(&impl_->registry);
+            drogon::app().setLogLevel(trantor::Logger::kInfo);
+            drogon::app()
+                .addListener("0.0.0.0", static_cast<uint16_t>(impl_->port))
+                .setThreadNum(1)
                 .run();
-        } catch (const std::exception& ex) { spdlog::error("RestServer exception: {}", ex.what()); }
+            spdlog::info("RestServer (drogon) stopped");
+        } catch (const std::exception& ex) {
+            spdlog::error("RestServer (drogon) exception: {}", ex.what());
+        }
         impl_->running.store(false);
     });
 }
 
-// stop(): 请求停止服务并 join 后台线程。
-// 说明：uWebSockets 的 run() 是阻塞的；如果需要在运行时优雅停止，应当在 start()
-// 中保存可用于停止的 loop/app 对象并在此调用其 shutdown API。当前实现为
-// best-effort：join 后台线程（如果库没有提供 stop 接口则可能需依赖进程退出）。
 void RestServer::stop() {
     if (!impl_->running.load()) return;
-    spdlog::info("RestServer stop requested");
-    if (impl_->worker.joinable()) impl_->worker.join();
+    spdlog::info("RestServer (drogon) stop requested");
+    drogon::app().quit();                                // 停止 drogon 事件循环
+    if (impl_->worker.joinable()) impl_->worker.join();  // 等待线程结束
+    impl_->running.store(false);
+    spdlog::info("RestServer (drogon) stopped");
 }
 
 bool RestServer::running() const {

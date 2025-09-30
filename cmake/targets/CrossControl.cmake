@@ -69,6 +69,16 @@ endif()
 
 target_link_libraries(CrossControl PRIVATE ${_core_qt_libs} logging config)
 
+if(TARGET trantor)
+  target_link_libraries(CrossControl PRIVATE trantor)
+elseif(TARGET trantor::trantor)
+  target_link_libraries(CrossControl PRIVATE trantor::trantor)
+elseif(TARGET Trantor::Trantor)
+  target_link_libraries(CrossControl PRIVATE Trantor::Trantor)
+elseif(TARGET trantor::Trantor)
+  target_link_libraries(CrossControl PRIVATE trantor::Trantor)
+endif()
+
 # Qt Multimedia 为摄像头 UI 所需
 if(NOT TARGET Qt6::Multimedia)
   message(

@@ -8,8 +8,7 @@ namespace DeviceGateway {
 class DeviceRegistry;
 
 // Lightweight REST server that can be started/stopped asynchronously from a
-// Qt application. It uses unofficial-uwebsockets when available; otherwise the
-// class compiles to a stub that returns errors at runtime.
+// Qt application. Implemented using drogon HTTP framework.
 class RestServer {
    public:
     RestServer(DeviceRegistry& registry, unsigned short port = 8080);

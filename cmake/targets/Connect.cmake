@@ -41,6 +41,15 @@ endif()
 target_link_libraries(Connect PRIVATE Qt6::Network Qt6::Widgets Qt6::SerialPort
                                       logging config)
 
+# Provide drogon-based HTTP client helpers
+# Drogon discovery is centralized in cmake/Dependencies.cmake; if found enable helpers
+if(Drogon_FOUND)
+  target_link_libraries(Connect PRIVATE Drogon::Drogon)
+  target_compile_definitions(Connect PRIVATE HAS_DROGON=1)
+else()
+  message(STATUS "Drogon not found; Connect will not expose drogon HTTP client helpers")
+endif()
+
 if(BUILD_MQTT_CLIENT)
   if(TARGET PahoMqttCpp::paho-mqttpp3)
     target_link_libraries(Connect PRIVATE PahoMqttCpp::paho-mqttpp3)

@@ -26,16 +26,25 @@ target_include_directories(
 
 # Link to project libraries
 target_link_libraries(DeviceGateway PRIVATE config logging Storage)
-# optional: uWebSockets-based embedded REST API for device registration
-find_package(unofficial-uwebsockets CONFIG)
-if(TARGET unofficial::uwebsockets::uwebsockets)
-  target_link_libraries(DeviceGateway
-                        PRIVATE unofficial::uwebsockets::uwebsockets)
+
+# Use drogon for HTTP REST server
+# Drogon discovery is centralized in cmake/Dependencies.cmake; require it here
+if(NOT Drogon_FOUND)
+  message(FATAL_ERROR "DeviceGateway requires Drogon but it was not found. Enable/install drogon via vcpkg and re-run configure.")
 else()
-  message(
-    STATUS
-      "unofficial-uwebsockets not found; REST device registration will not be available"
-  )
+  target_link_libraries(DeviceGateway PRIVATE Drogon::Drogon)
+  # Trantor is Drogon's dependency; some enums are referenced directly.
+  # Link against several common imported target names to be robust to
+  # differences in how drogon/trantor are exported by package managers.
+  if(TARGET trantor)
+    target_link_libraries(DeviceGateway PUBLIC trantor)
+  elseif(TARGET trantor::trantor)
+    target_link_libraries(DeviceGateway PUBLIC trantor::trantor)
+  elseif(TARGET Trantor::Trantor)
+    target_link_libraries(DeviceGateway PUBLIC Trantor::Trantor)
+  elseif(TARGET trantor::Trantor)
+    target_link_libraries(DeviceGateway PUBLIC trantor::Trantor)
+  endif()
 endif()
 # DeviceGateway depends on Connect for networking functionality
 if(TARGET Connect)
