@@ -27,7 +27,6 @@ target_include_directories(
          include/modules/Storage include/modules/Config)
 
 # Link to project libraries
-<<<<<<< HEAD
 target_link_libraries(DeviceGateway PUBLIC config logging Storage Qt6::Sql)
 
 # Use drogon for HTTP REST server Drogon discovery is centralized in
@@ -51,19 +50,6 @@ else()
   elseif(TARGET trantor::Trantor)
     target_link_libraries(DeviceGateway PUBLIC trantor::Trantor)
   endif()
-=======
-target_link_libraries(DeviceGateway PRIVATE config logging Storage)
-# optional: uWebSockets-based embedded REST API for device registration
-find_package(unofficial-uwebsockets CONFIG)
-if(TARGET unofficial::uwebsockets::uwebsockets)
-  target_link_libraries(DeviceGateway
-                        PRIVATE unofficial::uwebsockets::uwebsockets)
-else()
-  message(
-    STATUS
-      "unofficial-uwebsockets not found; REST device registration will not be available"
-  )
->>>>>>> parent of afbbae8 (feat: 集成 Drogon HTTP 框架，重构 DeviceGateway 模块的 REST 服务器实现)
 endif()
 # DeviceGateway depends on Connect for networking functionality
 if(TARGET Connect)
