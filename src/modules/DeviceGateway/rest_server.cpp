@@ -4,19 +4,20 @@
 #ifdef HAS_DROGON
 #include <drogon/drogon.h>
 
-#include <atomic>
-#include <memory>
-#include <thread>
-#include "modules/DeviceGateway/device_gateway.h"
-#include "spdlog/spdlog.h"
+#include <QByteArray>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
-#include <QVariantMap>
 #include <QString>
-#include <QByteArray>
+#include <QVariantMap>
+#include <atomic>
+#include <memory>
 #include <string>
+#include <thread>
+
 #include "logging/logging.h"
+#include "modules/DeviceGateway/device_gateway.h"
+#include "spdlog/spdlog.h"
 
 namespace DeviceGateway {
 
@@ -43,9 +44,10 @@ static void registerHandlers() {
     auto restLogger = logging::LoggerManager::instance().getLogger("REST");
 
     // GET /devices
-        app().registerHandler(
-            "/devices",
-            [restLogger](const HttpRequestPtr& req, std::function<void(const HttpResponsePtr&)>&& callback) {
+    app().registerHandler(
+        "/devices",
+        [restLogger](const HttpRequestPtr& req,
+                     std::function<void(const HttpResponsePtr&)>&& callback) {
             auto resp = HttpResponse::newHttpResponse();
             if (!g_gateway) {
                 resp->setStatusCode(k500InternalServerError);
@@ -67,7 +69,8 @@ static void registerHandlers() {
                 jo["firmware_version"] = QJsonValue(d.firmware_version);
                 jo["owner"] = QJsonValue(d.owner);
                 jo["group"] = QJsonValue(d.group);
-                if (d.lastSeen.isValid()) jo["last_seen"] = static_cast<qint64>(d.lastSeen.toSecsSinceEpoch());
+                if (d.lastSeen.isValid())
+                    jo["last_seen"] = static_cast<qint64>(d.lastSeen.toSecsSinceEpoch());
                 QJsonObject meta;
                 for (auto it = d.metadata.constBegin(); it != d.metadata.constEnd(); ++it) {
                     meta[it.key()] = QJsonValue(it.value().toString());
@@ -85,9 +88,10 @@ static void registerHandlers() {
         });
 
     // POST /devices
-        app().registerHandler(
-            "/devices",
-            [restLogger](const HttpRequestPtr& req, std::function<void(const HttpResponsePtr&)>&& callback) {
+    app().registerHandler(
+        "/devices",
+        [restLogger](const HttpRequestPtr& req,
+                     std::function<void(const HttpResponsePtr&)>&& callback) {
             auto resp = HttpResponse::newHttpResponse();
             if (!g_gateway) {
                 resp->setStatusCode(k500InternalServerError);
@@ -96,13 +100,16 @@ static void registerHandlers() {
                 callback(resp);
                 return;
             }
-            restLogger->info(std::string("REST POST /devices from ") + std::string(req->getPeerAddr().toIp()));
+            restLogger->info(std::string("REST POST /devices from ") +
+                             std::string(req->getPeerAddr().toIp()));
             const auto bodyView = req->getBody();
             const std::string bodyStr(bodyView.data(), bodyView.size());
             QJsonParseError perr;
-            const QJsonDocument doc = QJsonDocument::fromJson(QByteArray::fromStdString(bodyStr), &perr);
+            const QJsonDocument doc =
+                QJsonDocument::fromJson(QByteArray::fromStdString(bodyStr), &perr);
             if (perr.error != QJsonParseError::NoError || !doc.isObject()) {
-                restLogger->warn(std::string("REST POST /devices invalid JSON: ") + perr.errorString().toStdString());
+                restLogger->warn(std::string("REST POST /devices invalid JSON: ") +
+                                 perr.errorString().toStdString());
                 resp->setStatusCode(k400BadRequest);
                 resp->setContentTypeCode(CT_APPLICATION_JSON);
                 QJsonObject err;
@@ -115,7 +122,8 @@ static void registerHandlers() {
             QJsonObject body = doc.object();
             // validation: require non-empty id
             QJsonArray errsArr;
-            if (!body.contains("id") || !body.value("id").isString() || body.value("id").toString().trimmed().isEmpty()) {
+            if (!body.contains("id") || !body.value("id").isString() ||
+                body.value("id").toString().trimmed().isEmpty()) {
                 QJsonObject ve;
                 ve["field"] = QString("id");
                 ve["message"] = QString("missing or empty");
@@ -123,8 +131,11 @@ static void registerHandlers() {
             }
             if (!errsArr.isEmpty()) {
                 QStringList flat;
-                for (const auto& v : errsArr) flat << v.toObject().value("field").toString() + ": " + v.toObject().value("message").toString();
-                restLogger->warn(std::string("REST POST /devices validation failed: ") + flat.join(", ").toStdString());
+                for (const auto& v : errsArr)
+                    flat << v.toObject().value("field").toString() + ": " +
+                                v.toObject().value("message").toString();
+                restLogger->warn(std::string("REST POST /devices validation failed: ") +
+                                 flat.join(", ").toStdString());
                 resp->setStatusCode(k422UnprocessableEntity);
                 resp->setContentTypeCode(CT_APPLICATION_JSON);
                 QJsonObject err;
@@ -146,11 +157,13 @@ static void registerHandlers() {
             if (body.contains("metadata") && body.value("metadata").isObject()) {
                 QVariantMap mm;
                 const QJsonObject meta = body.value("metadata").toObject();
-                for (auto it = meta.constBegin(); it != meta.constEnd(); ++it) mm.insert(it.key(), it.value().toVariant());
+                for (auto it = meta.constBegin(); it != meta.constEnd(); ++it)
+                    mm.insert(it.key(), it.value().toVariant());
                 d.metadata = mm;
             }
             if (!g_gateway->addDeviceWithConnect(d)) {
-                restLogger->error(std::string("REST POST /devices failed to add device ") + d.id.toStdString());
+                restLogger->error(std::string("REST POST /devices failed to add device ") +
+                                  d.id.toStdString());
                 resp->setStatusCode(k500InternalServerError);
                 resp->setContentTypeCode(CT_APPLICATION_JSON);
                 resp->setBody("{\"error\":\"failed to add device\"}");
@@ -160,12 +173,14 @@ static void registerHandlers() {
                 resp->setBody("{\"result\":\"ok\"}");
             }
             callback(resp);
-    }, {Post});
+        },
+        {Post});
 
     // PUT/POST /devices/{id}
     app().registerHandler(
         R"(/devices/{id})",
-            [restLogger](const HttpRequestPtr& req, std::function<void(const HttpResponsePtr&)>&& callback) {
+        [restLogger](const HttpRequestPtr& req,
+                     std::function<void(const HttpResponsePtr&)>&& callback) {
             auto resp = HttpResponse::newHttpResponse();
             if (!g_gateway) {
                 resp->setStatusCode(k500InternalServerError);
@@ -179,9 +194,11 @@ static void registerHandlers() {
             const auto bodyView = req->getBody();
             const std::string bodyStr(bodyView.data(), bodyView.size());
             QJsonParseError perr;
-            const QJsonDocument doc = QJsonDocument::fromJson(QByteArray::fromStdString(bodyStr), &perr);
+            const QJsonDocument doc =
+                QJsonDocument::fromJson(QByteArray::fromStdString(bodyStr), &perr);
             if (perr.error != QJsonParseError::NoError || !doc.isObject()) {
-                restLogger->warn(std::string("REST PUT/POST /devices/{id} invalid JSON: ") + perr.errorString().toStdString());
+                restLogger->warn(std::string("REST PUT/POST /devices/{id} invalid JSON: ") +
+                                 perr.errorString().toStdString());
                 resp->setStatusCode(k400BadRequest);
                 resp->setContentTypeCode(CT_APPLICATION_JSON);
                 QJsonObject err;
@@ -216,11 +233,14 @@ static void registerHandlers() {
             if (body.contains("metadata") && body.value("metadata").isObject()) {
                 QVariantMap mm;
                 const QJsonObject meta = body.value("metadata").toObject();
-                for (auto it = meta.constBegin(); it != meta.constEnd(); ++it) mm.insert(it.key(), it.value().toVariant());
+                for (auto it = meta.constBegin(); it != meta.constEnd(); ++it)
+                    mm.insert(it.key(), it.value().toVariant());
                 d.metadata = mm;
             }
             if (!g_gateway->persistDevice(d)) {
-                restLogger->error(std::string("REST PUT/POST /devices/{id} failed to persist device ") + d.id.toStdString());
+                restLogger->error(
+                    std::string("REST PUT/POST /devices/{id} failed to persist device ") +
+                    d.id.toStdString());
                 resp->setStatusCode(k500InternalServerError);
                 resp->setContentTypeCode(CT_APPLICATION_JSON);
                 resp->setBody("{\"error\":\"failed to persist device\"}");
@@ -230,12 +250,14 @@ static void registerHandlers() {
                 resp->setBody("{\"result\":\"ok\"}");
             }
             callback(resp);
-    }, {Post, Put});
+        },
+        {Post, Put});
 
     // DELETE /devices/{id}
     app().registerHandler(
         R"(/devices/{id})",
-            [restLogger](const HttpRequestPtr& req, std::function<void(const HttpResponsePtr&)>&& callback) {
+        [restLogger](const HttpRequestPtr& req,
+                     std::function<void(const HttpResponsePtr&)>&& callback) {
             auto resp = HttpResponse::newHttpResponse();
             if (!g_gateway) {
                 resp->setStatusCode(k500InternalServerError);
@@ -254,7 +276,8 @@ static void registerHandlers() {
                 return;
             }
             if (!g_gateway->removeDeviceAndClose(QString::fromStdString(idStr))) {
-                restLogger->error(std::string("REST DELETE /devices/{id} failed to delete ") + idStr);
+                restLogger->error(std::string("REST DELETE /devices/{id} failed to delete ") +
+                                  idStr);
                 resp->setStatusCode(k500InternalServerError);
                 resp->setContentTypeCode(CT_APPLICATION_JSON);
                 QJsonObject err;
@@ -269,11 +292,16 @@ static void registerHandlers() {
                 resp->setBody(QJsonDocument(ok).toJson(QJsonDocument::Compact).toStdString());
             }
             callback(resp);
-    }, {Delete});
+        },
+        {Delete});
 }
 
-RestServer::RestServer(DeviceGateway* gw) { m_gateway = gw; }
-RestServer::~RestServer() { stop(); }
+RestServer::RestServer(DeviceGateway* gw) {
+    m_gateway = gw;
+}
+RestServer::~RestServer() {
+    stop();
+}
 
 bool RestServer::start(unsigned short port) {
     if (g_running.load()) return true;
@@ -283,14 +311,16 @@ bool RestServer::start(unsigned short port) {
     // drogon in this process: it can assert internally. Require process
     // restart instead.
     if (g_started_once.load()) {
-        spdlog::error("RestServer: drogon was already started once and cannot be restarted in the same process");
+        spdlog::error(
+            "RestServer: drogon was already started once and cannot be restarted in the same "
+            "process");
         return false;
     }
     try {
         registerHandlers();
         drogon::app().addListener("0.0.0.0", port);
     } catch (const std::exception& e) {
-    spdlog::error(std::string("RestServer start failed: ") + std::string(e.what()));
+        spdlog::error(std::string("RestServer start failed: ") + std::string(e.what()));
         return false;
     } catch (...) {
         spdlog::error("RestServer start failed: unknown exception");
@@ -299,8 +329,8 @@ bool RestServer::start(unsigned short port) {
     g_drogonThread = std::make_unique<std::thread>([]() { drogon::app().run(); });
     g_running.store(true);
     g_started_once.store(true);
-        logging::LoggerManager::instance().getLogger("REST")->info(
-            std::string("RestServer: drogon listening on port ") + std::to_string(port));
+    logging::LoggerManager::instance().getLogger("REST")->info(
+        std::string("RestServer: drogon listening on port ") + std::to_string(port));
     return true;
 }
 
@@ -308,8 +338,7 @@ void RestServer::stop() {
     if (!g_running.load()) return;
     try {
         drogon::app().quit();
-    } catch (...) {
-    }
+    } catch (...) {}
     if (g_drogonThread && g_drogonThread->joinable()) {
         g_drogonThread->join();
         g_drogonThread.reset();
@@ -318,9 +347,13 @@ void RestServer::stop() {
     spdlog::info("RestServer: stopped");
 }
 
-bool RestServer::isRunning() const { return g_running.load(); }
+bool RestServer::isRunning() const {
+    return g_running.load();
+}
 
-void RestServer::setGateway(DeviceGateway* gw) { m_gateway = gw; }
+void RestServer::setGateway(DeviceGateway* gw) {
+    m_gateway = gw;
+}
 
 }  // namespace DeviceGateway
 

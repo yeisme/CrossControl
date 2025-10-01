@@ -4,7 +4,9 @@
 #include <QDir>
 #include <QTextEdit>
 #include <algorithm>
+#include <chrono>
 
+#include "spdlog/common.h"
 #include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
@@ -82,7 +84,11 @@ void LoggerManager::enableFileLogging(bool enabled) {
                     auto& s = lg->sinks();
                     if (std::find(s.begin(), s.end(), file_sink_) == s.end())
                         s.push_back(file_sink_);
+                    // ensure this logger flushes at info and above so file reflects recent logs
+                    lg->flush_on(spdlog::level::info);
                 }
+            // also ensure default logger flushes at info
+            if (spdlog::default_logger()) spdlog::default_logger()->flush_on(spdlog::level::info);
         }
     } else {
         if (file_sink_) {
@@ -117,6 +123,10 @@ void LoggerManager::init() {
     // Enable file logging by default. This will create logs/ under the
     // application directory (or cwd) unless the user calls setLogDirectory().
     enableFileLogging(true);
+    // Start a periodic flush thread so file sinks are flushed regularly (1s).
+    // This provides near-real-time persistence without forcing a flush on every
+    // log call which can be expensive.
+    spdlog::flush_every(std::chrono::seconds(1));
 }
 
 void LoggerManager::installQtSinkToAll_() {
@@ -220,6 +230,8 @@ std::shared_ptr<spdlog::logger> LoggerManager::getLogger(const std::string& name
         lg = std::make_shared<spdlog::logger>(name, dsinks.begin(), dsinks.end());
         lg->set_level(spdlog::level::trace);
         lg->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] %v");
+        // ensure new logger flushes at info and above
+        lg->flush_on(spdlog::level::info);
         spdlog::register_logger(lg);
         // 如果我们已经有 qt_sink_，确保新的 logger 也带上它
         if (qt_sink_) {

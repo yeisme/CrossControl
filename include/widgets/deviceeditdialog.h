@@ -6,6 +6,8 @@
 
 class QLineEdit;
 class QTextEdit;
+class QPushButton;
+class QLabel;
 
 /**
  * @brief 编辑设备信息的对话框。
@@ -28,5 +30,11 @@ class DeviceEditDialog : public QDialog {
     QLineEdit* leFw_ = nullptr;
     QLineEdit* leOwner_ = nullptr;
     QLineEdit* leGroup_ = nullptr;
+    // Structured auth fields
+    QLineEdit* leAuthUser_ = nullptr;
+    QLineEdit* leAuthPass_ = nullptr;
+    QLineEdit* leAuthToken_ = nullptr;
     QTextEdit* teMeta_ = nullptr;
+    // Button to generate random UUID for ID field
+    QPushButton* btnGenId_ = nullptr;
 };

@@ -3,6 +3,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QFile>
+#include <QUrlQuery>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTextStream>
@@ -13,8 +14,6 @@
 #include "modules/DeviceGateway/rest_server.h"
 #include "modules/Storage/storage.h"
 #include "spdlog/spdlog.h"
-
-#include "modules/DeviceGateway/rest_server.h"
 
 #ifdef HAS_DROGON
 using DeviceGateway::RestServer;
@@ -89,10 +88,10 @@ void DeviceGateway::stopRest() {
 
 void DeviceGateway::shutdown() {
     if (m_restServer) {
-    auto srv = static_cast<RestServer*>(m_restServer);
-    srv->stop();
-    delete srv;
-    m_restServer = nullptr;
+        auto srv = static_cast<RestServer*>(m_restServer);
+        srv->stop();
+        delete srv;
+        m_restServer = nullptr;
     }
 
     // Close all managed connections
@@ -116,7 +115,36 @@ bool DeviceGateway::addDeviceWithConnect(const DeviceInfo& dev) {
 
     if (dev.endpoint.isEmpty()) return true;  // nothing to connect
 
-    auto conn = connect_factory::createByEndpoint(dev.endpoint);
+    // Allow authentication details via device metadata. Support common keys:
+    //  - auth_user / auth_pass  -> injected as user:pass@ in URL
+    //  - auth_token            -> appended as query ?token=...
+    QString ep = dev.endpoint.trimmed();
+    if (!dev.metadata.isEmpty()) {
+        // prefer QUrl parsing
+        QUrl url = QUrl::fromUserInput(ep);
+        bool changed = false;
+        if (dev.metadata.contains("auth_user") && dev.metadata.contains("auth_pass")) {
+            const QString u = dev.metadata.value("auth_user").toString();
+            const QString p = dev.metadata.value("auth_pass").toString();
+            if (!u.isEmpty()) {
+                url.setUserName(u);
+                url.setPassword(p);
+                changed = true;
+            }
+        }
+        if (dev.metadata.contains("auth_token")) {
+            const QString token = dev.metadata.value("auth_token").toString();
+            if (!token.isEmpty()) {
+                QUrlQuery q(url);
+                q.addQueryItem("token", token);
+                url.setQuery(q);
+                changed = true;
+            }
+        }
+        if (changed) ep = url.toString();
+    }
+
+    auto conn = connect_factory::createByEndpoint(ep);
     if (!conn) {
         spdlog::warn("DeviceGateway: could not create connection for endpoint {}",
                      dev.endpoint.toStdString());
@@ -190,6 +218,7 @@ bool DeviceGateway::ensureDevicesTable() {
                       q.lastError().text().toStdString());
         return false;
     }
+    spdlog::debug("DeviceGateway: ensured devices table exists");
     return true;
 }
 

@@ -57,64 +57,102 @@
 <context>
     <name>DeviceEditDialog</name>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="25"/>
         <source>ID</source>
-        <translation>ID</translation>
+        <translation type="vanished">ID</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="26"/>
         <source>Name</source>
-        <translation>名称</translation>
+        <translation type="vanished">名称</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="27"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="19"/>
+        <source>Generate UUID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/deviceeditdialog.cpp" line="36"/>
+        <source>ID &lt;span style=&quot;color:red&quot;&gt;*&lt;/span&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/deviceeditdialog.cpp" line="44"/>
+        <source>Name &lt;span style=&quot;color:red&quot;&gt;*&lt;/span&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/deviceeditdialog.cpp" line="47"/>
         <source>Status</source>
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="28"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="48"/>
         <source>Endpoint</source>
         <translation>端点</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="29"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="49"/>
         <source>Type</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="30"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="50"/>
         <source>HW Info</source>
         <translation>硬件信息</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="31"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="51"/>
         <source>Firmware</source>
         <translation>固件版本</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="32"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="52"/>
         <source>Owner</source>
         <translation>拥有者</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="33"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="53"/>
         <source>Group</source>
         <translation>设备组</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="34"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="54"/>
+        <source>Auth User</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/deviceeditdialog.cpp" line="55"/>
+        <source>Auth Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/deviceeditdialog.cpp" line="56"/>
+        <source>Auth Token</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/deviceeditdialog.cpp" line="57"/>
         <source>Metadata (JSON)</source>
         <translation>元数据（JSON）</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="37"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="60"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="38"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="61"/>
         <source>Cancel</source>
         <translation>取消</translation>
+    </message>
+    <message>
+        <location filename="../widgets/deviceeditdialog.cpp" line="69"/>
+        <source>Missing fields</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/deviceeditdialog.cpp" line="70"/>
+        <source>Please fill required fields: ID and Name.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -415,7 +453,7 @@
     <message>
         <location filename="../widgets/devicemanagementwidget.cpp" line="156"/>
         <source>REST control moved to System Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>REST 控制已移至系统设置</translation>
     </message>
     <message>
         <location filename="../widgets/devicemanagementwidget.cpp" line="267"/>
@@ -526,19 +564,19 @@
         <translation>CSV 文件 (*.csv);;NDJSON (*.ndjson)</translation>
     </message>
     <message>
-        <location filename="../widgets/devicemanagementwidget.cpp" line="437"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="438"/>
         <source>REST server stopped</source>
-        <translation type="unfinished"></translation>
+        <translation>REST 服务器已停止</translation>
     </message>
     <message>
-        <location filename="../widgets/devicemanagementwidget.cpp" line="442"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="443"/>
         <source>REST server started</source>
-        <translation type="unfinished"></translation>
+        <translation>REST 服务器已启动</translation>
     </message>
     <message>
         <location filename="../widgets/devicemanagementwidget.cpp" line="445"/>
         <source>Failed to start REST server</source>
-        <translation type="unfinished"></translation>
+        <translation>无法启动 REST 服务器</translation>
     </message>
     <message>
         <location filename="../widgets/devicemanagementwidget.cpp" line="457"/>
@@ -559,7 +597,7 @@
     <message>
         <location filename="../widgets/devicemanagementwidget.cpp" line="330"/>
         <source>Devices: %1  Success: %2  Fail: %3</source>
-        <translation type="unfinished"></translation>
+        <translation>设备数量: %1  成功: %2  失败: %3</translation>
     </message>
     <message>
         <location filename="../widgets/devicemanagementwidget.cpp" line="455"/>
@@ -1001,7 +1039,7 @@
         <location filename="../widgets/loginwidget.ui" line="70"/>
         <source>QFrame#frameRight { background: #ffffff; } QLineEdit { padding: 8px; }
                      QPushButton { padding: 8px 12px; }</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/loginwidget.ui" line="87"/>
@@ -1174,31 +1212,31 @@
         <location filename="../widgets/mainwidget.ui" line="64"/>
         <source>background: #ffffff; border: 1px solid
                                                       #e0e0e0; border-radius: 8px; padding: 12px;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="39"/>
         <source>font-size: 14px; color:
                                                                         #555;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="43"/>
         <source>29℃~34℃ Sunny Air quality:
                                                                         Good</source>
-        <translation type="unfinished"></translation>
+        <translation>29℃~34℃ 晴 空气质量: 良好</translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="73"/>
         <source>background: transparent;
                                                                         padding: 8px;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="128"/>
         <source>background: #ffffff; border: 1px solid #e0e0e0;
                                           border-radius: 8px; padding: 12px;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="141"/>
@@ -1369,7 +1407,8 @@
         <location filename="../widgets/messagewidget.cpp" line="256"/>
         <source>Failed to save message to database:
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>保存留言到数据库失败：
+%1</translation>
     </message>
     <message>
         <source>Failed to save message to database:
@@ -1595,24 +1634,24 @@
         <location filename="../widgets/settingwidget.cpp" line="263"/>
         <location filename="../widgets/settingwidget.cpp" line="280"/>
         <source>Start REST</source>
-        <translation type="unfinished">启动远程控制</translation>
+        <translation>启动远程控制</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="180"/>
         <source>REST Server Port</source>
-        <translation type="unfinished"></translation>
+        <translation>REST 服务器端口</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="181"/>
         <source>REST Control</source>
-        <translation type="unfinished"></translation>
+        <translation>REST 控制</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="197"/>
         <location filename="../widgets/settingwidget.cpp" line="251"/>
         <location filename="../widgets/settingwidget.cpp" line="278"/>
         <source>Stop REST</source>
-        <translation type="unfinished">停止远程控制</translation>
+        <translation>停止远程控制</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="152"/>
@@ -1634,27 +1673,27 @@
         <location filename="../widgets/settingwidget.cpp" line="256"/>
         <location filename="../widgets/settingwidget.cpp" line="297"/>
         <source>REST</source>
-        <translation type="unfinished">REST</translation>
+        <translation>REST</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="211"/>
         <source>Device gateway not available</source>
-        <translation type="unfinished"></translation>
+        <translation>设备网关不可用</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="220"/>
         <source>Stopping...</source>
-        <translation type="unfinished"></translation>
+        <translation>正在停止...</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="257"/>
         <source>Failed to start REST server. If the embedded REST server was already started in this process it cannot be restarted; please restart the application.</source>
-        <translation type="unfinished"></translation>
+        <translation>无法启动 REST 服务器。如果嵌入式 REST 服务器已经在此进程中启动，则无法重新启动；请重新启动应用程序。</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="298"/>
         <source>Failed to auto-start REST server on saved port</source>
-        <translation type="unfinished"></translation>
+        <translation>无法在保存的端口上自动启动 REST 服务器</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="319"/>
