@@ -42,6 +42,7 @@ endif()
 target_link_libraries(Connect PUBLIC Qt6::Network Qt6::Widgets Qt6::SerialPort
                                      logging config)
 
+<<<<<<< HEAD
 # Provide drogon-based HTTP client helpers Drogon discovery is centralized in
 # cmake/Dependencies.cmake; if found enable helpers
 if(Drogon_FOUND)
@@ -53,6 +54,8 @@ else()
       "Drogon not found; Connect will not expose drogon HTTP client helpers")
 endif()
 
+=======
+>>>>>>> parent of afbbae8 (feat: 集成 Drogon HTTP 框架，重构 DeviceGateway 模块的 REST 服务器实现)
 if(BUILD_MQTT_CLIENT)
   if(TARGET PahoMqttCpp::paho-mqttpp3)
     target_link_libraries(Connect PUBLIC PahoMqttCpp::paho-mqttpp3)

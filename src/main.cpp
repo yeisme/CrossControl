@@ -21,19 +21,6 @@
 #include "modules/DeviceGateway/device_gateway.h"
 #include "spdlog/spdlog.h"
 
-// 如果系统中存在 trantor/drogon 头，则把 drogon/trantor 的日志转发到项目的 spdlog 封装。
-#if defined(__has_include)
-#if __has_include(<trantor/utils/Logger.h>) && __has_include(<drogon/drogon.h>)
-#include <drogon/drogon.h>
-#include <trantor/utils/Logger.h>
-#define CROSSCONTROL_HAS_DROGON 1
-#else
-#define CROSSCONTROL_HAS_DROGON 0
-#endif
-#else
-#define CROSSCONTROL_HAS_DROGON 0
-#endif
-
 // 为当前系统用户界面语言安装翻译器。如果加载并安装了翻译，则返回一个非空的 unique_ptr；否则返回
 // nullptr。
 static std::unique_ptr<QTranslator> installSystemTranslator(QCoreApplication& app) {
@@ -95,26 +82,6 @@ int main(int argc, char* argv[]) {
     // 初始化统一日志，并将 Qt 消息重定向到 spdlog
     logging::LoggerManager::instance().init();
     qInstallMessageHandler(logging::LoggerManager::qtMessageHandler);
-
-#if CROSSCONTROL_HAS_DROGON
-    // 创建或获取名为 "Drogon" 的 spdlog logger（由 LoggerManager 管理的 shared_ptr）
-    auto drogon_logger_sp = logging::LoggerManager::instance().getLogger("Drogon");
-    if (drogon_logger_sp) {
-        // 让 trantor 直接使用 spdlog logger（trantor 提供的集成点）
-        trantor::Logger::enableSpdLog(-1, drogon_logger_sp);
-    } else {
-        // 作为后备：如果没有获取到 shared_ptr（极少见），退回到 setOutputFunction
-        trantor::Logger::setOutputFunction(
-            [](const char* msg, const uint64_t len) {
-                std::string s(msg, static_cast<size_t>(len));
-                spdlog::get("Drogon")->info(s);
-            },
-            []() {},
-            -1);
-    }
-    // 将 drogon 的默认日志级别设置为 info（可根据需要调整）
-    trantor::Logger::setLogLevel(trantor::Logger::kInfo);
-#endif
 
     // 初始化全局配置管理（使用组织/应用名统一存储）
     config::ConfigManager::instance().init("CrossControl", "CrossControl");

@@ -133,13 +133,50 @@ IConnectPtr createByEndpoint(const QString& endpoint) {
     return std::make_unique<TcpConnect>(ep, true);
 }
 
-#ifdef HAS_DROGON
-std::shared_ptr<drogon::HttpClient> createHttpClient(const QString& baseUrl) {
-    QString url = baseUrl.trimmed();
-    std::string uri = url.toStdString();
-    return std::shared_ptr<drogon::HttpClient>(drogon::HttpClient::newHttpClient(uri));
+std::shared_ptr<QNetworkAccessManager> createNetworkAccessManager() {
+    return std::make_shared<QNetworkAccessManager>();
 }
 
-#endif
+std::shared_ptr<QNetworkAccessManager> createNetworkAccessManagerFromEndpoint(
+    const QString& endpoint) {
+    QString ep = endpoint.trimmed();
+    auto manager = createNetworkAccessManager();
+
+    if (ep.isEmpty()) return manager;
+
+    // 尝试将 endpoint 解析为 URL（支持 scheme://host:port/path）
+    QUrl url(ep);
+    QString scheme = url.scheme().toLower();
+    QString host;
+    quint16 port = 0;
+
+    if (!url.host().isEmpty()) {
+        host = url.host();
+        port = static_cast<quint16>(url.port());
+    } else {
+        // 可能是 "host:port" 形式
+        QRegularExpression re(R"(^\s*([^:\s]+)[:](\d+)\s*$)");
+        QRegularExpressionMatch m = re.match(ep);
+        if (m.hasMatch()) {
+            host = m.captured(1);
+            port = static_cast<quint16>(m.captured(2).toUInt());
+        }
+    }
+
+    if (host.isEmpty()) return manager;
+
+    // 根据 scheme 选择代理类型
+    QNetworkProxy::ProxyType ptype = QNetworkProxy::HttpProxy;
+    if (scheme.startsWith("socks"))
+        ptype = QNetworkProxy::Socks5Proxy;
+    else if (scheme.startsWith("http-proxy") || scheme.startsWith("proxy"))
+        ptype = QNetworkProxy::HttpProxy;
+    else if (scheme.isEmpty())
+        ptype = QNetworkProxy::HttpProxy;  // 默认把 host:port 解释为 HTTP 代理
+
+    QNetworkProxy proxy(ptype, host, port);
+    manager->setProxy(proxy);
+    return manager;
+}
 
 }  // namespace connect_factory
