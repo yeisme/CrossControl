@@ -16,9 +16,14 @@
 #include "facerecognitionwidget.h"
 #include "logging.h"
 #include "modules/Config/config.h"
+#include "widgets/devicemanagementwidget.h"
 #include "spdlog/spdlog.h"
 
-CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
+// Default constructor delegates to gateway-taking constructor with nullptr
+CrossControlWidget::CrossControlWidget(QWidget* parent) : CrossControlWidget(nullptr, parent) {}
+
+CrossControlWidget::CrossControlWidget(DeviceGateway::DeviceGateway* gateway, QWidget* parent)
+    : QWidget(parent), deviceGateway(gateway) {
     LogM::instance().init();  // 初始化日志系统
     logging::useAsDefault("CrossControl");
     spdlog::debug("CrossControlWidget constructed");
@@ -89,15 +94,19 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     btnFaceRec = makeBtn(QCoreApplication::translate("CrossControlWidget", "Face Recognition"),
                          ":/icons/icons/app.svg",
                          "btnFaceRec");
+    btnDeviceMgmt = makeBtn(QCoreApplication::translate("CrossControlWidget", "Device Management"),
+                            ":/icons/icons/device.svg",
+                            "btnDeviceMgmt");
 
-    for (auto* b : {btnDashboard,
+    for (QPushButton* b : {btnDashboard,
                     btnMonitor,
                     btnUnlock,
                     btnVisitRecord,
                     btnMessage,
                     btnSetting,
                     btnLogs,
-                    btnFaceRec}) {
+                    btnFaceRec,
+                    btnDeviceMgmt}) {
         sideLayout->addWidget(b);
     }
 
@@ -124,6 +133,8 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     unlockWidget = new UnlockWidget();
     logWidget = new LogWidget();
     faceRecWidget = new FaceRecognitionWidget();
+    // Device management page
+    deviceMgmtWidget = new DeviceManagementWidget(deviceGateway);
 
     contentStack->addWidget(mainWidget);
     contentStack->addWidget(monitorWidget);
@@ -133,6 +144,7 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     contentStack->addWidget(unlockWidget);
     contentStack->addWidget(logWidget);
     contentStack->addWidget(faceRecWidget);
+    contentStack->addWidget(deviceMgmtWidget);
 
     // 组装主体
     appLayout->addWidget(sideBar);
@@ -197,6 +209,10 @@ CrossControlWidget::CrossControlWidget(QWidget* parent) : QWidget(parent) {
     connect(btnFaceRec, &QPushButton::clicked, this, [this, setActive]() {
         setActive(btnFaceRec);
         contentStack->setCurrentWidget(faceRecWidget);
+    });
+    connect(btnDeviceMgmt, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnDeviceMgmt);
+        contentStack->setCurrentWidget(deviceMgmtWidget);
     });
     connect(btnLogout, &QPushButton::clicked, this, &CrossControlWidget::onLogout);
 

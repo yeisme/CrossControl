@@ -1,6 +1,7 @@
 ﻿# Connect 模块的源文件
 set(CONNECT_SOURCES
     src/modules/Connect/tcp_connect.cpp
+  src/modules/Connect/iface_connect.cpp
     src/modules/Connect/udp_connect.cpp
     src/modules/Connect/mqtt_connect.cpp
     src/modules/Connect/serial_connect.cpp
@@ -38,30 +39,32 @@ if(NOT TARGET Qt6::Network OR NOT TARGET Qt6::Widgets)
   )
 endif()
 
-target_link_libraries(Connect PRIVATE Qt6::Network Qt6::Widgets Qt6::SerialPort
-                                      logging config)
+target_link_libraries(Connect PUBLIC Qt6::Network Qt6::Widgets Qt6::SerialPort
+                                     logging config)
 
-# Provide drogon-based HTTP client helpers
-# Drogon discovery is centralized in cmake/Dependencies.cmake; if found enable helpers
+# Provide drogon-based HTTP client helpers Drogon discovery is centralized in
+# cmake/Dependencies.cmake; if found enable helpers
 if(Drogon_FOUND)
-  target_link_libraries(Connect PRIVATE Drogon::Drogon)
-  target_compile_definitions(Connect PRIVATE HAS_DROGON=1)
+  target_link_libraries(Connect PUBLIC Drogon::Drogon)
+  target_compile_definitions(Connect PUBLIC HAS_DROGON=1)
 else()
-  message(STATUS "Drogon not found; Connect will not expose drogon HTTP client helpers")
+  message(
+    STATUS
+      "Drogon not found; Connect will not expose drogon HTTP client helpers")
 endif()
 
 if(BUILD_MQTT_CLIENT)
   if(TARGET PahoMqttCpp::paho-mqttpp3)
-    target_link_libraries(Connect PRIVATE PahoMqttCpp::paho-mqttpp3)
+    target_link_libraries(Connect PUBLIC PahoMqttCpp::paho-mqttpp3)
   elseif(TARGET PahoMqttCpp)
-    target_link_libraries(Connect PRIVATE PahoMqttCpp)
+    target_link_libraries(Connect PUBLIC PahoMqttCpp)
   else()
     message(
       STATUS
         "BUILD_MQTT_CLIENT is ON but PahoMqttCpp target not found; mqtt support in Connect will be limited."
     )
   endif()
-  target_compile_definitions(Connect PRIVATE BUILD_MQTT_CLIENT=1)
+  target_compile_definitions(Connect PUBLIC BUILD_MQTT_CLIENT=1)
 endif()
 
 # 仅当 CrossControl 目标存在时才将 Connect 链接到它
@@ -69,5 +72,6 @@ if(TARGET CrossControl)
   target_link_libraries(CrossControl PUBLIC Connect)
 endif()
 
-# 使用 helper 安装目标并分配到 Core 组件（Connect 功能作为 Core 的一部分）
-cc_install_target(Connect Core)
+# 使用 helper 安装目标并分配到 Core 组件（Connect 功能作为 Core 的一部分） Install Connect as its own
+# CPACK component when MQTT client support is enabled
+cc_install_target(Connect Connect)

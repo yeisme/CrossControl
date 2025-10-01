@@ -1,8 +1,11 @@
 ﻿#include "logging.h"
 
+#include <QCoreApplication>
+#include <QDir>
 #include <QTextEdit>
 #include <algorithm>
 
+#include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/spdlog.h"
 // We use registry internals to enumerate all registered loggers so that
@@ -27,8 +30,93 @@ void LoggerManager::ensureDefaultLogger_() {
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%n] %v");
 }
 
+// Helper: ensure logs directory exists and create rotating file sink
+void LoggerManager::enableFileLogging(bool enabled) {
+    if (enabled == file_enabled_) return;
+    file_enabled_ = enabled;
+    if (file_enabled_) {
+        // Determine logs directory. If log_dir_ is relative, resolve it
+        // relative to applicationDirPath (if available) or cwd.
+        QString dirPath;
+        if (!log_dir_.empty()) {
+            QString qdir = QString::fromStdString(log_dir_);
+            QDir qd(qdir);
+            if (qd.isAbsolute()) {
+                dirPath = qdir;
+            } else {
+                const QString appDir = QCoreApplication::applicationDirPath();
+                if (!appDir.isEmpty())
+                    dirPath = appDir + "/" + qdir;
+                else
+                    dirPath = QDir::currentPath() + "/" + qdir;
+            }
+        } else {
+            const QString appDir = QCoreApplication::applicationDirPath();
+            if (!appDir.isEmpty())
+                dirPath = appDir + "/logs";
+            else
+                dirPath = QDir::currentPath() + "/logs";
+        }
+
+        // create logs dir if needed
+        QDir d(dirPath);
+        if (!d.exists()) d.mkpath(".");
+
+        const std::string logfile = (dirPath + "/CrossControl.log").toStdString();
+        try {
+            file_sink_ = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(
+                logfile, 10 * 1024 * 1024, 7);
+            // Apply the current desired level; if UI logging is disabled,
+            // keep file sink off until enabled.
+            file_sink_->set_level(enabled_ ? current_level_ : spdlog::level::off);
+            file_sink_->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%n] %v");
+        } catch (const std::exception& ex) {
+            spdlog::error("Failed to create file sink: {}", ex.what());
+            file_sink_.reset();
+        }
+        if (file_sink_) {
+            // attach to default logger and tracked loggers
+            if (spdlog::default_logger()) spdlog::default_logger()->sinks().push_back(file_sink_);
+            for (auto& w : loggers_)
+                if (auto lg = w.lock()) {
+                    auto& s = lg->sinks();
+                    if (std::find(s.begin(), s.end(), file_sink_) == s.end())
+                        s.push_back(file_sink_);
+                }
+        }
+    } else {
+        if (file_sink_) {
+            auto removeSinkFromLogger = [&](std::shared_ptr<spdlog::logger> lg) {
+                if (!lg) return;
+                auto& s = lg->sinks();
+                s.erase(std::remove(s.begin(), s.end(), file_sink_), s.end());
+            };
+            if (spdlog::default_logger()) removeSinkFromLogger(spdlog::default_logger());
+            for (auto& w : loggers_)
+                if (auto lg = w.lock()) removeSinkFromLogger(lg);
+            file_sink_.reset();
+        }
+    }
+}
+
+void LoggerManager::setLogDirectory(const std::string& dir) {
+    log_dir_ = dir;
+    if (file_enabled_) {
+        // re-create file sink with new directory
+        enableFileLogging(false);
+        enableFileLogging(true);
+    }
+}
+
+void LoggerManager::setFileLogLevel(spdlog::level::level_enum level) {
+    if (file_sink_) file_sink_->set_level(level);
+}
+
 void LoggerManager::init() {
     ensureDefaultLogger_();
+    // Enable file logging by default. This will create logs/ under the
+    // application directory (or cwd) unless the user calls setLogDirectory().
+    enableFileLogging(true);
 }
 
 void LoggerManager::installQtSinkToAll_() {
@@ -109,11 +197,14 @@ void LoggerManager::detachQtSink(QTextEdit*) {
 
 void LoggerManager::setEnabled(bool enabled) {
     enabled_ = enabled;
-    if (qt_sink_) { qt_sink_->set_level(enabled ? spdlog::level::trace : spdlog::level::off); }
+    if (qt_sink_) { qt_sink_->set_level(enabled ? current_level_ : spdlog::level::off); }
+    if (file_sink_) { file_sink_->set_level(enabled ? current_level_ : spdlog::level::off); }
 }
 
 void LoggerManager::setLevel(spdlog::level::level_enum level) {
+    current_level_ = level;
     if (qt_sink_) qt_sink_->set_level(level);
+    if (file_sink_) file_sink_->set_level(level);
 }
 
 void LoggerManager::setPattern(const std::string& pattern) {

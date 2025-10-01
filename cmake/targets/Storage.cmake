@@ -21,7 +21,7 @@ find_package(
   Qt6
   COMPONENTS Sql
   REQUIRED)
-target_link_libraries(Storage PRIVATE Qt6::Sql logging config)
+target_link_libraries(Storage PUBLIC Qt6::Sql logging config)
 message(STATUS "Linking Storage module with Qt Sql and logging")
 
 target_include_directories(Storage PUBLIC include/modules/Storage)

@@ -18,6 +18,7 @@
 #include "crosscontrolwidget.h"
 #include "logging.h"
 #include "modules/Config/config.h"
+#include "modules/DeviceGateway/device_gateway.h"
 #include "spdlog/spdlog.h"
 
 // 如果系统中存在 trantor/drogon 头，则把 drogon/trantor 的日志转发到项目的 spdlog 封装。
@@ -128,7 +129,9 @@ int main(int argc, char* argv[]) {
     logging::LoggerManager::instance().attachQtSink(tmpLogEdit, MAX_LOG_LINES);
     spdlog::info("Application started");
 
-    CrossControlWidget mainWindow;
+    // Create DeviceGateway early and pass to main window so UI can control REST/registry
+    auto deviceGateway = std::make_unique<DeviceGateway::DeviceGateway>();
+    CrossControlWidget mainWindow(deviceGateway.get());
     mainWindow.setWindowTitle("CrossControl");
     // 应用程序图标
     QIcon appIcon(":/icons/icons/app.svg");
@@ -164,6 +167,7 @@ int main(int argc, char* argv[]) {
     const int rc = a.exec();
 
     spdlog::info("Application exiting");
+    // deviceGateway will be destroyed here as unique_ptr goes out of scope
     spdlog::shutdown();
     return rc;
 }

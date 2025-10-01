@@ -12,8 +12,8 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QMessageBox>
-#include <QSqlError>
-#include <QSqlQuery>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 #include <QSqlRecord>
 #include <QVBoxLayout>
 #include <QVariant>

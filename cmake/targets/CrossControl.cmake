@@ -27,6 +27,11 @@ set(PROJECT_SOURCES
     src/widgets/logwidget.ui
     src/widgets/facerecognitionwidget.cpp
     include/widgets/facerecognitionwidget.h
+    src/widgets/importexportcontrol.cpp
+    include/widgets/importexportcontrol.h
+    src/widgets/devicemanagementwidget.cpp
+    src/widgets/devicemanagementwidget.ui
+    include/widgets/devicemanagementwidget.h
     src/widgets/unlockwidget.cpp
     include/widgets/unlockwidget.h
     src/widgets/unlockwidget.ui
@@ -65,6 +70,9 @@ if(TARGET Qt6::Network)
 endif()
 if(TARGET Qt6::Sql)
   list(APPEND _core_qt_libs Qt6::Sql)
+endif()
+if(TARGET Qt6::SerialPort)
+  list(APPEND _core_qt_libs Qt6::SerialPort)
 endif()
 
 target_link_libraries(CrossControl PRIVATE ${_core_qt_libs} logging config)
@@ -111,12 +119,16 @@ cc_install_target(CrossControl Core)
 # they are included in CPack packages (NSIS/7Z). QM_FILES is produced by
 # qt_create_translation and refers to generated .qm files in the build tree.
 if(QM_FILES)
-  install(FILES ${QM_FILES} DESTINATION "${CMAKE_INSTALL_BINDIR}/i18n" COMPONENT Core)
+  install(
+    FILES ${QM_FILES}
+    DESTINATION "${CMAKE_INSTALL_BINDIR}/i18n"
+    COMPONENT Core)
 endif()
 
-# Optionally deploy Qt runtime when ENABLE_DEPLOY_QT is ON. Support both
-# Windows (windeployqt) and Linux (linuxdeployqt) for developer workflows.
+# Optionally deploy Qt runtime when ENABLE_DEPLOY_QT is ON. Support both Windows
+# (windeployqt) and Linux (linuxdeployqt) for developer workflows.
 if(ENABLE_DEPLOY_QT AND (WIN32 OR CMAKE_SYSTEM_NAME STREQUAL "Linux"))
-  # Add automatic deploy step to copy Qt runtime and plugins into the runtime dir
+  # Add automatic deploy step to copy Qt runtime and plugins into the runtime
+  # dir
   cc_deploy_qt_runtime(CrossControl)
 endif()

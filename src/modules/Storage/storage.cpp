@@ -1,6 +1,6 @@
 ﻿#include "storage.h"
 
-#include <QSqlDatabase>
+#include <QtSql/QSqlDatabase>
 
 #include "dbmanager.h"
 // use config to store requested DB path

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <QSqlDatabase>
+#include <QtSql/QSqlDatabase>
 #include <QtGlobal>
 
 #ifdef Storage_EXPORTS

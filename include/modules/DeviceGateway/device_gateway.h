@@ -15,6 +15,11 @@ class DeviceGateway {
     void start();
     void stop();
 
+    // Accessors for runtime components. Return raw pointers; ownership remains with
+    // DeviceGateway instance.
+    DeviceRegistry* registry() const { return registry_.get(); }
+    RestServer* restServer() const { return restServer_.get(); }
+
    private:
     // Local in-memory registry for devices (defined in device_registry.h)
     std::unique_ptr<DeviceRegistry> registry_;

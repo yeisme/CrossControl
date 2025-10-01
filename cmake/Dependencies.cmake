@@ -13,6 +13,7 @@ find_package(Qt6 CONFIG REQUIRED COMPONENTS
   Network
   Sql
   Multimedia
+  SerialPort
   LinguistTools
 )
 

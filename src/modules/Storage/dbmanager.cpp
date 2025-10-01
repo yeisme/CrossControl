@@ -2,8 +2,8 @@
 
 #include <QDir>
 #include <QFileInfo>
-#include <QSqlError>
-#include <QSqlQuery>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 #include <QStandardPaths>
 #include <QUuid>
 

@@ -6,6 +6,10 @@
 class QStackedWidget;
 class QPushButton;
 
+namespace DeviceGateway {
+class DeviceGateway;
+}
+
 #include "loginwidget.h"
 #include "logwidget.h"
 #include "mainwidget.h"
@@ -21,6 +25,7 @@ class CrossControlWidget : public QWidget {
 
    public:
     explicit CrossControlWidget(QWidget* parent = nullptr);
+    explicit CrossControlWidget(DeviceGateway::DeviceGateway* gateway, QWidget* parent = nullptr);
     ~CrossControlWidget() override;
 
    private:
@@ -41,6 +46,7 @@ class CrossControlWidget : public QWidget {
     QPushButton* btnSetting{nullptr};
     QPushButton* btnLogs{nullptr};
     QPushButton* btnFaceRec{nullptr};
+    QPushButton* btnDeviceMgmt{nullptr};
     QPushButton* btnLogout{nullptr};
 
     // 各页面
@@ -53,6 +59,10 @@ class CrossControlWidget : public QWidget {
     UnlockWidget* unlockWidget{nullptr};            // 解锁
     LogWidget* logWidget{nullptr};                  // 日志
     FaceRecognitionWidget* faceRecWidget{nullptr};  // 人脸识别页面
+    class DeviceManagementWidget* deviceMgmtWidget{nullptr};
+
+    // Optional pointer to runtime DeviceGateway (not owned)
+    DeviceGateway::DeviceGateway* deviceGateway{nullptr};
 
    public:
     // 供外部（例如 main.cpp）访问日志页面以完成全局绑定

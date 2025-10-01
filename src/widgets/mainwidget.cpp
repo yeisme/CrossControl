@@ -6,8 +6,8 @@
 #include <QDateTime>
 #include <QFont>
 #include <QLabel>
-#include <QSqlDatabase>
-#include <QSqlQuery>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
 #include <QSqlRecord>
 #include <QStringList>
 #include <QTimer>

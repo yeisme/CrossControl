@@ -2,7 +2,7 @@
 
 #include <QDateTime>
 #include <QSharedPointer>
-#include <QSqlDatabase>
+#include <QtSql/QSqlDatabase>
 #include <QString>
 #include <QTimeZone>
 #include <QVariant>

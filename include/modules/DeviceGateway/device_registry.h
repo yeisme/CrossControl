@@ -2,6 +2,7 @@
 
 #include <QDateTime>
 #include <QJsonObject>
+#include <QMap>
 #include <QList>
 #include <QReadWriteLock>
 #include <QString>
@@ -12,9 +13,13 @@ namespace DeviceGateway {
 struct DeviceInfo {
     QString deviceId;
     QString hwInfo;
+    // canonical connection endpoint (eg. "tcp://host:port", "udp://host:port", "COM3:115200")
+    QString endpoint;
     QString firmwareVersion;
     QString owner;
     QString group;
+    // path to an icon file associated with the device (stored in app data)
+    QString iconPath;
     QDateTime lastSeen;
 
     QJsonObject toJson() const;
@@ -31,7 +36,8 @@ class DeviceRegistry {
     DeviceRegistry();
 
     // 添加或更新设备信息（基于 deviceId）
-    void upsert(const DeviceInfo& info);
+    // persistToStorage 默认为 true，将同时写入 Storage 层的 devices 表以保证持久化
+    void upsert(const DeviceInfo& info, bool persistToStorage = true);
 
     // 返回 deviceId 对应的信息（若不存在则返回 std::nullopt）
     std::optional<DeviceInfo> get(const QString& deviceId) const;
@@ -51,6 +57,22 @@ class DeviceRegistry {
     QString exportJsonNd() const;
     // 从 jsonnd 文本导入，返回成功导入的条目数
     int importJsonNd(const QString& jsonndText);
+
+    // 将内存注册表的所有条目导出到一个独立的数据库文件（SQLite），
+    // 返回写入的条目数，错误时返回 -1
+    int exportToDatabaseFile(const QString& filePath) const;
+
+    // 从独立数据库文件导入设备表到当前注册表，返回导入的条目数，错误时返回 -1
+    // 如果 overwrite 为 true，则会覆盖已有条目
+    int importFromDatabaseFile(const QString& filePath, bool overwrite = true);
+
+    // 将内存注册表的所有条目导出到主 storage 数据库（将在该 DB 中创建/使用 devices 表）
+    // 返回写入的条目数，错误时返回 -1
+    int exportToStorage() const;
+
+    // 从主 storage 数据库的 devices 表导入到当前注册表，返回导入的条目数，错误时返回 -1
+    // 如果 overwrite 为 true，则会覆盖已有条目
+    int importFromStorage(bool overwrite = true);
 
    private:
     mutable QReadWriteLock m_lock;

@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "spdlog/sinks/qt_sinks.h"
+#include "spdlog/sinks/rotating_file_sink.h"
 #include "spdlog/spdlog.h"
 
 class QTextEdit;
@@ -42,6 +43,10 @@ class LOGGING_EXPORT LoggerManager {
     void setLevel(spdlog::level::level_enum level);
     void setPattern(const std::string& pattern);
 
+    void enableFileLogging(bool enabled = true);
+    void setLogDirectory(const std::string& dir);
+    void setFileLogLevel(spdlog::level::level_enum level);
+
     // 获取或创建具名 logger（与默认 logger 共享同一组 sinks），
     // 便于在不同模块按名称区分来源，例如：getLogger("AudioVideo")。
     std::shared_ptr<spdlog::logger> getLogger(const std::string& name);
@@ -61,6 +66,14 @@ class LOGGING_EXPORT LoggerManager {
     std::shared_ptr<spdlog::sinks::qt_color_sink_mt> qt_sink_;
     bool enabled_{true};
     std::vector<std::weak_ptr<spdlog::logger>> loggers_;  // 已创建的具名 loggers
+    // file logging
+    std::shared_ptr<spdlog::sinks::rotating_file_sink_mt> file_sink_;
+    bool file_enabled_{false};
+    std::string log_dir_{"logs"};
+    // current desired log level as set by the UI (affects both Qt sink and
+    // file sink when enabled). Stored so that re-enabling sinks restores
+    // the previously selected level.
+    spdlog::level::level_enum current_level_{spdlog::level::trace};
 };
 
 // 便捷别名与函数：返回具名 logger 的引用，便于使用点号语法

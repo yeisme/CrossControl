@@ -13,6 +13,7 @@
 #include <functional>
 #include <memory>
 #include <thread>
+#include <mutex>
 
 #include "modules/DeviceGateway/device_registry.h"
 #include "spdlog/spdlog.h"
@@ -53,8 +54,10 @@ static drogon::HttpResponsePtr makeTextResponse(
 //  RestServer::start）。
 class DGController : public drogon::HttpController<DGController> {
    public:
-    static DeviceRegistry* reg_;
-    static void setRegistry(DeviceRegistry* r) { reg_ = r; }
+    // Make the registry pointer atomic to avoid data-race when the main thread
+    // clears the pointer while drogon worker threads may read it.
+    static std::atomic<DeviceRegistry*> reg_;
+    static void setRegistry(DeviceRegistry* r) { reg_.store(r, std::memory_order_release); }
 
     // 路由列表：通过 drogon 的宏将 URI 与成员函数绑定
     // 例如：POST /register -> postRegister
@@ -88,12 +91,13 @@ class DGController : public drogon::HttpController<DGController> {
     // drogon 响应体
     void getDevices(const drogon::HttpRequestPtr& /*req*/,
                     std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
-        if (!reg_) {
+        DeviceRegistry* r = reg_.load(std::memory_order_acquire);
+        if (!r) {
             cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
             return;
         }
         // 从 registry 获取当前设备列表（返回 QList<DeviceInfo>）
-        const QList<DeviceInfo> list = reg_->list();
+        const QList<DeviceInfo> list = r->list();
         QJsonArray arr;
         for (const auto& d : list) arr.append(d.toJson());
         const QJsonDocument doc(arr);
@@ -105,20 +109,22 @@ class DGController : public drogon::HttpController<DGController> {
     }
     void getDevicesCsv(const drogon::HttpRequestPtr& /*req*/,
                        std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
-        if (!reg_) {
+        DeviceRegistry* r = reg_.load(std::memory_order_acquire);
+        if (!r) {
             cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
             return;
         }
-        const QString csv = reg_->exportCsv();
+        const QString csv = r->exportCsv();
         cb(makeTextResponse(csv, drogon::k200OK, "text/csv; charset=utf-8"));
     }
     void getDevicesNd(const drogon::HttpRequestPtr& /*req*/,
                       std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
-        if (!reg_) {
+        DeviceRegistry* r = reg_.load(std::memory_order_acquire);
+        if (!r) {
             cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
             return;
         }
-        const QString nd = reg_->exportJsonNd();
+        const QString nd = r->exportJsonNd();
         cb(makeTextResponse(nd, drogon::k200OK, "application/x-ndjson; charset=utf-8"));
     }
     // POST /devices/import/csv: 接收 CSV 文本并导入到 DeviceRegistry
@@ -126,14 +132,15 @@ class DGController : public drogon::HttpController<DGController> {
     // QString 以便使用 Qt 的 CSV 解析逻辑。完成导入后返回导入计数（JSON 格式）。
     void postImportCsv(const drogon::HttpRequestPtr& req,
                        std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
-        if (!reg_) {
+        DeviceRegistry* r = reg_.load(std::memory_order_acquire);
+        if (!r) {
             cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
             return;
         }
         const auto sv = req->getBody();
         // 注意：sv.data() 可能不是以 '\0' 结尾，使用 fromUtf8(data, size) 来构造 QString
         const QString csv = QString::fromUtf8(sv.data(), static_cast<int>(sv.size()));
-        const int imported = reg_->importCsv(csv);
+        const int imported = r->importCsv(csv);
         QJsonObject outObj;
         outObj["imported"] = imported;
         const QJsonDocument doc(outObj);
@@ -145,13 +152,14 @@ class DGController : public drogon::HttpController<DGController> {
     }
     void postImportNd(const drogon::HttpRequestPtr& req,
                       std::function<void(const drogon::HttpResponsePtr&)>&& cb) {
-        if (!reg_) {
+        DeviceRegistry* r = reg_.load(std::memory_order_acquire);
+        if (!r) {
             cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
             return;
         }
         const auto sv = req->getBody();
         const QString nd = QString::fromUtf8(sv.data(), static_cast<int>(sv.size()));
-        const int imported = reg_->importJsonNd(nd);
+        const int imported = r->importJsonNd(nd);
         QJsonObject outObj;
         outObj["imported"] = imported;
         const QJsonDocument doc(outObj);
@@ -166,12 +174,13 @@ class DGController : public drogon::HttpController<DGController> {
     void getDeviceById(const drogon::HttpRequestPtr& /*req*/,
                        std::function<void(const drogon::HttpResponsePtr&)>&& cb,
                        std::string id) {
-        if (!reg_) {
+        DeviceRegistry* r = reg_.load(std::memory_order_acquire);
+        if (!r) {
             cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
             return;
         }
         const QString qid = QString::fromStdString(id);
-        auto opt = reg_->get(qid);
+        auto opt = r->get(qid);
         if (!opt) {
             cb(makeTextResponse("Not Found\n", drogon::k404NotFound));
             return;
@@ -187,12 +196,13 @@ class DGController : public drogon::HttpController<DGController> {
     void deleteDeviceById(const drogon::HttpRequestPtr& /*req*/,
                           std::function<void(const drogon::HttpResponsePtr&)>&& cb,
                           std::string id) {
-        if (!reg_) {
+        DeviceRegistry* r = reg_.load(std::memory_order_acquire);
+        if (!r) {
             cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
             return;
         }
         const QString qid = QString::fromStdString(id);
-        const bool ok = reg_->remove(qid);
+        const bool ok = r->remove(qid);
         if (ok)
             cb(makeTextResponse("OK\n", drogon::k200OK));
         else
@@ -233,7 +243,12 @@ class DGController : public drogon::HttpController<DGController> {
         }
         try {
             // 写入 registry（可能触发磁盘/数据库持久化，视 DeviceRegistry 实现而定）
-            reg_->upsert(info);
+            DeviceRegistry* r = reg_.load(std::memory_order_acquire);
+            if (!r) {
+                cb(makeTextResponse("Registry not ready\n", drogon::k503ServiceUnavailable));
+                return;
+            }
+            r->upsert(info);
             cb(makeTextResponse("OK\n"));
         } catch (const std::exception& ex) {
             // 捕获异常并记录日志，避免抛出到 drogon 线程导致进程不稳定
@@ -243,7 +258,7 @@ class DGController : public drogon::HttpController<DGController> {
     }
 };
 
-DeviceRegistry* DGController::reg_ = nullptr;
+std::atomic<DeviceRegistry*> DGController::reg_{nullptr};
 
 // Impl: RestServer 内部实现
 struct RestServer::Impl {
@@ -251,6 +266,12 @@ struct RestServer::Impl {
     unsigned short port;               // 监听端口
     std::thread worker;                // 工作线程
     std::atomic<bool> running{false};  // 是否正在运行
+    std::mutex mutex;                  // protect start/stop transitions
+    // optional callbacks
+    std::function<void()> onStarted;
+    std::function<void()> onStopped;
+    std::function<void(RestServer::State)> onStateChanged;
+    std::atomic<RestServer::State> state{RestServer::State::Stopped};
 
     Impl(DeviceRegistry& r, unsigned short p) : registry(r), port(p) {}
 };
@@ -263,18 +284,75 @@ RestServer::~RestServer() {
 }
 
 void RestServer::start() {
+    std::lock_guard<std::mutex> lock(impl_->mutex);
     if (impl_->running.load()) return;
+    // transition to Starting
+    impl_->state.store(State::Starting);
+    if (impl_->onStateChanged) impl_->onStateChanged(State::Starting);
     impl_->running.store(true);
     impl_->worker = std::thread([this]() {
         try {
-            spdlog::info("RestServer (drogon) starting on port {}", impl_->port);
-            DGController::setRegistry(&impl_->registry);
-            drogon::app().setLogLevel(trantor::Logger::kInfo);
-            drogon::app()
-                .addListener("0.0.0.0", static_cast<uint16_t>(impl_->port))
-                .setThreadNum(1)
-                .run();
+            // std::thread::id is not directly formattable by fmt/spdlog on all
+            // platforms. Convert to a stable numeric value via std::hash for
+            // logging purposes.
+            const std::thread::id this_tid = std::this_thread::get_id();
+            const auto tid_hash = std::hash<std::thread::id>{}(this_tid);
+            spdlog::info("RestServer (drogon) starting on port {} (thread id={})", impl_->port,
+                         tid_hash);
+
+            try {
+                spdlog::info("RestServer: setting DGController registry pointer");
+                DGController::setRegistry(&impl_->registry);
+            } catch (const std::exception& ex) {
+                spdlog::error("RestServer: exception while setting registry: {}", ex.what());
+            } catch (...) {
+                spdlog::error("RestServer: unknown exception while setting registry");
+            }
+
+            try {
+                spdlog::info("RestServer: configuring drogon listener on port {}", impl_->port);
+                drogon::app().setLogLevel(trantor::Logger::kInfo);
+                drogon::app().addListener("0.0.0.0", static_cast<uint16_t>(impl_->port)).setThreadNum(1);
+                spdlog::info("RestServer: drogon listener configured");
+            } catch (const std::exception& ex) {
+                spdlog::error("RestServer: exception while configuring drogon: {}", ex.what());
+            } catch (...) {
+                spdlog::error("RestServer: unknown exception while configuring drogon");
+            }
+
+            // notify started (worker thread) after listener configured but
+            // before run() to indicate we're about to enter the event loop.
+            try {
+                impl_->state.store(State::Running);
+                if (impl_->onStateChanged) impl_->onStateChanged(State::Running);
+                if (impl_->onStarted) impl_->onStarted();
+            } catch (const std::exception& ex) {
+                spdlog::error("RestServer: onStarted callback threw exception: {}", ex.what());
+            } catch (...) {
+                spdlog::error("RestServer: onStarted callback threw unknown exception");
+            }
+
+            try {
+                spdlog::info("RestServer: entering drogon event loop");
+                drogon::app().run();
+            } catch (const std::exception& ex) {
+                spdlog::error("RestServer: exception during drogon::run(): {}", ex.what());
+            } catch (...) {
+                spdlog::error("RestServer: unknown exception during drogon::run()");
+            }
+
             spdlog::info("RestServer (drogon) stopped");
+            // transition to Stopped (worker thread)
+            impl_->state.store(State::Stopped);
+            if (impl_->onStateChanged) impl_->onStateChanged(State::Stopped);
+            // notify stopped (worker thread) after exit from run()
+            try {
+                if (impl_->onStopped) impl_->onStopped();
+            } catch (const std::exception& ex) {
+                spdlog::error("RestServer: onStopped callback threw exception: {}", ex.what());
+            } catch (...) {
+                spdlog::error("RestServer: onStopped callback threw unknown exception");
+            }
         } catch (const std::exception& ex) {
             spdlog::error("RestServer (drogon) exception: {}", ex.what());
         }
@@ -283,13 +361,31 @@ void RestServer::start() {
 }
 
 void RestServer::stop() {
+    std::lock_guard<std::mutex> lock(impl_->mutex);
     if (!impl_->running.load()) return;
+    // transition to Stopping
+    impl_->state.store(State::Stopping);
+    if (impl_->onStateChanged) impl_->onStateChanged(State::Stopping);
     spdlog::info("RestServer (drogon) stop requested");
+    // Clear the global registry pointer first so that any incoming handler
+    // invoked concurrently will safely see a null registry and return a 503
+    // instead of dereferencing a potentially destroyed object.
+    DGController::setRegistry(nullptr);
     drogon::app().quit();                                // 停止 drogon 事件循环
     if (impl_->worker.joinable()) impl_->worker.join();  // 等待线程结束
     impl_->running.store(false);
     spdlog::info("RestServer (drogon) stopped");
+    // invoke stopped callback (in caller thread)
+    if (impl_->onStopped) impl_->onStopped();
+    // ensure state is Stopped and notify caller thread as well
+    impl_->state.store(State::Stopped);
+    if (impl_->onStateChanged) impl_->onStateChanged(State::Stopped);
 }
+
+void RestServer::setOnStateChanged(std::function<void(State)> cb) { impl_->onStateChanged = std::move(cb); }
+
+void RestServer::setOnStarted(std::function<void()> cb) { impl_->onStarted = std::move(cb); }
+void RestServer::setOnStopped(std::function<void()> cb) { impl_->onStopped = std::move(cb); }
 
 bool RestServer::running() const {
     return impl_->running.load();

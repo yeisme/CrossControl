@@ -147,8 +147,12 @@ function(cc_deploy_qt_runtime target)
       return()
     endif()
 
+    # Use generator expressions to select --debug for Debug configuration and
+    # --release for other configurations. This ensures a Debug build of the
+    # executable receives debug Qt DLLs (Qt6Multimediad.dll, etc.) and avoids
+    # copying only release DLLs which would leave a debug exe missing symbols.
     add_custom_command(TARGET ${target} POST_BUILD
-      COMMAND "${_windeployqt_exe}" --release --dir "$<TARGET_FILE_DIR:${target}>" "$<TARGET_FILE:${target}>"
+      COMMAND "${_windeployqt_exe}" $<$<CONFIG:Debug>:--debug> $<$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>:--release> --dir "$<TARGET_FILE_DIR:${target}>" "$<TARGET_FILE:${target}>"
       COMMENT "windeployqt: deploying Qt runtime for ${target}")
 
   elseif(APPLE)

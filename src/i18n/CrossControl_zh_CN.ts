@@ -4,49 +4,362 @@
 <context>
     <name>CrossControlWidget</name>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="68"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="73"/>
         <source>Dashboard</source>
         <translation>仪表盘</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="71"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="76"/>
         <source>Monitor</source>
         <translation>监控</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="74"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="79"/>
         <source>Remote Unlock</source>
         <translation>远程开锁</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="77"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="82"/>
         <source>Visit Records</source>
         <translation>来访记录</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="80"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="85"/>
         <source>Messages</source>
         <translation>留言</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="83"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="88"/>
         <source>System Settings</source>
         <translation>系统设置</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="86"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="91"/>
         <source>Logs</source>
         <translation>运行日志</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="89"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="94"/>
         <source>Face Recognition</source>
         <translation>人脸识别</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="106"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="97"/>
+        <source>Device Management</source>
+        <translation>设备管理</translation>
+    </message>
+    <message>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="115"/>
         <source>Logout</source>
         <translation>退出登录</translation>
+    </message>
+</context>
+<context>
+    <name>DeviceManagementWidget</name>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="43"/>
+        <source>Icon</source>
+        <translation>图标</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="44"/>
+        <source>Device ID</source>
+        <translation>设备 ID</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="45"/>
+        <source>HW Info</source>
+        <translation>硬件信息</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="46"/>
+        <source>Endpoint</source>
+        <translation>端点</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="47"/>
+        <source>Firmware</source>
+        <translation>固件版本</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="48"/>
+        <source>Owner</source>
+        <translation>拥有者</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="49"/>
+        <source>Group</source>
+        <translation>设备组</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="50"/>
+        <source>Last Seen</source>
+        <translation>最后在线</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="51"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="83"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="107"/>
+        <source>Test</source>
+        <translation>测试</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="85"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="149"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="190"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="200"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="210"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="220"/>
+        <source>Control</source>
+        <translation>控制</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="108"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="150"/>
+        <source>No endpoint configured for %1</source>
+        <translation>未为 %1 配置端点</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="129"/>
+        <source>Test Result</source>
+        <translation>测试结果</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="131"/>
+        <source>Device %1 reachable</source>
+        <translation>设备 %1 可达</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="134"/>
+        <source>Device %1 unreachable</source>
+        <translation>设备 %1 无法访问</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="158"/>
+        <source>Control Device</source>
+        <translation>控制设备</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="159"/>
+        <source>Command (text or JSON):</source>
+        <translation>命令（文本或 JSON）：</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="192"/>
+        <source>Failed to open connection to %1</source>
+        <translation>无法打开与 %1 的连接</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="202"/>
+        <source>Failed to send command to %1</source>
+        <translation>无法向 %1 发送命令</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="212"/>
+        <source>Sent %1 bytes to %2. Reply: %3</source>
+        <translation>已向 %2 发送 %1 字节。回复：%3</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="222"/>
+        <source>Sent %1 bytes to %2. No immediate reply</source>
+        <translation>已向 %2 发送 %1 字节。没有立即回复</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="273"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="337"/>
+        <source>Add Device</source>
+        <translation>添加设备</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="285"/>
+        <source>Choose Icon...</source>
+        <translation>选择图标...</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="298"/>
+        <source>Choose device icon</source>
+        <translation>选择设备图标</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="300"/>
+        <source>Images (*.png *.svg *.ico);;All Files (*)</source>
+        <translation>图像 (*.png *.svg *.ico);;所有文件 (*)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="316"/>
+        <source>Device ID:</source>
+        <translation>设备 ID:</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="318"/>
+        <source>HW Info:</source>
+        <translation>硬件信息:</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="319"/>
+        <source>Endpoint:</source>
+        <translation>端点:</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="321"/>
+        <source>Firmware:</source>
+        <translation>固件版本:</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="322"/>
+        <source>Owner:</source>
+        <translation>拥有者:</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="323"/>
+        <source>Group:</source>
+        <translation>设备组:</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="324"/>
+        <source>Icon:</source>
+        <translation>图标:</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="338"/>
+        <source>Device ID is required</source>
+        <translation>设备 ID 是必需的</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="434"/>
+        <source>Export devices DB</source>
+        <translation>导出设备数据库</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="436"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="500"/>
+        <source>SQLite DB (*.db);;All Files (*)</source>
+        <translation>SQLite 数据库 (*.db);;所有文件 (*)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="445"/>
+        <source>Exported %1 devices to %2</source>
+        <translation>已导出 %1 个设备到 %2</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="454"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="521"/>
+        <source>CSV Files (*.csv);;All Files (*)</source>
+        <translation>CSV 文件 (*.csv);;所有文件 (*)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="473"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="545"/>
+        <source>JSONND Files (*.ndjson *.jsonnd);;All Files (*)</source>
+        <translation>JSONND 文件 (*.ndjson *.jsonnd);;所有文件 (*)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="510"/>
+        <source>Imported %1 devices from %2</source>
+        <translation>已从 %2 导入 %1 个设备</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="572"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="609"/>
+        <source>Test All</source>
+        <translation>测试所有</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="610"/>
+        <source>%1/%2 devices reachable</source>
+        <translation>%1/%2 个设备可达</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="vanished">导出</translation>
+    </message>
+    <message>
+        <source>Exported to %1 (placeholder)</source>
+        <translation type="vanished">已导出到 %1 (占位符)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="498"/>
+        <source>Import devices DB</source>
+        <translation>导入设备数据库</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation type="vanished">导入</translation>
+    </message>
+    <message>
+        <source>Imported from %1 (placeholder)</source>
+        <translation type="vanished">已从 %1 导入 (占位符)</translation>
+    </message>
+    <message>
+        <source>REST</source>
+        <translation type="vanished">REST</translation>
+    </message>
+    <message>
+        <source>REST server start requested (placeholder)</source>
+        <translation type="vanished">请求启动 REST 服务器 (占位符)</translation>
+    </message>
+    <message>
+        <source>REST server stop requested (placeholder)</source>
+        <translation type="vanished">请求停止 REST 服务器 (占位符)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="21"/>
+        <source>Refresh</source>
+        <translation>刷新</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="33"/>
+        <source>Export DB</source>
+        <translation>导出数据库</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="38"/>
+        <source>Import DB</source>
+        <translation>导入数据库</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="43"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="452"/>
+        <source>Export CSV</source>
+        <translation>导出 CSV</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="48"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="519"/>
+        <source>Import CSV</source>
+        <translation>导入 CSV</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="53"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="471"/>
+        <source>Export JSONND</source>
+        <translation>导出 JSONND</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="58"/>
+        <location filename="../widgets/devicemanagementwidget.cpp" line="543"/>
+        <source>Import JSONND</source>
+        <translation>导入 JSONND</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="63"/>
+        <source>Add</source>
+        <translation>添加</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="68"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="83"/>
+        <source>Start REST</source>
+        <translation>启动远程控制</translation>
+    </message>
+    <message>
+        <location filename="../widgets/devicemanagementwidget.ui" line="88"/>
+        <source>Stop REST</source>
+        <translation>停止远程控制</translation>
     </message>
 </context>
 <context>
@@ -301,6 +614,69 @@
         <location filename="../widgets/facerecognitionwidget.cpp" line="456"/>
         <source>Delete failed for %1</source>
         <translation>删除失败：%1</translation>
+    </message>
+</context>
+<context>
+    <name>ImportExportControl</name>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="14"/>
+        <source>Import...</source>
+        <translation>导入...</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="15"/>
+        <source>Export...</source>
+        <translation>导出...</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="26"/>
+        <source>Import devices</source>
+        <translation>导入设备</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="28"/>
+        <source>Choose import method:</source>
+        <translation>选择导入方式：</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="31"/>
+        <source>Import from SQLite DB</source>
+        <translation>从 SQLite 数据库导入</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="32"/>
+        <source>Import from CSV</source>
+        <translation>从 CSV 导入</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="33"/>
+        <source>Import from JSONND</source>
+        <translation>从 JSONND 导入</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="50"/>
+        <source>Export devices</source>
+        <translation>导出设备</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="52"/>
+        <source>Choose export method:</source>
+        <translation>选择导出方式：</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="55"/>
+        <source>Export to SQLite DB</source>
+        <translation>导出到 SQLite 数据库</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="56"/>
+        <source>Export to CSV</source>
+        <translation>导出到 CSV</translation>
+    </message>
+    <message>
+        <location filename="../widgets/importexportcontrol.cpp" line="57"/>
+        <source>Export to JSONND</source>
+        <translation>导出到 JSONND</translation>
     </message>
 </context>
 <context>
@@ -844,6 +1220,17 @@
         <location filename="../widgets/monitorwidget.cpp" line="273"/>
         <source>Choose save path</source>
         <translation>选择保存路径</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>Choose device icon</source>
+        <translation type="vanished">选择设备图标</translation>
+    </message>
+    <message>
+        <source>Images (*.png *.svg *.ico);;All Files (*)</source>
+        <translation type="vanished">图像 (*.png *.svg *.ico);;所有文件 (*)</translation>
     </message>
 </context>
 <context>

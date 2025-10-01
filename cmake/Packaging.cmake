@@ -271,6 +271,35 @@ if(WIN32 AND BUILD_MQTT_CLIENT)
     PATTERN "*paho*.*")
 endif()
 
+# Ensure DeviceGateway's third-party runtime libraries (Drogon/Trantor) are
+# packaged with the DeviceGateway component so the optional module can be
+# installed standalone. Match common naming patterns for Windows DLLs and
+# Unix shared objects. These installs intentionally mirror the Connect
+# handling above but target the DeviceGateway component.
+if(WIN32 AND TARGET DeviceGateway)
+  install(
+    DIRECTORY "${CMAKE_BINARY_DIR}/bin/"
+    DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    COMPONENT DeviceGateway
+    FILES_MATCHING
+    PATTERN "drogon*.dll"
+    PATTERN "trantor*.dll"
+    PATTERN "drogon*.pdb"
+    PATTERN "trantor*.pdb")
+endif()
+
+if(UNIX AND NOT APPLE AND TARGET DeviceGateway)
+  install(
+    DIRECTORY "${CMAKE_BINARY_DIR}/lib/"
+    DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    COMPONENT DeviceGateway
+    FILES_MATCHING
+    PATTERN "libdrogon*.so"
+    PATTERN "libdrogon*.so.*"
+    PATTERN "libtrantor*.so"
+    PATTERN "libtrantor*.so.*")
+endif()
+
 if(UNIX AND NOT APPLE AND BUILD_MQTT_CLIENT)
   # Install any libpaho shared libraries into the Connect component for DEB
   # packaging. Match soname and versioned shared objects (libpaho*.so*).
