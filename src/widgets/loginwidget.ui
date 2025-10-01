@@ -1,228 +1,229 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>LoginWidget</class>
- <widget class="QWidget" name="LoginWidget">
-   <property name="windowTitle">
-    <string>Login / Register</string>
-  </property>
-  <layout class="QHBoxLayout" name="horizontalLayoutRoot">
-   <item>
-      <widget class="QFrame" name="frameLeft">
-       <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-       </property>
-     <layout class="QVBoxLayout" name="verticalLayoutLeft">
-      <item>
-       <spacer name="verticalSpacerLeftTop">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QLabel" name="labelBrand">
-        <property name="text">
-         <string>Smart Home Control</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignHCenter|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="labelSlogan">
-        <property name="text">
-             <string>Safer · More Convenient · Smarter</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignHCenter|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacerLeftBottom">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="frameRight">
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="styleSheet">
-      <string>QFrame#frameRight { background: #ffffff; } QLineEdit { padding: 8px; } QPushButton { padding: 8px 12px; }</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayoutRight">
-      <item>
-       <widget class="QTabWidget" name="tabWidget">
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <widget class="QWidget" name="tabLogin">
-      <attribute name="title">
-       <string>Login</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayoutLogin">
-          <item>
-                <widget class="QLineEdit" name="lineEditLoginEmail">
-            <property name="placeholderText">
-                   <string>Email</string>
-            </property>
-            <property name="clearButtonEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-                <widget class="QLineEdit" name="lineEditLoginPassword">
-            <property name="echoMode">
-             <enum>QLineEdit::Password</enum>
-            </property>
-            <property name="placeholderText">
-                   <string>Password (min 8 chars)</string>
-            </property>
-            <property name="maxLength">
-             <number>20</number>
-            </property>
-            <property name="clearButtonEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-                 <item>
-                    <widget class="QLabel" name="labelLoginError">
-                     <property name="styleSheet">
-                        <string notr="true">color: #dc2626;</string>
-                     </property>
-                     <property name="text">
-                        <string></string>
-                     </property>
-                     <property name="minimumSize">
-                        <size>
-                           <width>0</width>
-                           <height>18</height>
-                        </size>
-                     </property>
-                     <property name="visible">
-                        <bool>true</bool>
-                     </property>
-                    </widget>
-                 </item>
-          <item>
-                <widget class="QPushButton" name="pushButtonLogin">
-            <property name="text">
-                   <string>Login</string>
-            </property>
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="tabRegister">
-      <attribute name="title">
-       <string>Register</string>
-         </attribute>
-         <layout class="QVBoxLayout" name="verticalLayoutRegister">
-          <item>
-                <widget class="QLineEdit" name="lineEditRegisterEmail">
-            <property name="placeholderText">
-                   <string>Email</string>
-            </property>
-            <property name="clearButtonEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-                <widget class="QLineEdit" name="lineEditRegisterPassword">
-            <property name="echoMode">
-             <enum>QLineEdit::Password</enum>
-            </property>
-            <property name="placeholderText">
-                   <string>Set password (min 8 chars)</string>
-            </property>
-            <property name="maxLength">
-             <number>20</number>
-            </property>
-            <property name="clearButtonEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-                 <item>
-                    <widget class="QLineEdit" name="lineEditRegisterPasswordConfirm">
-                     <property name="echoMode">
-                        <enum>QLineEdit::Password</enum>
-                     </property>
-                     <property name="placeholderText">
-                        <string>Confirm password</string>
-                     </property>
-                     <property name="maxLength">
-                        <number>20</number>
-                     </property>
-                     <property name="clearButtonEnabled">
-                        <bool>true</bool>
-                     </property>
-                    </widget>
-                 </item>
-                 <item>
-                    <widget class="QLabel" name="labelRegisterError">
-                     <property name="styleSheet">
-                        <string notr="true">color: #dc2626;</string>
-                     </property>
-                     <property name="text">
-                        <string></string>
-                     </property>
-                     <property name="minimumSize">
-                        <size>
-                           <width>0</width>
-                           <height>18</height>
-                        </size>
-                     </property>
-                     <property name="visible">
-                        <bool>true</bool>
-                     </property>
-                    </widget>
-                 </item>
-          <item>
-                <widget class="QPushButton" name="pushButtonRegister">
-            <property name="text">
-                   <string>Register &amp; Sign In</string>
-            </property>
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-  </layout>
- </widget>
- <resources/>
- <connections/>
- <buttongroups/>
- </ui>
+   <class>LoginWidget</class>
+   <widget class="QWidget" name="LoginWidget">
+      <property name="windowTitle">
+         <string>Login / Register</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayoutRoot">
+         <item>
+            <widget class="QFrame" name="frameLeft">
+               <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayoutLeft">
+                  <item>
+                     <spacer name="verticalSpacerLeftTop">
+                        <property name="orientation">
+                           <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                           <size>
+                              <width>20</width>
+                              <height>40</height>
+                           </size>
+                        </property>
+                     </spacer>
+                  </item>
+                  <item>
+                     <widget class="QLabel" name="labelBrand">
+                        <property name="text">
+                           <string>Smart Home Control</string>
+                        </property>
+                        <property name="alignment">
+                           <set>Qt::AlignHCenter|Qt::AlignVCenter</set>
+                        </property>
+                     </widget>
+                  </item>
+                  <item>
+                     <widget class="QLabel" name="labelSlogan">
+                        <property name="text">
+                           <string>Safer · More Convenient · Smarter</string>
+                        </property>
+                        <property name="alignment">
+                           <set>Qt::AlignHCenter|Qt::AlignVCenter</set>
+                        </property>
+                     </widget>
+                  </item>
+                  <item>
+                     <spacer name="verticalSpacerLeftBottom">
+                        <property name="orientation">
+                           <enum>Qt::Vertical</enum>
+                        </property>
+                        <property name="sizeHint" stdset="0">
+                           <size>
+                              <width>20</width>
+                              <height>40</height>
+                           </size>
+                        </property>
+                     </spacer>
+                  </item>
+               </layout>
+            </widget>
+         </item>
+         <item>
+            <widget class="QFrame" name="frameRight">
+               <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="styleSheet">
+                  <string>QFrame#frameRight { background: #ffffff; } QLineEdit { padding: 8px; }
+                     QPushButton { padding: 8px 12px; }</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayoutRight">
+                  <item>
+                     <widget class="QTabWidget" name="tabWidget">
+                        <property name="currentIndex">
+                           <number>0</number>
+                        </property>
+                        <widget class="QWidget" name="tabLogin">
+                           <attribute name="title">
+                              <string>Login</string>
+                           </attribute>
+                           <layout class="QVBoxLayout" name="verticalLayoutLogin">
+                              <item>
+                                 <widget class="QLineEdit" name="lineEditLoginEmail">
+                                    <property name="placeholderText">
+                                       <string>Email</string>
+                                    </property>
+                                    <property name="clearButtonEnabled">
+                                       <bool>true</bool>
+                                    </property>
+                                 </widget>
+                              </item>
+                              <item>
+                                 <widget class="QLineEdit" name="lineEditLoginPassword">
+                                    <property name="echoMode">
+                                       <enum>QLineEdit::Password</enum>
+                                    </property>
+                                    <property name="placeholderText">
+                                       <string>Password (min 8 chars)</string>
+                                    </property>
+                                    <property name="maxLength">
+                                       <number>20</number>
+                                    </property>
+                                    <property name="clearButtonEnabled">
+                                       <bool>true</bool>
+                                    </property>
+                                 </widget>
+                              </item>
+                              <item>
+                                 <widget class="QLabel" name="labelLoginError">
+                                    <property name="styleSheet">
+                                       <string notr="true">color: #dc2626;</string>
+                                    </property>
+                                    <property name="text">
+                                       <string></string>
+                                    </property>
+                                    <property name="minimumSize">
+                                       <size>
+                                          <width>0</width>
+                                          <height>18</height>
+                                       </size>
+                                    </property>
+                                    <property name="visible">
+                                       <bool>true</bool>
+                                    </property>
+                                 </widget>
+                              </item>
+                              <item>
+                                 <widget class="QPushButton" name="pushButtonLogin">
+                                    <property name="text">
+                                       <string>Login</string>
+                                    </property>
+                                    <property name="enabled">
+                                       <bool>false</bool>
+                                    </property>
+                                 </widget>
+                              </item>
+                           </layout>
+                        </widget>
+                        <widget class="QWidget" name="tabRegister">
+                           <attribute name="title">
+                              <string>Register</string>
+                           </attribute>
+                           <layout class="QVBoxLayout" name="verticalLayoutRegister">
+                              <item>
+                                 <widget class="QLineEdit" name="lineEditRegisterEmail">
+                                    <property name="placeholderText">
+                                       <string>Email</string>
+                                    </property>
+                                    <property name="clearButtonEnabled">
+                                       <bool>true</bool>
+                                    </property>
+                                 </widget>
+                              </item>
+                              <item>
+                                 <widget class="QLineEdit" name="lineEditRegisterPassword">
+                                    <property name="echoMode">
+                                       <enum>QLineEdit::Password</enum>
+                                    </property>
+                                    <property name="placeholderText">
+                                       <string>Set password (min 8 chars)</string>
+                                    </property>
+                                    <property name="maxLength">
+                                       <number>20</number>
+                                    </property>
+                                    <property name="clearButtonEnabled">
+                                       <bool>true</bool>
+                                    </property>
+                                 </widget>
+                              </item>
+                              <item>
+                                 <widget class="QLineEdit" name="lineEditRegisterPasswordConfirm">
+                                    <property name="echoMode">
+                                       <enum>QLineEdit::Password</enum>
+                                    </property>
+                                    <property name="placeholderText">
+                                       <string>Confirm password</string>
+                                    </property>
+                                    <property name="maxLength">
+                                       <number>20</number>
+                                    </property>
+                                    <property name="clearButtonEnabled">
+                                       <bool>true</bool>
+                                    </property>
+                                 </widget>
+                              </item>
+                              <item>
+                                 <widget class="QLabel" name="labelRegisterError">
+                                    <property name="styleSheet">
+                                       <string notr="true">color: #dc2626;</string>
+                                    </property>
+                                    <property name="text">
+                                       <string></string>
+                                    </property>
+                                    <property name="minimumSize">
+                                       <size>
+                                          <width>0</width>
+                                          <height>18</height>
+                                       </size>
+                                    </property>
+                                    <property name="visible">
+                                       <bool>true</bool>
+                                    </property>
+                                 </widget>
+                              </item>
+                              <item>
+                                 <widget class="QPushButton" name="pushButtonRegister">
+                                    <property name="text">
+                                       <string>Register &amp; Sign In</string>
+                                    </property>
+                                    <property name="enabled">
+                                       <bool>false</bool>
+                                    </property>
+                                 </widget>
+                              </item>
+                           </layout>
+                        </widget>
+                     </widget>
+                  </item>
+               </layout>
+            </widget>
+         </item>
+      </layout>
+   </widget>
+   <resources />
+   <connections />
+   <buttongroups />
+</ui>

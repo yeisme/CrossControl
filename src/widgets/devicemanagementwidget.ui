@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>DeviceManagementWidget</class>
+    <widget class="QWidget" name="DeviceManagementWidget">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>1000</width>
+                <height>700</height>
+            </rect>
+        </property>
+        <property name="minimumSize">
+            <size>
+                <width>800</width>
+                <height>600</height>
+            </size>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+                <layout class="QHBoxLayout" name="topLayout">
+                    <item>
+                        <widget class="QLineEdit" name="leFilter">
+                            <property name="placeholderText">
+                                <string>Filter by ID / Name / Endpoint...</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="btnAdd">
+                            <property name="text">
+                                <string>Add</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="btnEdit">
+                            <property name="text">
+                                <string>Edit</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="btnDelete">
+                            <property name="text">
+                                <string>Delete</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="btnRefresh">
+                            <property name="text">
+                                <string>Refresh</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="btnImport">
+                            <property name="text">
+                                <string>Import</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="btnExport">
+                            <property name="text">
+                                <string>Export</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="btnTest">
+                            <property name="text">
+                                <string>Test Selected</string>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+            <item>
+                <widget class="QSplitter" name="mainSplitter">
+                    <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                    </property>
+                    <widget class="QWidget" name="leftPane">
+                        <layout class="QVBoxLayout" name="leftLayout">
+                            <item>
+                                <widget class="QTableWidget" name="tableWidget">
+                                    <property name="columnCount">
+                                        <number>9</number>
+                                    </property>
+                                </widget>
+                            </item>
+                        </layout>
+                    </widget>
+                    <widget class="QWidget" name="rightPane">
+                        <layout class="QVBoxLayout" name="rightLayout">
+                            <item>
+                                <!-- chart placeholder: if Qt Charts available we can replace this
+                                at runtime -->
+                                <widget class="QWidget" name="chartWidget">
+                                    <property name="minimumHeight">
+                                        <number>120</number>
+                                    </property>
+                                </widget>
+                            </item>
+                            <item>
+                                <widget class="QGroupBox" name="groupTestResults">
+                                    <property name="title">
+                                        <string>Test Results</string>
+                                    </property>
+                                    <layout class="QVBoxLayout" name="resultsLayout">
+                                        <item>
+                                            <widget class="QTextEdit" name="teTestResults">
+                                                <property name="readOnly">
+                                                    <bool>true</bool>
+                                                </property>
+                                            </widget>
+                                        </item>
+                                    </layout>
+                                </widget>
+                            </item>
+                        </layout>
+                    </widget>
+                </widget>
+            </item>
+        </layout>
+    </widget>
+    <resources />
+    <connections />
+</ui>

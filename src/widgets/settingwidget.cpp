@@ -2,11 +2,18 @@
 
 #include <qcoreapplication.h>
 
+#include <QCheckBox>
 #include <QHeaderView>
+#include <QLabel>
 #include <QMessageBox>
+#include <QTimer>
+#include <thread>
+#include <QSpinBox>
 #include <QTableWidget>
 
+#include "logging/logging.h"
 #include "modules/Config/config.h"
+#include "modules/DeviceGateway/device_gateway.h"
 #include "spdlog/spdlog.h"
 #include "ui_settingwidget.h"
 
@@ -48,6 +55,9 @@ SettingWidget::SettingWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Sett
         connect(jsonEditBtn, &QPushButton::clicked, this, &SettingWidget::on_btnJsonEditor_clicked);
     }
     spdlog::debug("SettingWidget initialized");
+
+    // initialize REST controls (created but inactive until gateway set)
+    initRestControls();
 
     // wire save/reload buttons
     auto* reloadBtn = findChild<QPushButton*>(QStringLiteral("btnReloadSettings"));
@@ -150,6 +160,148 @@ void SettingWidget::on_btnConfigureStorage_clicked() {
         QCoreApplication::translate("SettingWidget", "Storage"),
         QCoreApplication::translate("SettingWidget", "Storage database path updated."));
     populateSettingsTable();
+}
+
+void SettingWidget::initRestControls() {
+    // create controls: port spinbox, start/stop button and small log viewer
+    auto* portSpin = new QSpinBox(this);
+    portSpin->setRange(1, 65535);
+    portSpin->setValue(8080);
+    portSpin->setObjectName("sbRestPort");
+
+    auto* restBtn =
+        new QPushButton(QCoreApplication::translate("SettingWidget", "Start REST"), this);
+    restBtn->setObjectName("btnRestStartStop");
+
+    // add rows into settings list: only port and control button. We do NOT create
+    // a per-REST log widget here—the REST handlers write to the named logger
+    // "REST" and LoggerManager ensures those messages appear in the main
+    // LogWidget's Qt sink.
+    addSettingRow(QCoreApplication::translate("SettingWidget", "REST Server Port"), portSpin);
+    addSettingRow(QCoreApplication::translate("SettingWidget", "REST Control"), restBtn);
+
+    // connect local signals
+    connect(restBtn, &QPushButton::clicked, this, &SettingWidget::on_btnRestStartStop_clicked);
+    connect(portSpin,
+            qOverload<int>(&QSpinBox::valueChanged),
+            this,
+            &SettingWidget::on_restPortChanged);
+
+    // restore saved config values
+    auto& cfg = config::ConfigManager::instance();
+    const int port = cfg.getInt("REST/port", 8080);
+    portSpin->setValue(port);
+    const bool enabled = cfg.getBool("REST/enabled", false);
+    // if enabled, we will not start automatically here unless gateway is set; just update button
+    // text
+    if (enabled) restBtn->setText(QCoreApplication::translate("SettingWidget", "Stop REST"));
+
+    // No per-REST sinks or duplication UI: REST logs are handled by the named
+    // logger "REST" and will appear in the main LogWidget via LoggerManager.
+}
+
+void SettingWidget::on_btnRestStartStop_clicked() {
+    auto* restBtn = findChild<QPushButton*>(QStringLiteral("btnRestStartStop"));
+    auto* portSpin = findChild<QSpinBox*>(QStringLiteral("sbRestPort"));
+    if (!restBtn || !portSpin) return;
+    if (!gateway_) {
+        QMessageBox::warning(
+            this,
+            QCoreApplication::translate("SettingWidget", "REST"),
+            QCoreApplication::translate("SettingWidget", "Device gateway not available"));
+        return;
+    }
+
+    // If REST is running, request stop in a background thread and disable the
+    // button until the server has fully stopped. Poll isRestRunning() via QTimer
+    // so the UI remains responsive.
+    if (gateway_->isRestRunning()) {
+        restBtn->setEnabled(false);
+        restBtn->setText(QCoreApplication::translate("SettingWidget", "Stopping..."));
+
+        // Dispatch stop in background so UI thread is not blocked
+        std::thread([this]() {
+            if (gateway_) gateway_->stopRest();
+        }).detach();
+
+        // Poll for shutdown completion and re-enable the button when done
+        QTimer* poll = new QTimer(this);
+        poll->setInterval(250);
+        connect(poll, &QTimer::timeout, this, [this, poll, restBtn]() {
+            if (!gateway_ || !gateway_->isRestRunning()) {
+                poll->stop();
+                poll->deleteLater();
+                restBtn->setText(QCoreApplication::translate("SettingWidget", "Start REST"));
+                restBtn->setEnabled(true);
+                config::ConfigManager::instance().setValue("REST/enabled", false);
+                config::ConfigManager::instance().sync();
+            }
+        });
+        poll->start();
+    } else {
+        const int port = portSpin->value();
+        // persist port
+        config::ConfigManager::instance().setValue("REST/port", port);
+        config::ConfigManager::instance().setValue("REST/enabled", true);
+        config::ConfigManager::instance().sync();
+
+        // attempt to start/init gateway
+        bool ok = gateway_->init();
+        if (ok) {
+            restBtn->setText(QCoreApplication::translate("SettingWidget", "Stop REST"));
+        } else {
+            // Starting may fail if Drogon was previously started in this process
+            QMessageBox::warning(
+                this,
+                QCoreApplication::translate("SettingWidget", "REST"),
+                QCoreApplication::translate(
+                    "SettingWidget",
+                    "Failed to start REST server. If the embedded REST server was already started in this process it cannot be restarted; please restart the application."));
+            // Ensure persisted flag reflects actual running state
+            config::ConfigManager::instance().setValue("REST/enabled", false);
+            config::ConfigManager::instance().sync();
+            restBtn->setText(QCoreApplication::translate("SettingWidget", "Start REST"));
+        }
+    }
+}
+
+void SettingWidget::on_restPortChanged(int port) {
+    // persist change immediately
+    config::ConfigManager::instance().setValue("REST/port", port);
+    config::ConfigManager::instance().sync();
+}
+
+void SettingWidget::updateRestControls() {
+    auto* restBtn = findChild<QPushButton*>(QStringLiteral("btnRestStartStop"));
+    if (!restBtn) return;
+    if (gateway_ && gateway_->isRestRunning()) {
+        restBtn->setText(QCoreApplication::translate("SettingWidget", "Stop REST"));
+    } else {
+        restBtn->setText(QCoreApplication::translate("SettingWidget", "Start REST"));
+    }
+}
+
+// Optional binder for gateway so main window can wire the gateway instance
+void SettingWidget::bindDeviceGateway(DeviceGateway::DeviceGateway* gw) {
+    gateway_ = gw;
+    updateRestControls();
+    // if config says REST should be enabled, try to start it on configured port
+    auto& cfg = config::ConfigManager::instance();
+    const bool shouldEnable = cfg.getBool("REST/enabled", false);
+    const int port = cfg.getInt("REST/port", 8080);
+    if (shouldEnable && gateway_ && !gateway_->isRestRunning()) {
+        const bool ok = gateway_->startRest(static_cast<unsigned short>(port));
+        if (!ok) {
+            QMessageBox::warning(
+                this,
+                QCoreApplication::translate("SettingWidget", "REST"),
+                QCoreApplication::translate("SettingWidget",
+                                            "Failed to auto-start REST server on saved port"));
+            cfg.setValue("REST/enabled", false);
+            cfg.sync();
+        }
+        updateRestControls();
+    }
 }
 
 void SettingWidget::on_btnManageAccounts_clicked() {

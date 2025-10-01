@@ -29,6 +29,8 @@ set(PROJECT_SOURCES
     include/widgets/facerecognitionwidget.h
     src/widgets/importexportcontrol.cpp
     include/widgets/importexportcontrol.h
+    src/widgets/deviceeditdialog.cpp
+    include/widgets/deviceeditdialog.h
     src/widgets/devicemanagementwidget.cpp
     src/widgets/devicemanagementwidget.ui
     include/widgets/devicemanagementwidget.h
@@ -43,6 +45,11 @@ set(PROJECT_SOURCES
     ${TS_FILES})
 
 qt_add_executable(CrossControl MANUAL_FINALIZATION ${PROJECT_SOURCES})
+
+# 确保 AUTOUIC 在 include/widgets 中的头文件引用生成的 ui_*.h 时，可以找到位于 src/widgets 下的 .ui 文件。
+# 默认情况下，AUTOUIC 会搜索头文件目录；请将源 widgets 目录添加到搜索路径中。
+set_target_properties(CrossControl PROPERTIES AUTOUIC_SEARCH_PATHS
+                                              "${CMAKE_SOURCE_DIR}/src/widgets")
 
 # 仅使用 Qt6 API 生成翻译文件
 qt_create_translation(QM_FILES ${TS_FILES} ${PROJECT_SOURCES})
@@ -73,6 +80,13 @@ if(TARGET Qt6::Sql)
 endif()
 if(TARGET Qt6::SerialPort)
   list(APPEND _core_qt_libs Qt6::SerialPort)
+endif()
+if(TARGET Qt6::Charts)
+  list(APPEND _core_qt_libs Qt6::Charts)
+  target_compile_definitions(CrossControl PRIVATE HAS_QT_CHARTS=1)
+endif()
+if(TARGET Qt6::Concurrent)
+  list(APPEND _core_qt_libs Qt6::Concurrent)
 endif()
 
 target_link_libraries(CrossControl PRIVATE ${_core_qt_libs} logging config)

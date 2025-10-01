@@ -135,6 +135,8 @@ CrossControlWidget::CrossControlWidget(DeviceGateway::DeviceGateway* gateway, QW
     faceRecWidget = new FaceRecognitionWidget();
     // Device management page
     deviceMgmtWidget = new DeviceManagementWidget(deviceGateway);
+    // bind gateway to settings page so it can control REST server
+    if (settingWidget) settingWidget->bindDeviceGateway(deviceGateway);
 
     contentStack->addWidget(mainWidget);
     contentStack->addWidget(monitorWidget);

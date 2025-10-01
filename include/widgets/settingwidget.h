@@ -7,6 +7,10 @@
 #include <QTextEdit>
 #include <QWidget>
 
+namespace DeviceGateway {
+class DeviceGateway;
+}
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class SettingWidget;
@@ -33,6 +37,13 @@ class SettingWidget : public QWidget {
     void on_btnManageAccounts_clicked();
     void on_btnJsonEditor_clicked();
 
+        // REST control
+        void on_btnRestStartStop_clicked();
+        void on_restPortChanged(int port);
+    
+    // bind the DeviceGateway instance so settings page can control REST server
+    void bindDeviceGateway(DeviceGateway::DeviceGateway* gw);
+
    private slots:
     void on_btnBackFromSetting_clicked();
     void on_btnToggleTheme_clicked();
@@ -43,6 +54,13 @@ class SettingWidget : public QWidget {
    private:
     Ui::SettingWidget* ui;
     void populateSettingsTable();
+
+        // optional pointer to control REST server
+        DeviceGateway::DeviceGateway* gateway_ = nullptr;
+
+    // helpers to manage REST controls
+    void initRestControls();
+    void updateRestControls();
 };
 
 #endif  // SETTINGWIDGET_H

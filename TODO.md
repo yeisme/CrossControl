@@ -34,7 +34,7 @@
 
 1. Device Registry & Provisioning
 
-   - [ ] 设备注册/元数据存储（device_id / hw_info / firmware_version / owner / group） — 验收：UI/REST API 能新增/修改/查询设备并导出 CSV
+   - [ ] 设备注册/元数据存储（device_id / hw_info / firmware_version / owner / group） — 验收：UI/REST API 能新增/修改/查询设备并导出 CSV/JSONND
    - [ ] 设备预配/入网流程（支持自动注册 token、设备证书签发/绑定）— 验收：新设备在首次上线时能完成自动注册并出现在 Registry
    - [ ] 证书/凭据管理（支持轮换） — 验收：支持推送新的凭据并让设备重连
    - 优先级：P0

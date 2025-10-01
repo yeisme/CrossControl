@@ -15,11 +15,15 @@ find_package(Qt6 CONFIG REQUIRED COMPONENTS
   Multimedia
   SerialPort
   LinguistTools
+  Concurrent
 )
 
 # 项目使用的核心格式化/日志库
 find_package(fmt CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED) # 使用 spdlog 作为日志库，比 QDebug 更快且功能更丰富
+
+find_package(Drogon CONFIG REQUIRED)
+message(STATUS "Found Drogon: enabling drogon HTTP support")
 
 if(BUILD_MQTT_CLIENT)
   find_package(PahoMqttCpp CONFIG)
