@@ -2,10 +2,10 @@
 
 #include <QDateTime>
 #include <QSharedPointer>
-#include <QtSql/QSqlDatabase>
 #include <QString>
 #include <QTimeZone>
 #include <QVariant>
+#include <QtSql/QSqlDatabase>
 
 namespace storage {
 

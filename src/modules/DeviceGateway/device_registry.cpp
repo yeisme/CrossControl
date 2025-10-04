@@ -1,7 +1,7 @@
 ﻿#include "modules/DeviceGateway/device_registry.h"
 
-#include <optional>
 #include <QDateTime>
+#include <optional>
 
 namespace DeviceGateway {
 

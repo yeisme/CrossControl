@@ -41,7 +41,9 @@ QT_END_NAMESPACE
  * - CRC 校验失败会丢弃当前包并继续解析后续数据。
  */
 
-namespace DeviceGateway { class DeviceGateway; }
+namespace DeviceGateway {
+class DeviceGateway;
+}
 
 class MonitorWidget : public QWidget {
     Q_OBJECT
@@ -182,7 +184,6 @@ class MonitorWidget : public QWidget {
     // UI state helper
     void setTcpConnected(bool connected);
 
-
     /**
      * @brief CRC16-CCITT 计算函数，用于校验收到的 JPEG 数据
      * @param buf 数据缓冲区指针
@@ -202,13 +203,22 @@ class MonitorWidget : public QWidget {
      */
     // Returns number of clients the data was written to
     int broadcastToClients(const QByteArray& data);
-        // storage helpers
-        void ensureActionsTable();
-        int saveActionToDb(const QString& name, const QString& type, const QByteArray& payload);
-        QVector<QPair<int, QString>> loadActionsFromDb(const QString& type);
+    // storage helpers
+    void ensureActionsTable();
+    int saveActionToDb(const QString& name, const QString& type, const QByteArray& payload);
+    QVector<QPair<int, QString>> loadActionsFromDb(const QString& type);
     // HTTP action helpers
-    QByteArray serializeHttpAction(const QString& url, const QString& method, const QString& token, bool autoBearer, const QByteArray& body);
-    bool deserializeHttpAction(const QByteArray& payload, QString& url, QString& method, QString& token, bool& autoBearer, QByteArray& body);
+    QByteArray serializeHttpAction(const QString& url,
+                                   const QString& method,
+                                   const QString& token,
+                                   bool autoBearer,
+                                   const QByteArray& body);
+    bool deserializeHttpAction(const QByteArray& payload,
+                               QString& url,
+                               QString& method,
+                               QString& token,
+                               bool& autoBearer,
+                               QByteArray& body);
     // device edit fields live in UI: editHost, editPort
 
     // Note: protocol-specific operations (HTTP/TCP/UDP/Serial) are handled by

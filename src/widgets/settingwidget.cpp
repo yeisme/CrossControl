@@ -6,10 +6,10 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QMessageBox>
-#include <QTimer>
-#include <thread>
 #include <QSpinBox>
 #include <QTableWidget>
+#include <QTimer>
+#include <thread>
 
 #include "logging/logging.h"
 #include "modules/Config/config.h"
@@ -256,7 +256,8 @@ void SettingWidget::on_btnRestStartStop_clicked() {
                 QCoreApplication::translate("SettingWidget", "REST"),
                 QCoreApplication::translate(
                     "SettingWidget",
-                    "Failed to start REST server. If the embedded REST server was already started in this process it cannot be restarted; please restart the application."));
+                    "Failed to start REST server. If the embedded REST server was already started "
+                    "in this process it cannot be restarted; please restart the application."));
             // Ensure persisted flag reflects actual running state
             config::ConfigManager::instance().setValue("REST/enabled", false);
             config::ConfigManager::instance().sync();

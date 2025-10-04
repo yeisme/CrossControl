@@ -16,6 +16,7 @@ class RestServer {
     bool isRunning() const;
 
     void setGateway(DeviceGateway* gw);
+
    private:
     // no-op private; implementation uses drogon and module-global state
     DeviceGateway* m_gateway{nullptr};

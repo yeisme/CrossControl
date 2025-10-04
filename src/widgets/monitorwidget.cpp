@@ -113,25 +113,24 @@ MonitorWidget::MonitorWidget(DeviceGateway::DeviceGateway* gateway, QWidget* par
         mqttLayout->addWidget(new QLabel(QStringLiteral("MQTT client (TBD)"), mqttTab));
         tabOps->addTab(mqttTab, QCoreApplication::translate("MonitorWidget", "MQTT"));
 
+        // ---- TCP tab ----
+        if (!this->findChild<TcpOpsWidget*>()) {
+            TcpOpsWidget* tcpOps = new TcpOpsWidget(tabOps);
+            tcpOps->setObjectName("tabTcp");
+            tabOps->addTab(tcpOps, QCoreApplication::translate("MonitorWidget", "TCP"));
+        }
 
-    // ---- TCP tab ----
-    if (!this->findChild<TcpOpsWidget*>()) {
-        TcpOpsWidget* tcpOps = new TcpOpsWidget(tabOps);
-        tcpOps->setObjectName("tabTcp");
-        tabOps->addTab(tcpOps, QCoreApplication::translate("MonitorWidget", "TCP"));
-    }
+        // ---- UDP tab ----
+        if (!this->findChild<UdpOpsWidget*>()) {
+            UdpOpsWidget* udpOps = new UdpOpsWidget(tabOps);
+            udpOps->setObjectName("tabUdp");
+            tabOps->addTab(udpOps, QCoreApplication::translate("MonitorWidget", "UDP"));
+        }
 
-    // ---- UDP tab ----
-    if (!this->findChild<UdpOpsWidget*>()) {
-        UdpOpsWidget* udpOps = new UdpOpsWidget(tabOps);
-        udpOps->setObjectName("tabUdp");
-        tabOps->addTab(udpOps, QCoreApplication::translate("MonitorWidget", "UDP"));
-    }
-
-    // ---- Serial tab ----
-    SerialOpsWidget* serialOps = new SerialOpsWidget(tabOps);
-    serialOps->setObjectName("tabSerial");
-    tabOps->addTab(serialOps, QCoreApplication::translate("MonitorWidget", "Serial"));
+        // ---- Serial tab ----
+        SerialOpsWidget* serialOps = new SerialOpsWidget(tabOps);
+        serialOps->setObjectName("tabSerial");
+        tabOps->addTab(serialOps, QCoreApplication::translate("MonitorWidget", "Serial"));
 
         // Insert tabOps into the UI near the legacy send controls when possible
         QWidget* parentWidget = nullptr;
@@ -169,7 +168,7 @@ MonitorWidget::MonitorWidget(DeviceGateway::DeviceGateway* gateway, QWidget* par
         for (int i = 0; i < tabOpsExisting->count(); ++i) {
             QWidget* page = tabOpsExisting->widget(i);
             if (!page) continue;
-                if (page->objectName() == QLatin1String("tabHttp")) {
+            if (page->objectName() == QLatin1String("tabHttp")) {
                 // If it's already the correct type, nothing to do
                 if (qobject_cast<HttpOpsWidget*>(page)) break;
                 // create new HttpOpsWidget and replace the page
@@ -223,26 +222,32 @@ MonitorWidget::MonitorWidget(DeviceGateway::DeviceGateway* gateway, QWidget* par
         // append if missing (place before Serial if present)
         int insertIndex = tabOpsExisting->count();
         for (int i = 0; i < tabOpsExisting->count(); ++i) {
-            if (tabOpsExisting->widget(i) && tabOpsExisting->widget(i)->objectName() == QLatin1String("tabSerial")) {
-                insertIndex = i; // insert before serial
+            if (tabOpsExisting->widget(i) &&
+                tabOpsExisting->widget(i)->objectName() == QLatin1String("tabSerial")) {
+                insertIndex = i;  // insert before serial
                 break;
             }
         }
         if (!foundTcp) {
             TcpOpsWidget* tcpOps = new TcpOpsWidget(tabOpsExisting);
             tcpOps->setObjectName("tabTcp");
-            tabOpsExisting->insertTab(insertIndex++, tcpOps, QCoreApplication::translate("MonitorWidget", "TCP"));
+            tabOpsExisting->insertTab(
+                insertIndex++, tcpOps, QCoreApplication::translate("MonitorWidget", "TCP"));
         }
         if (!foundUdp) {
             UdpOpsWidget* udpOps = new UdpOpsWidget(tabOpsExisting);
             udpOps->setObjectName("tabUdp");
-            tabOpsExisting->insertTab(insertIndex++, udpOps, QCoreApplication::translate("MonitorWidget", "UDP"));
+            tabOpsExisting->insertTab(
+                insertIndex++, udpOps, QCoreApplication::translate("MonitorWidget", "UDP"));
         }
         // Debug: list tabs and their widget types
         for (int j = 0; j < tabOpsExisting->count(); ++j) {
             QWidget* w = tabOpsExisting->widget(j);
             QString name = w ? w->objectName() : QStringLiteral("(null)");
-            spdlog::info("Monitor tab[{}] = {} ({})", j, name.toStdString(), w ? w->metaObject()->className() : "(no widget)");
+            spdlog::info("Monitor tab[{}] = {} ({})",
+                         j,
+                         name.toStdString(),
+                         w ? w->metaObject()->className() : "(no widget)");
         }
     }
 
@@ -373,11 +378,14 @@ MonitorWidget::MonitorWidget(DeviceGateway::DeviceGateway* gateway, QWidget* par
     cameraControls->setObjectName("cameraControls");
     QHBoxLayout* camLay = new QHBoxLayout(cameraControls);
     camLay->setContentsMargins(0, 0, 0, 0);
-    QPushButton* btnPlay = new QPushButton(QCoreApplication::translate("MonitorWidget", "Play"), cameraControls);
+    QPushButton* btnPlay =
+        new QPushButton(QCoreApplication::translate("MonitorWidget", "Play"), cameraControls);
     btnPlay->setObjectName("btnCameraPlay");
-    QPushButton* btnPause = new QPushButton(QCoreApplication::translate("MonitorWidget", "Pause"), cameraControls);
+    QPushButton* btnPause =
+        new QPushButton(QCoreApplication::translate("MonitorWidget", "Pause"), cameraControls);
     btnPause->setObjectName("btnCameraPause");
-    QPushButton* btnSnapshot = new QPushButton(QCoreApplication::translate("MonitorWidget", "Snapshot"), cameraControls);
+    QPushButton* btnSnapshot =
+        new QPushButton(QCoreApplication::translate("MonitorWidget", "Snapshot"), cameraControls);
     btnSnapshot->setObjectName("btnCameraSnapshot");
     // PTZ simple controls
     QPushButton* btnUp = new QPushButton("↑", cameraControls);
@@ -868,44 +876,65 @@ void MonitorWidget::on_comboDevices_currentIndexChanged(int index) {
                 ui->editPort->setText(p[1]);
             }
 
-                // If device metadata includes camera-specific fields, populate HTTP tab and enable camera controls
-                // Common metadata keys: camera_snapshot_url, camera_stream_url, camera_ptz_endpoint
-                if (d.metadata.contains("camera_snapshot_url") || d.metadata.contains("camera_stream_url")) {
-                    QString url;
-                    if (d.metadata.contains("camera_stream_url")) url = d.metadata.value("camera_stream_url").toString();
-                    else url = d.metadata.value("camera_snapshot_url").toString();
-                    // find HttpOpsWidget and set its URL field if present
-                    auto http = this->findChild<HttpOpsWidget*>(QStringLiteral("tabHttp"));
-                    if (!http) http = this->findChild<HttpOpsWidget*>();
-                    if (http) {
-                        if (auto le = http->findChild<QLineEdit*>(QStringLiteral("editHttpUrl"))) {
-                            le->setText(url);
-                        }
-                    } else {
-                        // fallback: if a plain editHttpUrl exists in UI, set it
-                        if (auto le = this->findChild<QLineEdit*>(QStringLiteral("editHttpUrl"))) le->setText(url);
-                    }
-                    // enable camera PTZ buttons if we have an endpoint
-                    bool hasPtz = d.metadata.contains("camera_ptz_endpoint") && !d.metadata.value("camera_ptz_endpoint").toString().isEmpty();
-                    if (auto pc = this->findChild<QWidget*>(QStringLiteral("cameraControls"))) {
-                        for (auto btnName : {QStringLiteral("btnCameraPlay"), QStringLiteral("btnCameraPause"), QStringLiteral("btnCameraSnapshot"), QStringLiteral("btnPtzUp"), QStringLiteral("btnPtzLeft"), QStringLiteral("btnPtzRight"), QStringLiteral("btnPtzDown")}) {
-                            if (auto b = pc->findChild<QPushButton*>(btnName)) b->setEnabled(true);
-                        }
-                        // disable PTZ arrows if no PTZ endpoint
-                        if (!hasPtz) {
-                            for (auto btnName : {QStringLiteral("btnPtzUp"), QStringLiteral("btnPtzLeft"), QStringLiteral("btnPtzRight"), QStringLiteral("btnPtzDown")}) {
-                                if (auto b = pc->findChild<QPushButton*>(btnName)) b->setEnabled(false);
-                            }
-                        }
+            // If device metadata includes camera-specific fields, populate HTTP tab and enable
+            // camera controls Common metadata keys: camera_snapshot_url, camera_stream_url,
+            // camera_ptz_endpoint
+            if (d.metadata.contains("camera_snapshot_url") ||
+                d.metadata.contains("camera_stream_url")) {
+                QString url;
+                if (d.metadata.contains("camera_stream_url"))
+                    url = d.metadata.value("camera_stream_url").toString();
+                else
+                    url = d.metadata.value("camera_snapshot_url").toString();
+                // find HttpOpsWidget and set its URL field if present
+                auto http = this->findChild<HttpOpsWidget*>(QStringLiteral("tabHttp"));
+                if (!http) http = this->findChild<HttpOpsWidget*>();
+                if (http) {
+                    if (auto le = http->findChild<QLineEdit*>(QStringLiteral("editHttpUrl"))) {
+                        le->setText(url);
                     }
                 } else {
-                    // No camera metadata: disable cameraControls buttons
-                    if (auto pc = this->findChild<QWidget*>(QStringLiteral("cameraControls"))) {
-                        for (auto btnName : {QStringLiteral("btnCameraPlay"), QStringLiteral("btnCameraPause"), QStringLiteral("btnCameraSnapshot"), QStringLiteral("btnPtzUp"), QStringLiteral("btnPtzLeft"), QStringLiteral("btnPtzRight"), QStringLiteral("btnPtzDown")}) {
+                    // fallback: if a plain editHttpUrl exists in UI, set it
+                    if (auto le = this->findChild<QLineEdit*>(QStringLiteral("editHttpUrl")))
+                        le->setText(url);
+                }
+                // enable camera PTZ buttons if we have an endpoint
+                bool hasPtz = d.metadata.contains("camera_ptz_endpoint") &&
+                              !d.metadata.value("camera_ptz_endpoint").toString().isEmpty();
+                if (auto pc = this->findChild<QWidget*>(QStringLiteral("cameraControls"))) {
+                    for (auto btnName : {QStringLiteral("btnCameraPlay"),
+                                         QStringLiteral("btnCameraPause"),
+                                         QStringLiteral("btnCameraSnapshot"),
+                                         QStringLiteral("btnPtzUp"),
+                                         QStringLiteral("btnPtzLeft"),
+                                         QStringLiteral("btnPtzRight"),
+                                         QStringLiteral("btnPtzDown")}) {
+                        if (auto b = pc->findChild<QPushButton*>(btnName)) b->setEnabled(true);
+                    }
+                    // disable PTZ arrows if no PTZ endpoint
+                    if (!hasPtz) {
+                        for (auto btnName : {QStringLiteral("btnPtzUp"),
+                                             QStringLiteral("btnPtzLeft"),
+                                             QStringLiteral("btnPtzRight"),
+                                             QStringLiteral("btnPtzDown")}) {
                             if (auto b = pc->findChild<QPushButton*>(btnName)) b->setEnabled(false);
                         }
                     }
                 }
+            } else {
+                // No camera metadata: disable cameraControls buttons
+                if (auto pc = this->findChild<QWidget*>(QStringLiteral("cameraControls"))) {
+                    for (auto btnName : {QStringLiteral("btnCameraPlay"),
+                                         QStringLiteral("btnCameraPause"),
+                                         QStringLiteral("btnCameraSnapshot"),
+                                         QStringLiteral("btnPtzUp"),
+                                         QStringLiteral("btnPtzLeft"),
+                                         QStringLiteral("btnPtzRight"),
+                                         QStringLiteral("btnPtzDown")}) {
+                        if (auto b = pc->findChild<QPushButton*>(btnName)) b->setEnabled(false);
+                    }
+                }
+            }
             return;
         }
     }

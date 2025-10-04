@@ -6,12 +6,12 @@
 #include <QDateTime>
 #include <QFont>
 #include <QLabel>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlQuery>
 #include <QSqlRecord>
 #include <QStringList>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/QSqlQuery>
 
 #include "modules/Storage/storage.h"
 #include "spdlog/spdlog.h"

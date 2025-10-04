@@ -4,7 +4,9 @@
 #include <QPair>
 #include <QVector>
 
-namespace Ui { class ActionManager; }
+namespace Ui {
+class ActionManager;
+}
 
 class ActionManager : public QDialog {
     Q_OBJECT
@@ -31,7 +33,7 @@ class ActionManager : public QDialog {
    private:
     Ui::ActionManager* ui;
     QString m_type;
-    QVector<QPair<QString, QString>> m_rows; // name, created_at
+    QVector<QPair<QString, QString>> m_rows;  // name, created_at
     void refreshList();
     QByteArray currentPayload() const;
 };

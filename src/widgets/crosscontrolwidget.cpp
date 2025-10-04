@@ -16,8 +16,8 @@
 #include "facerecognitionwidget.h"
 #include "logging.h"
 #include "modules/Config/config.h"
-#include "widgets/devicemanagementwidget.h"
 #include "spdlog/spdlog.h"
+#include "widgets/devicemanagementwidget.h"
 
 // Default constructor delegates to gateway-taking constructor with nullptr
 CrossControlWidget::CrossControlWidget(QWidget* parent) : CrossControlWidget(nullptr, parent) {}

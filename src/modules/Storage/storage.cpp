@@ -1,8 +1,8 @@
 ﻿#include "storage.h"
 
 #include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 
 #include "dbmanager.h"
 // use config to store requested DB path
@@ -35,18 +35,19 @@ bool Storage::saveAction(const QString& type, const QString& name, const QByteAr
         QSqlQuery q(d);
         QString tbl = actionsTableForType(type);
         // create table if not exists
-        q.exec(QString("CREATE TABLE IF NOT EXISTS %1 (name TEXT PRIMARY KEY, payload BLOB, created_at TEXT)").arg(tbl));
+        q.exec(QString("CREATE TABLE IF NOT EXISTS %1 (name TEXT PRIMARY KEY, payload BLOB, "
+                       "created_at TEXT)")
+                   .arg(tbl));
         QSqlQuery q2(d);
-        q2.prepare(QString("INSERT OR REPLACE INTO %1 (name,payload,created_at) VALUES (?,?,datetime('now'))").arg(tbl));
+        q2.prepare(
+            QString(
+                "INSERT OR REPLACE INTO %1 (name,payload,created_at) VALUES (?,?,datetime('now'))")
+                .arg(tbl));
         q2.addBindValue(name);
         q2.addBindValue(payload);
-        if (!q2.exec()) {
-            return false;
-        }
+        if (!q2.exec()) { return false; }
         return true;
-    } catch (...) {
-        return false;
-    }
+    } catch (...) { return false; }
 }
 
 QVector<QPair<QString, QString>> Storage::loadActions(const QString& type) {
@@ -55,14 +56,14 @@ QVector<QPair<QString, QString>> Storage::loadActions(const QString& type) {
         QSqlDatabase& d = DbManager::instance().db();
         QSqlQuery q(d);
         QString tbl = actionsTableForType(type);
-        q.exec(QString("SELECT name, created_at FROM %1 ORDER BY created_at DESC LIMIT 100").arg(tbl));
+        q.exec(
+            QString("SELECT name, created_at FROM %1 ORDER BY created_at DESC LIMIT 100").arg(tbl));
         while (q.next()) {
             QString name = q.value(0).toString();
             QString created = q.value(1).toString();
             out.append(qMakePair(name, created));
         }
-    } catch (...) {
-    }
+    } catch (...) {}
     return out;
 }
 
@@ -75,9 +76,7 @@ QByteArray Storage::loadActionPayload(const QString& type, const QString& name) 
         q.addBindValue(name);
         if (!q.exec() || !q.next()) return QByteArray();
         return q.value(0).toByteArray();
-    } catch (...) {
-        return QByteArray();
-    }
+    } catch (...) { return QByteArray(); }
 }
 
 int Storage::migrateOldActions() {
@@ -96,8 +95,7 @@ int Storage::migrateOldActions() {
             QByteArray payload = q2.value(2).toByteArray();
             if (saveAction(type, name, payload)) ++migrated;
         }
-    } catch (...) {
-    }
+    } catch (...) {}
     return migrated;
 }
 
@@ -109,9 +107,7 @@ bool Storage::deleteAction(const QString& type, const QString& name) {
         q.prepare(QString("DELETE FROM %1 WHERE name = ?").arg(tbl));
         q.addBindValue(name);
         return q.exec();
-    } catch (...) {
-        return false;
-    }
+    } catch (...) { return false; }
 }
 
 bool Storage::renameAction(const QString& type, const QString& oldName, const QString& newName) {
@@ -134,9 +130,7 @@ bool Storage::renameAction(const QString& type, const QString& oldName, const QS
         q2.addBindValue(oldName);
         q2.exec();
         return true;
-    } catch (...) {
-        return false;
-    }
+    } catch (...) { return false; }
 }
 
 }  // namespace storage

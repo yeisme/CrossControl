@@ -4,9 +4,9 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QImage>
+#include <QVariant>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
-#include <QVariant>
 #include <cmath>
 #include <opencv2/imgcodecs.hpp>
 

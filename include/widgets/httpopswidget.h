@@ -13,28 +13,28 @@ class QNetworkAccessManager;
 
 class HttpOpsWidget : public QWidget {
     Q_OBJECT
-public:
+   public:
     explicit HttpOpsWidget(QWidget* parent = nullptr);
     ~HttpOpsWidget();
 
-private slots:
+   private slots:
     void on_btnSend_clicked();
     void on_btnSaveAction_clicked();
     void on_btnLoadAction_clicked();
     void on_btnClear_clicked();
     void on_btnKV_clicked();
 
-private:
+   private:
     Ui::HttpOpsWidget* ui;
     QNetworkAccessManager* m_net = nullptr;
 
     QByteArray serializeHttpAction(const QString& url,
-                                    const QString& method,
-                                    const QString& token,
-                                    bool autoBearer,
-                                    const QByteArray& body,
-                                    const QString& contentType,
-                                    bool sendAsJson);
+                                   const QString& method,
+                                   const QString& token,
+                                   bool autoBearer,
+                                   const QByteArray& body,
+                                   const QString& contentType,
+                                   bool sendAsJson);
     bool deserializeHttpAction(const QByteArray& payload,
                                QString& url,
                                QString& method,
@@ -45,4 +45,4 @@ private:
                                bool& sendAsJson);
 };
 
-#endif // HTTPOPSWIDGET_H
+#endif  // HTTPOPSWIDGET_H

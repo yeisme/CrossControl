@@ -1,8 +1,8 @@
 ﻿#include "importexportcontrol.h"
 
+#include <QCoreApplication>
 #include <QHBoxLayout>
 #include <QPushButton>
-#include <QCoreApplication>
 
 ImportExportControl::ImportExportControl(QWidget* parent) : QWidget(parent) {
     btnImport_ =

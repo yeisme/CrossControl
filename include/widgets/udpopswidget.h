@@ -4,25 +4,27 @@
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class UdpOpsWidget; }
+namespace Ui {
+class UdpOpsWidget;
+}
 QT_END_NAMESPACE
 
 class QUdpSocket;
 
 class UdpOpsWidget : public QWidget {
     Q_OBJECT
-public:
+   public:
     explicit UdpOpsWidget(QWidget* parent = nullptr);
     ~UdpOpsWidget() override;
 
-private slots:
+   private slots:
     void on_btnBind_clicked();
     void on_btnSend_clicked();
     void on_btnSaveAction_clicked();
     void on_btnLoadAction_clicked();
     void on_btnClear_clicked();
 
-private:
+   private:
     Ui::UdpOpsWidget* ui;
     QUdpSocket* m_sock = nullptr;
 
@@ -31,4 +33,4 @@ private:
     bool deserializeUdpAction(const QByteArray& payload, QString& peer, QByteArray& body);
 };
 
-#endif // UDPOPSWIDGET_H
+#endif  // UDPOPSWIDGET_H

@@ -4,7 +4,9 @@
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class SerialOpsWidget; }
+namespace Ui {
+class SerialOpsWidget;
+}
 QT_END_NAMESPACE
 
 class QSerialPort;
@@ -13,11 +15,11 @@ class QTimer;
 
 class SerialOpsWidget : public QWidget {
     Q_OBJECT
-public:
+   public:
     explicit SerialOpsWidget(QWidget* parent = nullptr);
     ~SerialOpsWidget();
 
-private slots:
+   private slots:
     void on_btnOpen_clicked();
     void on_btnClose_clicked();
     void on_btnSend_clicked();
@@ -25,7 +27,7 @@ private slots:
     void on_btnLoadAction_clicked();
     void on_btnClear_clicked();
 
-private:
+   private:
     Ui::SerialOpsWidget* ui;
     QSerialPort* m_port = nullptr;
     QTimer* m_activityTimer = nullptr;
@@ -33,4 +35,4 @@ private:
     void setConnected(bool connected);
 };
 
-#endif // SERIALOPSWIDGET_H
+#endif  // SERIALOPSWIDGET_H

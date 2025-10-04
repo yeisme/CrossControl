@@ -37,10 +37,10 @@ class SettingWidget : public QWidget {
     void on_btnManageAccounts_clicked();
     void on_btnJsonEditor_clicked();
 
-        // REST control
-        void on_btnRestStartStop_clicked();
-        void on_restPortChanged(int port);
-    
+    // REST control
+    void on_btnRestStartStop_clicked();
+    void on_restPortChanged(int port);
+
     // bind the DeviceGateway instance so settings page can control REST server
     void bindDeviceGateway(DeviceGateway::DeviceGateway* gw);
 
@@ -55,8 +55,8 @@ class SettingWidget : public QWidget {
     Ui::SettingWidget* ui;
     void populateSettingsTable();
 
-        // optional pointer to control REST server
-        DeviceGateway::DeviceGateway* gateway_ = nullptr;
+    // optional pointer to control REST server
+    DeviceGateway::DeviceGateway* gateway_ = nullptr;
 
     // helpers to manage REST controls
     void initRestControls();

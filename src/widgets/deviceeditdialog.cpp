@@ -3,20 +3,21 @@
 #include <qcoreapplication.h>
 
 #include <QFormLayout>
+#include <QHBoxLayout>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QTextEdit>
-#include <QLabel>
 #include <QUuid>
-#include <QHBoxLayout>
-#include <QMessageBox>
 
 DeviceEditDialog::DeviceEditDialog(QWidget* parent) : QDialog(parent) {
     auto* form = new QFormLayout(this);
     leId_ = new QLineEdit(this);
-    btnGenId_ = new QPushButton(QCoreApplication::translate("DeviceEditDialog", "Generate UUID"), this);
+    btnGenId_ =
+        new QPushButton(QCoreApplication::translate("DeviceEditDialog", "Generate UUID"), this);
     leName_ = new QLineEdit(this);
     leStatus_ = new QLineEdit(this);
     leEndpoint_ = new QLineEdit(this);
@@ -33,7 +34,9 @@ DeviceEditDialog::DeviceEditDialog(QWidget* parent) : QDialog(parent) {
     leAuthToken_ = new QLineEdit(this);
 
     // ID and Name are required fields. Add a red asterisk label after the field label.
-    auto* idLabel = new QLabel(QCoreApplication::translate("DeviceEditDialog", "ID <span style=\"color:red\">*</span>"), this);
+    auto* idLabel = new QLabel(
+        QCoreApplication::translate("DeviceEditDialog", "ID <span style=\"color:red\">*</span>"),
+        this);
     idLabel->setTextFormat(Qt::RichText);
     // place ID field and generate button on one row
     auto* idRow = new QHBoxLayout();
@@ -41,7 +44,9 @@ DeviceEditDialog::DeviceEditDialog(QWidget* parent) : QDialog(parent) {
     idRow->addWidget(btnGenId_);
     form->addRow(idLabel, idRow);
 
-    auto* nameLabel = new QLabel(QCoreApplication::translate("DeviceEditDialog", "Name <span style=\"color:red\">*</span>"), this);
+    auto* nameLabel = new QLabel(
+        QCoreApplication::translate("DeviceEditDialog", "Name <span style=\"color:red\">*</span>"),
+        this);
     nameLabel->setTextFormat(Qt::RichText);
     form->addRow(nameLabel, leName_);
     form->addRow(QCoreApplication::translate("DeviceEditDialog", "Status"), leStatus_);
@@ -66,8 +71,11 @@ DeviceEditDialog::DeviceEditDialog(QWidget* parent) : QDialog(parent) {
     // validate required fields before accept
     connect(ok, &QPushButton::clicked, this, [this]() {
         if (leId_->text().trimmed().isEmpty() || leName_->text().trimmed().isEmpty()) {
-            QMessageBox::warning(this, QCoreApplication::translate("DeviceEditDialog", "Missing fields"),
-                                 QCoreApplication::translate("DeviceEditDialog", "Please fill required fields: ID and Name."));
+            QMessageBox::warning(
+                this,
+                QCoreApplication::translate("DeviceEditDialog", "Missing fields"),
+                QCoreApplication::translate("DeviceEditDialog",
+                                            "Please fill required fields: ID and Name."));
             return;
         }
         QDialog::accept();
@@ -93,9 +101,12 @@ void DeviceEditDialog::setDevice(const DeviceGateway::DeviceInfo& d) {
     teMeta_->setPlainText(QString::fromUtf8(
         QJsonDocument(QJsonObject::fromVariantMap(d.metadata)).toJson(QJsonDocument::Compact)));
     // populate structured auth fields from metadata if present
-    if (d.metadata.contains("auth_user")) leAuthUser_->setText(d.metadata.value("auth_user").toString());
-    if (d.metadata.contains("auth_pass")) leAuthPass_->setText(d.metadata.value("auth_pass").toString());
-    if (d.metadata.contains("auth_token")) leAuthToken_->setText(d.metadata.value("auth_token").toString());
+    if (d.metadata.contains("auth_user"))
+        leAuthUser_->setText(d.metadata.value("auth_user").toString());
+    if (d.metadata.contains("auth_pass"))
+        leAuthPass_->setText(d.metadata.value("auth_pass").toString());
+    if (d.metadata.contains("auth_token"))
+        leAuthToken_->setText(d.metadata.value("auth_token").toString());
 }
 
 DeviceGateway::DeviceInfo DeviceEditDialog::device() const {

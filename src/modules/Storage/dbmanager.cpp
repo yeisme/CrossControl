@@ -2,10 +2,10 @@
 
 #include <QDir>
 #include <QFileInfo>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
 #include <QStandardPaths>
 #include <QUuid>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 
 #include "logging.h"
 // 使用 config 模块提供配置

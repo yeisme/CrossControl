@@ -12,11 +12,11 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QMessageBox>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
 #include <QSqlRecord>
 #include <QVBoxLayout>
 #include <QVariant>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 
 #include "modules/Storage/dbmanager.h"
 #include "modules/Storage/storage.h"
