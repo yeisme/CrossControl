@@ -6,7 +6,7 @@
       <item>
         <widget class="QLabel" name="labelMonitorTitle">
             <property name="text">
-              <string>Control View/控制页面</string>
+              <string>Operations / 操作</string>
             </property>
           <property name="alignment">
             <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -293,27 +293,7 @@
         </widget>
       </item>
 
-      <item>
-        <widget class="QLabel" name="labelMonitorFeed">
-          <property name="styleSheet">
-            <string>background-color: #333; color: white; min-height: 300px;</string>
-          </property>
-          <property name="text">
-            <string>Monitor Video Area</string>
-          </property>
-          <property name="alignment">
-            <set>Qt::AlignmentFlag::AlignCenter</set>
-          </property>
-        </widget>
-      </item>
-
-      <item>
-        <widget class="QPushButton" name="btnBackFromMonitor">
-          <property name="text">
-            <string>Back to Main</string>
-          </property>
-        </widget>
-      </item>
+      <!-- Monitor video area and back button removed as requested -->
     </layout>
   </widget>
   <customwidgets>

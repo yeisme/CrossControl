@@ -20,18 +20,24 @@ QLineEdit,QTextEdit{font:9pt "Segoe UI"}</string>
    <item>
     <layout class="QHBoxLayout" name="bindLayout">
      <item>
-      <widget class="QLineEdit" name="editBindPort">
-       <property name="placeholderText">
-        <string>bind port</string>
-       </property>
-      </widget>
+  <widget class="QLineEdit" name="editBindPort">
+   <property name="placeholderText">
+    <string>Local bind port</string>
+   </property>
+   <property name="toolTip">
+    <string>Local port to bind and listen for incoming UDP packets</string>
+   </property>
+  </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btnBind">
-       <property name="text">
-        <string>Bind</string>
-       </property>
-      </widget>
+  <widget class="QPushButton" name="btnBind">
+   <property name="text">
+    <string>Bind</string>
+   </property>
+   <property name="toolTip">
+    <string>Bind and listen on the specified local UDP port</string>
+   </property>
+  </widget>
      </item>
     </layout>
    </item>

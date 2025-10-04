@@ -70,43 +70,45 @@ CrossControlWidget::CrossControlWidget(DeviceGateway::DeviceGateway* gateway, QW
         return b;
     };
 
+    // 按推荐顺序创建侧边栏按钮（按功能与使用频率分组）
     btnDashboard = makeBtn(QCoreApplication::translate("CrossControlWidget", "Dashboard"),
                            ":/icons/icons/dashboard.svg",
                            "btnDashboard");
-    btnMonitor = makeBtn(QCoreApplication::translate("CrossControlWidget", "Monitor"),
-                         ":/icons/icons/monitor.svg",
-                         "btnMonitor");
-    btnUnlock = makeBtn(QCoreApplication::translate("CrossControlWidget", "Remote Unlock"),
-                        ":/icons/icons/unlock.svg",
-                        "btnUnlock");
-    btnVisitRecord = makeBtn(QCoreApplication::translate("CrossControlWidget", "Visit Records"),
-                             ":/icons/icons/visit.svg",
-                             "btnVisitRecord");
-    btnMessage = makeBtn(QCoreApplication::translate("CrossControlWidget", "Messages"),
-                         ":/icons/icons/message.svg",
-                         "btnMessage");
-    btnSetting = makeBtn(QCoreApplication::translate("CrossControlWidget", "System Settings"),
-                         ":/icons/icons/setting.svg",
-                         "btnSetting");
-    btnLogs = makeBtn(QCoreApplication::translate("CrossControlWidget", "Logs"),
-                      ":/icons/icons/logs.svg",
-                      "btnLogs");
-    btnFaceRec = makeBtn(QCoreApplication::translate("CrossControlWidget", "Face Recognition"),
-                         ":/icons/icons/app.svg",
-                         "btnFaceRec");
     btnDeviceMgmt = makeBtn(QCoreApplication::translate("CrossControlWidget", "Device Management"),
                             ":/icons/icons/device.svg",
                             "btnDeviceMgmt");
+    btnMonitor = makeBtn(QCoreApplication::translate("CrossControlWidget", "Monitor"),
+                         ":/icons/icons/monitor.svg",
+                         "btnMonitor");
+    btnFaceRec = makeBtn(QCoreApplication::translate("CrossControlWidget", "Face Recognition"),
+                         ":/icons/icons/app.svg",
+                         "btnFaceRec");
+    btnVisitRecord = makeBtn(QCoreApplication::translate("CrossControlWidget", "Visit Records"),
+                             ":/icons/icons/visit.svg",
+                             "btnVisitRecord");
+    btnUnlock = makeBtn(QCoreApplication::translate("CrossControlWidget", "Remote Unlock"),
+                        ":/icons/icons/unlock.svg",
+                        "btnUnlock");
+    btnMessage = makeBtn(QCoreApplication::translate("CrossControlWidget", "Messages"),
+                         ":/icons/icons/message.svg",
+                         "btnMessage");
+    btnLogs = makeBtn(QCoreApplication::translate("CrossControlWidget", "Logs"),
+                      ":/icons/icons/logs.svg",
+                      "btnLogs");
+    btnSetting = makeBtn(QCoreApplication::translate("CrossControlWidget", "System Settings"),
+                         ":/icons/icons/setting.svg",
+                         "btnSetting");
 
+    // 按顺序加入布局
     for (QPushButton* b : {btnDashboard,
-                    btnMonitor,
-                    btnUnlock,
-                    btnVisitRecord,
-                    btnMessage,
-                    btnSetting,
-                    btnLogs,
-                    btnFaceRec,
-                    btnDeviceMgmt}) {
+                           btnDeviceMgmt,
+                           btnMonitor,
+                           btnFaceRec,
+                           btnVisitRecord,
+                           btnUnlock,
+                           btnMessage,
+                           btnLogs,
+                           btnSetting}) {
         sideLayout->addWidget(b);
     }
 
@@ -138,15 +140,16 @@ CrossControlWidget::CrossControlWidget(DeviceGateway::DeviceGateway* gateway, QW
     // bind gateway to settings page so it can control REST server
     if (settingWidget) settingWidget->bindDeviceGateway(deviceGateway);
 
-    contentStack->addWidget(mainWidget);
-    contentStack->addWidget(monitorWidget);
-    contentStack->addWidget(visitRecordWidget);
-    contentStack->addWidget(messageWidget);
-    contentStack->addWidget(settingWidget);
-    contentStack->addWidget(unlockWidget);
-    contentStack->addWidget(logWidget);
-    contentStack->addWidget(faceRecWidget);
-    contentStack->addWidget(deviceMgmtWidget);
+    // 内容堆栈：顺序对应侧边栏按钮
+    contentStack->addWidget(mainWidget);         // Dashboard
+    contentStack->addWidget(deviceMgmtWidget);   // Device Management
+    contentStack->addWidget(monitorWidget);      // Monitor
+    contentStack->addWidget(faceRecWidget);      // Face Recognition
+    contentStack->addWidget(visitRecordWidget);  // Visit Records
+    contentStack->addWidget(unlockWidget);       // Remote Unlock
+    contentStack->addWidget(messageWidget);      // Messages
+    contentStack->addWidget(logWidget);          // Logs
+    contentStack->addWidget(settingWidget);      // System Settings
 
     // 组装主体
     appLayout->addWidget(sideBar);
@@ -166,13 +169,14 @@ CrossControlWidget::CrossControlWidget(DeviceGateway::DeviceGateway* gateway, QW
     // 侧边栏导航
     auto setActive = [this](QPushButton* active) {
         for (auto* b : {btnDashboard,
+                        btnDeviceMgmt,
                         btnMonitor,
-                        btnUnlock,
+                        btnFaceRec,
                         btnVisitRecord,
+                        btnUnlock,
                         btnMessage,
-                        btnSetting,
                         btnLogs,
-                        btnFaceRec}) {
+                        btnSetting}) {
             if (!b) continue;
             b->setProperty("active", b == active ? "true" : "false");
             b->style()->unpolish(b);
@@ -184,37 +188,37 @@ CrossControlWidget::CrossControlWidget(DeviceGateway::DeviceGateway* gateway, QW
         setActive(btnDashboard);
         showMainPage();
     });
+    connect(btnDeviceMgmt, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnDeviceMgmt);
+        contentStack->setCurrentWidget(deviceMgmtWidget);
+    });
     connect(btnMonitor, &QPushButton::clicked, this, [this, setActive]() {
         setActive(btnMonitor);
         showMonitorPage();
-    });
-    connect(btnUnlock, &QPushButton::clicked, this, [this, setActive]() {
-        setActive(btnUnlock);
-        showUnlockPage();
-    });
-    connect(btnVisitRecord, &QPushButton::clicked, this, [this, setActive]() {
-        setActive(btnVisitRecord);
-        showVisitRecordPage();
-    });
-    connect(btnMessage, &QPushButton::clicked, this, [this, setActive]() {
-        setActive(btnMessage);
-        showMessagePage();
-    });
-    connect(btnSetting, &QPushButton::clicked, this, [this, setActive]() {
-        setActive(btnSetting);
-        showSettingPage();
-    });
-    connect(btnLogs, &QPushButton::clicked, this, [this, setActive]() {
-        setActive(btnLogs);
-        showLogPage();
     });
     connect(btnFaceRec, &QPushButton::clicked, this, [this, setActive]() {
         setActive(btnFaceRec);
         contentStack->setCurrentWidget(faceRecWidget);
     });
-    connect(btnDeviceMgmt, &QPushButton::clicked, this, [this, setActive]() {
-        setActive(btnDeviceMgmt);
-        contentStack->setCurrentWidget(deviceMgmtWidget);
+    connect(btnVisitRecord, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnVisitRecord);
+        showVisitRecordPage();
+    });
+    connect(btnUnlock, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnUnlock);
+        showUnlockPage();
+    });
+    connect(btnMessage, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnMessage);
+        showMessagePage();
+    });
+    connect(btnLogs, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnLogs);
+        showLogPage();
+    });
+    connect(btnSetting, &QPushButton::clicked, this, [this, setActive]() {
+        setActive(btnSetting);
+        showSettingPage();
     });
     connect(btnLogout, &QPushButton::clicked, this, &CrossControlWidget::onLogout);
 

@@ -368,6 +368,62 @@ MonitorWidget::MonitorWidget(DeviceGateway::DeviceGateway* gateway, QWidget* par
     if (auto lbl = this->findChild<QLabel*>("labelDeviceCardText"))
         lbl->setText(QCoreApplication::translate("MonitorWidget", "No device selected"));
 
+    // Create a small camera control panel (runtime) and insert above device card
+    QWidget* cameraControls = new QWidget(this);
+    cameraControls->setObjectName("cameraControls");
+    QHBoxLayout* camLay = new QHBoxLayout(cameraControls);
+    camLay->setContentsMargins(0, 0, 0, 0);
+    QPushButton* btnPlay = new QPushButton(QCoreApplication::translate("MonitorWidget", "Play"), cameraControls);
+    btnPlay->setObjectName("btnCameraPlay");
+    QPushButton* btnPause = new QPushButton(QCoreApplication::translate("MonitorWidget", "Pause"), cameraControls);
+    btnPause->setObjectName("btnCameraPause");
+    QPushButton* btnSnapshot = new QPushButton(QCoreApplication::translate("MonitorWidget", "Snapshot"), cameraControls);
+    btnSnapshot->setObjectName("btnCameraSnapshot");
+    // PTZ simple controls
+    QPushButton* btnUp = new QPushButton("↑", cameraControls);
+    btnUp->setObjectName("btnPtzUp");
+    QPushButton* btnLeft = new QPushButton("←", cameraControls);
+    btnLeft->setObjectName("btnPtzLeft");
+    QPushButton* btnRight = new QPushButton("→", cameraControls);
+    btnRight->setObjectName("btnPtzRight");
+    QPushButton* btnDown = new QPushButton("↓", cameraControls);
+    btnDown->setObjectName("btnPtzDown");
+    camLay->addWidget(btnPlay);
+    camLay->addWidget(btnPause);
+    camLay->addWidget(btnSnapshot);
+    camLay->addStretch(1);
+    camLay->addWidget(btnUp);
+    camLay->addWidget(btnLeft);
+    camLay->addWidget(btnRight);
+    camLay->addWidget(btnDown);
+
+    // Insert cameraControls widget above deviceCard if possible
+    if (auto topLay = this->layout()) {
+        // find the index of deviceCard and insert before it
+        int insertAt = -1;
+        for (int i = 0; i < topLay->count(); ++i) {
+            QLayoutItem* it = topLay->itemAt(i);
+            if (!it) continue;
+            if (auto w = it->widget()) {
+                if (w->objectName() == QLatin1String("deviceCard")) {
+                    insertAt = i;
+                    break;
+                }
+            }
+        }
+        // QLayout doesn't provide insertWidget; cast to QBoxLayout when possible
+        if (insertAt >= 0) {
+            if (auto bx = qobject_cast<QBoxLayout*>(topLay)) {
+                bx->insertWidget(insertAt, cameraControls);
+            } else {
+                // fallback: add and hope layout order is acceptable
+                topLay->addWidget(cameraControls);
+            }
+        } else {
+            topLay->addWidget(cameraControls);
+        }
+    }
+
     connect(ui->comboDevices,
             QOverload<int>::of(&QComboBox::currentIndexChanged),
             this,
@@ -499,8 +555,10 @@ void MonitorWidget::handleIncomingData(QTcpSocket* sock, const QByteArray& data)
             continue;
         }
         m_lastPixmap = pixmap;
-        QPixmap scaled = pixmap.scaled(ui->labelMonitorFeed->size(), Qt::KeepAspectRatio);
-        ui->labelMonitorFeed->setPixmap(scaled);
+        if (auto lbl = this->findChild<QLabel*>(QStringLiteral("labelMonitorFeed"))) {
+            QPixmap scaled = pixmap.scaled(lbl->size(), Qt::KeepAspectRatio);
+            lbl->setPixmap(scaled);
+        }
 
         // optionally save
         QString saveDir = ui->editSavePath->text();
@@ -675,9 +733,7 @@ void MonitorWidget::on_btnLoadHttpAction_clicked() {
 
 // UDP action forwarding removed
 
-void MonitorWidget::on_btnBackFromMonitor_clicked() {
-    emit backToMain();
-}
+// on_btnBackFromMonitor_clicked removed: UI no longer contains the Back to Main button.
 
 void MonitorWidget::on_btnChoosePath_clicked() {
     QString dir = QFileDialog::getExistingDirectory(
@@ -811,6 +867,45 @@ void MonitorWidget::on_comboDevices_currentIndexChanged(int index) {
                 ui->editHost->setText(p[0]);
                 ui->editPort->setText(p[1]);
             }
+
+                // If device metadata includes camera-specific fields, populate HTTP tab and enable camera controls
+                // Common metadata keys: camera_snapshot_url, camera_stream_url, camera_ptz_endpoint
+                if (d.metadata.contains("camera_snapshot_url") || d.metadata.contains("camera_stream_url")) {
+                    QString url;
+                    if (d.metadata.contains("camera_stream_url")) url = d.metadata.value("camera_stream_url").toString();
+                    else url = d.metadata.value("camera_snapshot_url").toString();
+                    // find HttpOpsWidget and set its URL field if present
+                    auto http = this->findChild<HttpOpsWidget*>(QStringLiteral("tabHttp"));
+                    if (!http) http = this->findChild<HttpOpsWidget*>();
+                    if (http) {
+                        if (auto le = http->findChild<QLineEdit*>(QStringLiteral("editHttpUrl"))) {
+                            le->setText(url);
+                        }
+                    } else {
+                        // fallback: if a plain editHttpUrl exists in UI, set it
+                        if (auto le = this->findChild<QLineEdit*>(QStringLiteral("editHttpUrl"))) le->setText(url);
+                    }
+                    // enable camera PTZ buttons if we have an endpoint
+                    bool hasPtz = d.metadata.contains("camera_ptz_endpoint") && !d.metadata.value("camera_ptz_endpoint").toString().isEmpty();
+                    if (auto pc = this->findChild<QWidget*>(QStringLiteral("cameraControls"))) {
+                        for (auto btnName : {QStringLiteral("btnCameraPlay"), QStringLiteral("btnCameraPause"), QStringLiteral("btnCameraSnapshot"), QStringLiteral("btnPtzUp"), QStringLiteral("btnPtzLeft"), QStringLiteral("btnPtzRight"), QStringLiteral("btnPtzDown")}) {
+                            if (auto b = pc->findChild<QPushButton*>(btnName)) b->setEnabled(true);
+                        }
+                        // disable PTZ arrows if no PTZ endpoint
+                        if (!hasPtz) {
+                            for (auto btnName : {QStringLiteral("btnPtzUp"), QStringLiteral("btnPtzLeft"), QStringLiteral("btnPtzRight"), QStringLiteral("btnPtzDown")}) {
+                                if (auto b = pc->findChild<QPushButton*>(btnName)) b->setEnabled(false);
+                            }
+                        }
+                    }
+                } else {
+                    // No camera metadata: disable cameraControls buttons
+                    if (auto pc = this->findChild<QWidget*>(QStringLiteral("cameraControls"))) {
+                        for (auto btnName : {QStringLiteral("btnCameraPlay"), QStringLiteral("btnCameraPause"), QStringLiteral("btnCameraSnapshot"), QStringLiteral("btnPtzUp"), QStringLiteral("btnPtzLeft"), QStringLiteral("btnPtzRight"), QStringLiteral("btnPtzDown")}) {
+                            if (auto b = pc->findChild<QPushButton*>(btnName)) b->setEnabled(false);
+                        }
+                    }
+                }
             return;
         }
     }
@@ -869,8 +964,10 @@ void MonitorWidget::onDataReady(const QByteArray& data) {
             continue;
         }
         m_lastPixmap = pixmap;
-        QPixmap scaled = pixmap.scaled(ui->labelMonitorFeed->size(), Qt::KeepAspectRatio);
-        ui->labelMonitorFeed->setPixmap(scaled);
+        if (auto lbl = this->findChild<QLabel*>(QStringLiteral("labelMonitorFeed"))) {
+            QPixmap scaled = pixmap.scaled(lbl->size(), Qt::KeepAspectRatio);
+            lbl->setPixmap(scaled);
+        }
 
         // save to disk
         QString saveDir = ui->editSavePath->text();

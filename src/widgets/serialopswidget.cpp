@@ -2,10 +2,10 @@
 
 #include <spdlog/spdlog.h>
 
-#include <QInputDialog>
-#include <QLabel>
 #include <QBoxLayout>
 #include <QFormLayout>
+#include <QInputDialog>
+#include <QLabel>
 #include <QMessageBox>
 #include <QProgressBar>
 #include <QSerialPort>
@@ -58,18 +58,16 @@ SerialOpsWidget::SerialOpsWidget(QWidget* parent) : QWidget(parent), ui(new Ui::
 
     // explanatory labels (small, gray text). Keep them short and translatable.
     QLabel* lblPortHelp = new QLabel(
-        QCoreApplication::translate(
-            "SerialOpsWidget",
-            "Port (e.g. COM5): the system name of the serial device."),
+        QCoreApplication::translate("SerialOpsWidget",
+                                    "Port (e.g. COM5): the system name of the serial device."),
         this);
     lblPortHelp->setWordWrap(true);
     lblPortHelp->setObjectName(QStringLiteral("labelPortHelp"));
     lblPortHelp->setStyleSheet("color:gray; font-size:11px;");
 
     QLabel* lblBaudHelp = new QLabel(
-        QCoreApplication::translate(
-            "SerialOpsWidget",
-            "Baud (e.g. 115200): communication speed in bits per second."),
+        QCoreApplication::translate("SerialOpsWidget",
+                                    "Baud (e.g. 115200): communication speed in bits per second."),
         this);
     lblBaudHelp->setWordWrap(true);
     lblBaudHelp->setObjectName(QStringLiteral("labelBaudHelp"));
@@ -78,6 +76,48 @@ SerialOpsWidget::SerialOpsWidget(QWidget* parent) : QWidget(parent), ui(new Ui::
     // Try to insert above the known combo boxes. If insertion fails, labels will still be shown.
     insertAbove(ui->comboPort, lblPortHelp);
     insertAbove(ui->comboBaud, lblBaudHelp);
+
+    // Additional short help labels for other serial options.
+    QLabel* lblDataBitsHelp =
+        new QLabel(QCoreApplication::translate(
+                       "SerialOpsWidget", "Data bits (e.g. 8): number of data bits per frame."),
+                   this);
+    lblDataBitsHelp->setWordWrap(true);
+    lblDataBitsHelp->setObjectName(QStringLiteral("labelDataBitsHelp"));
+    lblDataBitsHelp->setStyleSheet("color:gray; font-size:11px;");
+    // try to place above the combo for data bits; use findChild because autogen timing may vary
+    insertAbove(this->findChild<QWidget*>(QStringLiteral("comboDataBits")), lblDataBitsHelp);
+
+    QLabel* lblParityHelp =
+        new QLabel(QCoreApplication::translate(
+                       "SerialOpsWidget",
+                       "Parity (None/Even/Odd): simple error-checking bit used by some devices."),
+                   this);
+    lblParityHelp->setWordWrap(true);
+    lblParityHelp->setObjectName(QStringLiteral("labelParityHelp"));
+    lblParityHelp->setStyleSheet("color:gray; font-size:11px;");
+    insertAbove(this->findChild<QWidget*>(QStringLiteral("comboParity")), lblParityHelp);
+
+    QLabel* lblStopBitsHelp = new QLabel(
+        QCoreApplication::translate("SerialOpsWidget",
+                                    "Stop bits (1 / 1.5 / 2): marks the end of a data frame."),
+        this);
+    lblStopBitsHelp->setWordWrap(true);
+    lblStopBitsHelp->setObjectName(QStringLiteral("labelStopBitsHelp"));
+    lblStopBitsHelp->setStyleSheet("color:gray; font-size:11px;");
+    insertAbove(this->findChild<QWidget*>(QStringLiteral("comboStopBits")), lblStopBitsHelp);
+
+    QLabel* lblTimeoutHelp = new QLabel(
+        QCoreApplication::translate("SerialOpsWidget",
+                                    "Timeout (ms): how long reads/writes wait before giving up."),
+        this);
+    lblTimeoutHelp->setWordWrap(true);
+    lblTimeoutHelp->setObjectName(QStringLiteral("labelTimeoutHelp"));
+    lblTimeoutHelp->setStyleSheet("color:gray; font-size:11px;");
+    // prefer the spin control if present, otherwise the label
+    QWidget* timeoutTarget = this->findChild<QWidget*>(QStringLiteral("spinTimeout"));
+    if (!timeoutTarget) timeoutTarget = this->findChild<QWidget*>(QStringLiteral("labelTimeout"));
+    insertAbove(timeoutTarget, lblTimeoutHelp);
     // Buttons use auto-connect naming (on_<object>_<signal>), no manual connect needed
 
     // populate port list

@@ -26,7 +26,7 @@ class MonitorWidget;
 QT_END_NAMESPACE
 
 /**
- * @brief 监控页面小部件
+ * @brief 操作页面小部件
  *
  * 该类负责：
  * - 作为客户端模式时，通过 TcpConnect 在后台线程中拉取来自设备的视频数据；
@@ -68,10 +68,6 @@ class MonitorWidget : public QWidget {
     void backToMain();
 
    private slots:
-    /**
-     * @brief 返回主界面按钮的槽函数（由 UI 自动连接）
-     */
-    void on_btnBackFromMonitor_clicked();
 
     /**
      * @brief 点击连接（Start）按钮的槽函数，启动 TcpConnect 后台工作线程

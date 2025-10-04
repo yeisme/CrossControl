@@ -52,7 +52,7 @@ class CrossControlWidget : public QWidget {
     // 各页面
     LoginWidget* loginWidget{nullptr};              // 登录页面
     MainWidget* mainWidget{nullptr};                // Dashboard 主页面
-    MonitorWidget* monitorWidget{nullptr};          // 监控页面
+    MonitorWidget* monitorWidget{nullptr};          // 操作页面
     VisitRecordWidget* visitRecordWidget{nullptr};  // 访客记录
     MessageWidget* messageWidget{nullptr};          // 消息
     SettingWidget* settingWidget{nullptr};          // 设置

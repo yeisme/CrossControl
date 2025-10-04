@@ -13,20 +13,26 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="connectLayout">
-     <item>
-      <widget class="QLineEdit" name="editHost">
-       <property name="placeholderText">
-        <string>host</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="editPort">
-       <property name="placeholderText">
-        <string>port</string>
-       </property>
-      </widget>
-     </item>
+    <item>
+     <widget class="QLineEdit" name="editHost">
+      <property name="placeholderText">
+       <string>Remote host</string>
+      </property>
+      <property name="toolTip">
+       <string>Remote host (used to connect to a remote server)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="editPort">
+      <property name="placeholderText">
+       <string>Remote port</string>
+      </property>
+      <property name="toolTip">
+       <string>Remote port (used to connect to a remote server)</string>
+      </property>
+     </widget>
+    </item>
      <item>
       <widget class="QPushButton" name="btnConnect">
        <property name="text">

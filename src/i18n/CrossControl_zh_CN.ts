@@ -124,52 +124,52 @@
 <context>
     <name>CrossControlWidget</name>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="73"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="74"/>
         <source>Dashboard</source>
         <translation>仪表盘</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="76"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="80"/>
         <source>Monitor</source>
-        <translation>监控</translation>
+        <translation>操作</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="79"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="86"/>
+        <source>Visit Records</source>
+        <translation type="unfinished">来访记录</translation>
+    </message>
+    <message>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="89"/>
         <source>Remote Unlock</source>
         <translation>远程开锁</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="82"/>
-        <source>Visit Records</source>
-        <translation>来访记录</translation>
-    </message>
-    <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="85"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="92"/>
         <source>Messages</source>
         <translation>留言</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="88"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="98"/>
         <source>System Settings</source>
         <translation>系统设置</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="91"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="95"/>
         <source>Logs</source>
         <translation>运行日志</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="94"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="83"/>
         <source>Face Recognition</source>
         <translation>人脸识别</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="97"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="77"/>
         <source>Device Management</source>
         <translation>设备管理</translation>
     </message>
     <message>
-        <location filename="../widgets/crosscontrolwidget.cpp" line="115"/>
+        <location filename="../widgets/crosscontrolwidget.cpp" line="117"/>
         <source>Logout</source>
         <translation>退出登录</translation>
     </message>
@@ -722,7 +722,7 @@
     <message>
         <location filename="../widgets/devicemanagementwidget.cpp" line="330"/>
         <source>Devices: %1  Success: %2  Fail: %3</source>
-        <translation>设备数量: %1  成功: %2  失败: %3</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/devicemanagementwidget.cpp" line="455"/>
@@ -1379,7 +1379,7 @@
         <location filename="../widgets/loginwidget.ui" line="70"/>
         <source>QFrame#frameRight { background: #ffffff; } QLineEdit { padding: 8px; }
                      QPushButton { padding: 8px 12px; }</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/loginwidget.ui" line="87"/>
@@ -1552,31 +1552,31 @@
         <location filename="../widgets/mainwidget.ui" line="64"/>
         <source>background: #ffffff; border: 1px solid
                                                       #e0e0e0; border-radius: 8px; padding: 12px;</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="39"/>
         <source>font-size: 14px; color:
                                                                         #555;</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="43"/>
         <source>29℃~34℃ Sunny Air quality:
                                                                         Good</source>
-        <translation>29℃~34℃ 晴 空气质量: 良好</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="73"/>
         <source>background: transparent;
                                                                         padding: 8px;</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="128"/>
         <source>background: #ffffff; border: 1px solid #e0e0e0;
                                           border-radius: 8px; padding: 12px;</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="141"/>
@@ -1591,7 +1591,7 @@
     <message>
         <location filename="../widgets/mainwidget.ui" line="144"/>
         <source>Monitor</source>
-        <translation>监控</translation>
+        <translation>操作</translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="160"/>
@@ -1747,8 +1747,7 @@
         <location filename="../widgets/messagewidget.cpp" line="256"/>
         <source>Failed to save message to database:
 %1</source>
-        <translation>保存留言到数据库失败：
-%1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Failed to save message to database:
@@ -1803,7 +1802,7 @@
         <translation type="vanished">监听端口</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="463"/>
+        <location filename="../widgets/monitorwidget.cpp" line="519"/>
         <source>Listen</source>
         <translation>监听</translation>
     </message>
@@ -1816,6 +1815,11 @@
         <location filename="../widgets/monitorwidget.ui" line="64"/>
         <source>Start</source>
         <translation>开始</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.ui" line="9"/>
+        <source>Operations / 操作</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/monitorwidget.ui" line="34"/>
@@ -1930,7 +1934,7 @@
         <translation>MQTT客户端将在此实现</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="913"/>
+        <location filename="../widgets/monitorwidget.cpp" line="1010"/>
         <source>Disconnected</source>
         <translation>未连接</translation>
     </message>
@@ -1949,19 +1953,12 @@
         <translation type="vanished">串口界面在此</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="299"/>
-        <source>background-color: #333; color: white; min-height: 300px;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../widgets/monitorwidget.ui" line="302"/>
         <source>Monitor Video Area</source>
-        <translation>监控视频区域</translation>
+        <translation type="vanished">监控视频区域</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="313"/>
         <source>Back to Main</source>
-        <translation>返回主页</translation>
+        <translation type="vanished">返回主页</translation>
     </message>
     <message>
         <location filename="../widgets/monitorwidget.ui" line="138"/>
@@ -1970,9 +1967,8 @@
         <translation>未选择设备</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.ui" line="9"/>
         <source>Control View/控制页面</source>
-        <translation>控制页面</translation>
+        <translation type="vanished">控制页面</translation>
     </message>
     <message>
         <location filename="../widgets/monitorwidget.ui" line="289"/>
@@ -1981,14 +1977,36 @@
         <translation>串口</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="437"/>
+        <location filename="../widgets/monitorwidget.cpp" line="376"/>
+        <source>Play</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.cpp" line="378"/>
+        <source>Pause</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.cpp" line="380"/>
+        <source>Snapshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.cpp" line="493"/>
         <source>Listening...</source>
         <translation>正在监听...</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="446"/>
+        <location filename="../widgets/monitorwidget.cpp" line="502"/>
         <source>Listen Failed</source>
         <translation>监听失败</translation>
+    </message>
+    <message>
+        <location filename="../widgets/monitorwidget.cpp" line="857"/>
+        <source>Name: %1
+Type: %2
+Last seen: %3</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sent</source>
@@ -2011,21 +2029,20 @@
         <translation>UDP</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="801"/>
         <source>Name: %1
-Type: %2
-Last seen: %3</source>
-        <translation>名称: %1
-类型: %2
-最后一次出现: %3</translation>
+                Type: %2
+                Last seen: %3</source>
+        <translation type="vanished">名称: %1
+                类型: %2
+                最后一次出现: %3</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="806"/>
+        <location filename="../widgets/monitorwidget.cpp" line="862"/>
         <source>N/A</source>
         <translation>无</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="910"/>
+        <location filename="../widgets/monitorwidget.cpp" line="1007"/>
         <source>Connected</source>
         <translation>已连接</translation>
     </message>
@@ -2034,7 +2051,7 @@ Last seen: %3</source>
         <translation type="vanished">没有连接的客户端</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="685"/>
+        <location filename="../widgets/monitorwidget.cpp" line="741"/>
         <source>Choose save path</source>
         <translation>选择保存路径</translation>
     </message>
@@ -2109,7 +2126,7 @@ Last seen: %3</source>
     </message>
     <message>
         <location filename="../widgets/serialopswidget.ui" line="76"/>
-        <location filename="../widgets/serialopswidget.cpp" line="379"/>
+        <location filename="../widgets/serialopswidget.cpp" line="349"/>
         <source>Open</source>
         <translation>打开</translation>
     </message>
@@ -2120,7 +2137,7 @@ Last seen: %3</source>
     </message>
     <message>
         <location filename="../widgets/serialopswidget.ui" line="88"/>
-        <location filename="../widgets/serialopswidget.cpp" line="381"/>
+        <location filename="../widgets/serialopswidget.cpp" line="351"/>
         <source>Closed</source>
         <translation>已关闭</translation>
     </message>
@@ -2141,7 +2158,7 @@ Last seen: %3</source>
     </message>
     <message>
         <location filename="../widgets/serialopswidget.ui" line="130"/>
-        <location filename="../widgets/serialopswidget.cpp" line="345"/>
+        <location filename="../widgets/serialopswidget.cpp" line="315"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
@@ -2157,111 +2174,91 @@ Last seen: %3</source>
         <translation>加载</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="62"/>
+        <location filename="../widgets/serialopswidget.cpp" line="61"/>
         <source>Port (e.g. COM5): the system name of the serial device.</source>
-        <translation type="unfinished"></translation>
+        <translation>端口（例如 COM5）：串口设备在系统中的名称。</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="71"/>
+        <location filename="../widgets/serialopswidget.cpp" line="69"/>
         <source>Baud (e.g. 115200): communication speed in bits per second.</source>
-        <translation type="unfinished"></translation>
+        <translation>波特率（例如 115200）：通信速率，单位为比特/秒。</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="84"/>
-        <source>例如: COM5 - 系统分配的串口名称 (Windows) 或 /dev/ttyUSB0 (Linux)</source>
-        <translation type="unfinished"></translation>
+        <location filename="../widgets/serialopswidget.cpp" line="82"/>
+        <source>Data bits (e.g. 8): number of data bits per frame.</source>
+        <translation>数据位（例如 8）：每个数据帧中携带的数据位数。</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="86"/>
-        <source>例如: 115200 - 串口通信速率，单位 bits/s</source>
-        <translation type="unfinished"></translation>
+        <location filename="../widgets/serialopswidget.cpp" line="92"/>
+        <source>Parity (None/Even/Odd): simple error-checking bit used by some devices.</source>
+        <translation>校验位（无/偶/奇）：用于简单错误检测的校验位。</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="125"/>
-        <source>更详细: COM5 是 Windows 下的串口名；在 Linux 下类似 /dev/ttyUSB0。</source>
-        <translation type="unfinished"></translation>
+        <location filename="../widgets/serialopswidget.cpp" line="102"/>
+        <source>Stop bits (1 / 1.5 / 2): marks the end of a data frame.</source>
+        <translation>停止位（1 / 1.5 / 2）：标识数据帧结束的位。</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="130"/>
-        <source>Port 说明</source>
-        <translation type="unfinished"></translation>
+        <location filename="../widgets/serialopswidget.cpp" line="111"/>
+        <source>Timeout (ms): how long reads/writes wait before giving up.</source>
+        <translation>超时（毫秒）：读取/写入操作放弃前等待的最长时间。</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="131"/>
-        <source>Port: 系统用来表示串口设备的名称。例如 Windows 中常见为 COM5，Linux 中常见为 /dev/ttyUSB0。选择与设备匹配的端口。</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../widgets/serialopswidget.cpp" line="140"/>
-        <source>更详细: 115200 表示每秒 115200 比特 (bits/s)。</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../widgets/serialopswidget.cpp" line="145"/>
-        <source>Baud 说明</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../widgets/serialopswidget.cpp" line="146"/>
-        <source>Baud (波特率): 指串口通信的速度，以 bits per second (bps) 为单位。例如 115200 表示每秒 115200 比特。通讯双方需使用相同速率。</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../widgets/serialopswidget.cpp" line="259"/>
+        <location filename="../widgets/serialopswidget.cpp" line="229"/>
         <source>Timeout (ms): %1</source>
         <translation>超时 (毫秒): %1</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="270"/>
-        <location filename="../widgets/serialopswidget.cpp" line="299"/>
+        <location filename="../widgets/serialopswidget.cpp" line="240"/>
+        <location filename="../widgets/serialopswidget.cpp" line="269"/>
         <source>Serial</source>
         <translation>串行</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="271"/>
+        <location filename="../widgets/serialopswidget.cpp" line="241"/>
         <source>Failed to open port: %1</source>
         <translation>打开端口失败: %1</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="300"/>
+        <location filename="../widgets/serialopswidget.cpp" line="270"/>
         <source>Port not open</source>
         <translation>端口未打开</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="317"/>
+        <location filename="../widgets/serialopswidget.cpp" line="287"/>
         <source>Save Serial Action</source>
         <translation>保存串行操作</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="318"/>
+        <location filename="../widgets/serialopswidget.cpp" line="288"/>
         <location filename="../widgets/actionmanager.cpp" line="196"/>
         <source>Action name:</source>
         <translation>操作名称:</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="330"/>
-        <location filename="../widgets/serialopswidget.cpp" line="338"/>
+        <location filename="../widgets/serialopswidget.cpp" line="300"/>
+        <location filename="../widgets/serialopswidget.cpp" line="308"/>
         <source>Storage</source>
         <translation>存储</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="331"/>
-        <location filename="../widgets/serialopswidget.cpp" line="339"/>
+        <location filename="../widgets/serialopswidget.cpp" line="301"/>
+        <location filename="../widgets/serialopswidget.cpp" line="309"/>
         <source>Storage not initialized.</source>
         <translation>存储未初始化。</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="346"/>
+        <location filename="../widgets/serialopswidget.cpp" line="316"/>
         <source>Failed to save action</source>
         <translation>保存操作失败</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="351"/>
+        <location filename="../widgets/serialopswidget.cpp" line="321"/>
         <source>Saved action &apos;%1&apos;</source>
         <translation>已保存操作 &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../widgets/serialopswidget.cpp" line="350"/>
+        <location filename="../widgets/serialopswidget.cpp" line="320"/>
         <source>Saved</source>
         <translation>已保存</translation>
     </message>
@@ -2270,94 +2267,94 @@ Last seen: %3</source>
         <location filename="../widgets/actionmanager.cpp" line="129"/>
         <location filename="../widgets/actionmanager.cpp" line="156"/>
         <source>Failed to load payload</source>
-        <translation type="unfinished">载荷加载失败</translation>
+        <translation>载荷加载失败</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="91"/>
         <location filename="../widgets/actionmanager.cpp" line="98"/>
         <source>Delete</source>
-        <translation type="unfinished">删除</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="92"/>
         <source>Delete action &apos;%1&apos;?</source>
-        <translation type="unfinished">删除操作 &apos;%1&apos;？</translation>
+        <translation>删除操作 &apos;%1&apos;？</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="99"/>
         <source>Failed to delete action &apos;%1&apos;</source>
-        <translation type="unfinished">删除操作 &apos;%1&apos; 失败</translation>
+        <translation>删除操作 &apos;%1&apos; 失败</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="118"/>
         <location filename="../widgets/actionmanager.cpp" line="128"/>
         <location filename="../widgets/actionmanager.cpp" line="136"/>
         <source>Rename</source>
-        <translation type="unfinished">重命名</translation>
+        <translation>重命名</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="119"/>
         <source>New name:</source>
-        <translation type="unfinished">新名称：</translation>
+        <translation>新名称：</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="137"/>
         <source>Failed to rename action</source>
-        <translation type="unfinished">重命名操作失败</translation>
+        <translation>重命名操作失败</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="155"/>
         <location filename="../widgets/actionmanager.cpp" line="169"/>
         <source>Export</source>
-        <translation type="unfinished">导出</translation>
+        <translation>导出</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="161"/>
         <source>Export Action</source>
-        <translation type="unfinished">导出操作</translation>
+        <translation>导出操作</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="163"/>
         <location filename="../widgets/actionmanager.cpp" line="182"/>
         <source>JSON files (*.json);;All files (*)</source>
-        <translation type="unfinished">JSON 文件 (*.json);;所有文件 (*)</translation>
+        <translation>JSON 文件 (*.json);;所有文件 (*)</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="170"/>
         <source>Failed to open file for write</source>
-        <translation type="unfinished">无法打开文件以写入</translation>
+        <translation>无法打开文件以写入</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="180"/>
         <location filename="../widgets/actionmanager.cpp" line="195"/>
         <source>Import Action</source>
-        <translation type="unfinished">导入操作</translation>
+        <translation>导入操作</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="187"/>
         <location filename="../widgets/actionmanager.cpp" line="205"/>
         <source>Import</source>
-        <translation type="unfinished">导入</translation>
+        <translation>导入</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="188"/>
         <source>Failed to open file</source>
-        <translation type="unfinished">无法打开文件</translation>
+        <translation>无法打开文件</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="206"/>
         <source>Failed to save imported action</source>
-        <translation type="unfinished">保存导入的操作失败</translation>
+        <translation>保存导入的操作失败</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="237"/>
         <source>Migrate</source>
-        <translation type="unfinished">迁移</translation>
+        <translation>迁移</translation>
     </message>
     <message>
         <location filename="../widgets/actionmanager.cpp" line="238"/>
         <source>Migrated %1 actions</source>
-        <translation type="unfinished">已迁移 %1 个操作</translation>
+        <translation>已迁移 %1 个操作</translation>
     </message>
 </context>
 <context>
@@ -2495,9 +2492,14 @@ Last seen: %3</source>
         <translation>正在停止...</translation>
     </message>
     <message>
+        <source>Failed to start REST server. If the embedded REST server was already started in
+                this process it cannot be restarted; please restart the application.</source>
+        <translation type="vanished">无法启动 REST 服务器。如果嵌入式 REST 服务器已经在此进程中启动，则无法重新启动；请重新启动应用程序。</translation>
+    </message>
+    <message>
         <location filename="../widgets/settingwidget.cpp" line="257"/>
         <source>Failed to start REST server. If the embedded REST server was already started in this process it cannot be restarted; please restart the application.</source>
-        <translation>无法启动 REST 服务器。如果嵌入式 REST 服务器已经在此进程中启动，则无法重新启动；请重新启动应用程序。</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="298"/>
@@ -2602,49 +2604,59 @@ Last seen: %3</source>
     <name>TcpOpsWidget</name>
     <message>
         <location filename="../widgets/tcpopswidget.ui" line="19"/>
-        <source>host</source>
-        <translation>主机</translation>
+        <source>Remote host</source>
+        <translation>远端主机</translation>
     </message>
     <message>
-        <location filename="../widgets/tcpopswidget.ui" line="26"/>
-        <source>port</source>
-        <translation>端口</translation>
+        <location filename="../widgets/tcpopswidget.ui" line="22"/>
+        <source>Remote host (used to connect to a remote server)</source>
+        <translation>远端主机（用于连接到远程服务器）</translation>
     </message>
     <message>
-        <location filename="../widgets/tcpopswidget.ui" line="33"/>
+        <location filename="../widgets/tcpopswidget.ui" line="29"/>
+        <source>Remote port</source>
+        <translation>远端端口</translation>
+    </message>
+    <message>
+        <location filename="../widgets/tcpopswidget.ui" line="32"/>
+        <source>Remote port (used to connect to a remote server)</source>
+        <translation>远端端口（用于连接到远程服务器）</translation>
+    </message>
+    <message>
+        <location filename="../widgets/tcpopswidget.ui" line="39"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
     <message>
-        <location filename="../widgets/tcpopswidget.ui" line="40"/>
+        <location filename="../widgets/tcpopswidget.ui" line="46"/>
         <source>Disconnect</source>
         <translation>断开连接</translation>
     </message>
     <message>
-        <location filename="../widgets/tcpopswidget.ui" line="49"/>
+        <location filename="../widgets/tcpopswidget.ui" line="55"/>
         <location filename="../widgets/tcpopswidget.cpp" line="173"/>
         <source>Disconnected</source>
         <translation>已断开连接</translation>
     </message>
     <message>
-        <location filename="../widgets/tcpopswidget.ui" line="64"/>
+        <location filename="../widgets/tcpopswidget.ui" line="70"/>
         <source>Send</source>
         <translation>发送</translation>
     </message>
     <message>
-        <location filename="../widgets/tcpopswidget.ui" line="75"/>
+        <location filename="../widgets/tcpopswidget.ui" line="81"/>
         <location filename="../widgets/udpopswidget.cpp" line="132"/>
         <location filename="../widgets/tcpopswidget.cpp" line="132"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../widgets/tcpopswidget.ui" line="89"/>
+        <location filename="../widgets/tcpopswidget.ui" line="95"/>
         <source>Clear</source>
         <translation>清空</translation>
     </message>
     <message>
-        <location filename="../widgets/tcpopswidget.ui" line="96"/>
+        <location filename="../widgets/tcpopswidget.ui" line="102"/>
         <source>Load</source>
         <translation>加载</translation>
     </message>
@@ -2667,22 +2679,22 @@ Last seen: %3</source>
         <location filename="../widgets/udpopswidget.cpp" line="40"/>
         <location filename="../widgets/udpopswidget.cpp" line="62"/>
         <source>UDP</source>
-        <translation type="unfinished">UDP</translation>
+        <translation>UDP</translation>
     </message>
     <message>
         <location filename="../widgets/udpopswidget.cpp" line="41"/>
         <source>Failed to bind port</source>
-        <translation type="unfinished">绑定端口失败</translation>
+        <translation>绑定端口失败</translation>
     </message>
     <message>
         <location filename="../widgets/udpopswidget.cpp" line="63"/>
         <source>Socket not bound</source>
-        <translation type="unfinished">套接字未绑定</translation>
+        <translation>套接字未绑定</translation>
     </message>
     <message>
         <location filename="../widgets/udpopswidget.cpp" line="104"/>
         <source>Save UDP Action</source>
-        <translation type="unfinished">保存 UDP 操作</translation>
+        <translation>保存 UDP 操作</translation>
     </message>
     <message>
         <location filename="../widgets/udpopswidget.cpp" line="105"/>
@@ -2733,48 +2745,65 @@ Last seen: %3</source>
 <context>
     <name>UdpOpsWidget</name>
     <message>
+        <source>font: 9pt &quot;Segoe UI&quot;;
+                QPushButton{min-width:84px;padding:6px;border-radius:4px;background:#1976d2;color:white}
+                QPushButton:disabled{background:#9e9e9e}
+                QLineEdit,QTextEdit{font:9pt &quot;Segoe UI&quot;}</source>
+        <translation type="vanished">font: 9pt &quot;Segoe UI&quot;;
+                QPushButton{min-width:84px;padding:6px;border-radius:4px;background:#1976d2;color:white}
+                QPushButton:disabled{background:#9e9e9e}
+                QLineEdit,QTextEdit{font:9pt &quot;Segoe UI&quot;}</translation>
+    </message>
+    <message>
+        <location filename="../widgets/udpopswidget.ui" line="25"/>
+        <source>Local bind port</source>
+        <translation>本地绑定端口</translation>
+    </message>
+    <message>
+        <location filename="../widgets/udpopswidget.ui" line="28"/>
+        <source>Local port to bind and listen for incoming UDP packets</source>
+        <translation>本地端口，用于绑定并接收传入的 UDP 数据包</translation>
+    </message>
+    <message>
+        <location filename="../widgets/udpopswidget.ui" line="38"/>
+        <source>Bind and listen on the specified local UDP port</source>
+        <translation>在指定的本地 UDP 端口上绑定并监听</translation>
+    </message>
+    <message>
+        <location filename="../widgets/udpopswidget.ui" line="35"/>
+        <source>Bind</source>
+        <translation>绑定</translation>
+    </message>
+    <message>
         <location filename="../widgets/udpopswidget.ui" line="14"/>
         <source>font: 9pt &quot;Segoe UI&quot;;
 QPushButton{min-width:84px;padding:6px;border-radius:4px;background:#1976d2;color:white}
 QPushButton:disabled{background:#9e9e9e}
 QLineEdit,QTextEdit{font:9pt &quot;Segoe UI&quot;}</source>
-        <translation>font: 9pt &quot;Segoe UI&quot;;
-QPushButton{min-width:84px;padding:6px;border-radius:4px;background:#1976d2;color:white}
-QPushButton:disabled{background:#9e9e9e}
-QLineEdit,QTextEdit{font:9pt &quot;Segoe UI&quot;}</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/udpopswidget.ui" line="25"/>
-        <source>bind port</source>
-        <translation>绑定端口</translation>
-    </message>
-    <message>
-        <location filename="../widgets/udpopswidget.ui" line="32"/>
-        <source>Bind</source>
-        <translation>绑定</translation>
-    </message>
-    <message>
-        <location filename="../widgets/udpopswidget.ui" line="46"/>
+        <location filename="../widgets/udpopswidget.ui" line="52"/>
         <source>host:port</source>
         <translation>主机:端口</translation>
     </message>
     <message>
-        <location filename="../widgets/udpopswidget.ui" line="56"/>
+        <location filename="../widgets/udpopswidget.ui" line="62"/>
         <source>Send</source>
         <translation>发送</translation>
     </message>
     <message>
-        <location filename="../widgets/udpopswidget.ui" line="67"/>
+        <location filename="../widgets/udpopswidget.ui" line="73"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../widgets/udpopswidget.ui" line="79"/>
+        <location filename="../widgets/udpopswidget.ui" line="85"/>
         <source>Clear</source>
         <translation>清空</translation>
     </message>
     <message>
-        <location filename="../widgets/udpopswidget.ui" line="86"/>
+        <location filename="../widgets/udpopswidget.ui" line="92"/>
         <source>Load</source>
         <translation>加载</translation>
     </message>
