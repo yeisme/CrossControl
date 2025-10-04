@@ -13,6 +13,25 @@ set(PROJECT_SOURCES
     src/widgets/monitorwidget.cpp
     include/widgets/monitorwidget.h
     src/widgets/monitorwidget.ui
+  src/widgets/httpopswidget.cpp
+  include/widgets/httpopswidget.h
+  src/widgets/httpopswidget.ui
+  src/widgets/tcpopswidget.cpp
+  include/widgets/tcpopswidget.h
+  src/widgets/tcpopswidget.ui
+  src/widgets/udpopswidget.cpp
+  include/widgets/udpopswidget.h
+  src/widgets/udpopswidget.ui
+  src/widgets/keyvalueeditor.cpp
+  include/widgets/keyvalueeditor.h
+  src/widgets/keyvalueeditor.ui
+  src/widgets/actionmanager.cpp
+  include/widgets/actionmanager.h
+  src/widgets/actionmanager.ui
+  # tcp/udp pages removed
+  src/widgets/serialopswidget.cpp
+  include/widgets/serialopswidget.h
+  src/widgets/serialopswidget.ui
     src/widgets/visitrecordwidget.cpp
     include/widgets/visitrecordwidget.h
     src/widgets/visitrecordwidget.ui

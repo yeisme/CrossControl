@@ -126,7 +126,7 @@ CrossControlWidget::CrossControlWidget(DeviceGateway::DeviceGateway* gateway, QW
 
     // 各页面
     mainWidget = new MainWidget();  // Dashboard 简化展示
-    monitorWidget = new MonitorWidget();
+    monitorWidget = new MonitorWidget(deviceGateway);
     visitRecordWidget = new VisitRecordWidget();
     messageWidget = new MessageWidget();
     settingWidget = new SettingWidget();

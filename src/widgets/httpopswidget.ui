@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HttpOpsWidget</class>
+ <widget class="QWidget" name="HttpOpsWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="topLayout">
+     <item>
+      <widget class="QLineEdit" name="editUrl">
+       <property name="placeholderText">
+        <string>https://example.com/api</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+    <widget class="QComboBox" name="comboMethod">
+     <item>
+      <property name="text">
+       <string>GET</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>POST</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>PUT</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>DELETE</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>PATCH</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>HEAD</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>OPTIONS</string>
+      </property>
+     </item>
+    </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="editToken">
+       <property name="placeholderText">
+        <string>Token</string>
+       </property>
+      </widget>
+     </item>
+    <item>
+     <widget class="QLineEdit" name="editContentType">
+      <property name="placeholderText">
+       <string>Content-Type (optional)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="chkSendJson">
+      <property name="text">
+       <string>Send as JSON</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+     <item>
+      <widget class="QCheckBox" name="chkBearer">
+       <property name="text">
+        <string>Auto Bearer</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnSend">
+       <property name="text">
+        <string>Send</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="teRequest">
+     <property name="placeholderText">
+      <string>Request body (for methods with body)</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextEdit" name="teResponse">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>Response</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="actionLayout">
+     <item>
+      <widget class="QPushButton" name="btnSaveAction">
+       <property name="text">
+        <string>Save</string>
+       </property>
+      </widget>
+     </item>
+    <item>
+     <widget class="QPushButton" name="btnClear">
+      <property name="text">
+       <string>Clear</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btnKV">
+      <property name="text">
+       <string>KV Editor</string>
+      </property>
+     </widget>
+    </item>
+     <item>
+      <widget class="QPushButton" name="btnLoadAction">
+       <property name="text">
+        <string>Load</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

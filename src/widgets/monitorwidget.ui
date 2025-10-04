@@ -5,9 +5,9 @@
     <layout class="QVBoxLayout" name="verticalLayoutMonitor">
       <item>
         <widget class="QLabel" name="labelMonitorTitle">
-          <property name="text">
-            <string>Monitor View</string>
-          </property>
+            <property name="text">
+              <string>Control View/控制页面</string>
+            </property>
           <property name="alignment">
             <set>Qt::AlignmentFlag::AlignCenter</set>
           </property>
@@ -16,28 +16,7 @@
       <item>
         <widget class="QWidget" name="monitorControls">
           <layout class="QVBoxLayout" name="verticalLayoutControls">
-            <!-- First row: Listen controls -->
-            <item>
-              <layout class="QHBoxLayout" name="horizontalLayoutListen">
-                <item>
-                  <widget class="QLineEdit" name="editListenPort">
-                    <property name="placeholderText">
-                      <string>Listen Port</string>
-                    </property>
-                    <property name="maximumWidth">
-                      <number>80</number>
-                    </property>
-                  </widget>
-                </item>
-                <item>
-                  <widget class="QPushButton" name="btnListen">
-                    <property name="text">
-                      <string>Listen</string>
-                    </property>
-                  </widget>
-                </item>
-              </layout>
-            </item>
+            <!-- Removed legacy Listen controls. -->
 
             <!-- Second row: Connect / device selection -->
             <item>
@@ -46,6 +25,16 @@
                   <widget class="QComboBox" name="comboDevices">
                     <property name="editable">
                       <bool>false</bool>
+                    </property>
+                  </widget>
+                </item>
+                <item>
+                  <widget class="QPushButton" name="btnRefresh">
+                    <property name="text">
+                      <string>Refresh</string>
+                    </property>
+                    <property name="toolTip">
+                      <string>Refresh device list from registry</string>
                     </property>
                   </widget>
                 </item>
@@ -96,16 +85,7 @@
             <!-- Third row: Send / save path -->
             <item>
               <layout class="QHBoxLayout" name="horizontalLayoutSend">
-                <item>
-                  <widget class="QLineEdit" name="editSendText">
-                    <property name="placeholderText">
-                      <string>Command / Text to send</string>
-                    </property>
-                    <property name="minimumWidth">
-                      <number>180</number>
-                    </property>
-                  </widget>
-                </item>
+                  <!-- editSendText removed: legacy send textbox deleted -->
                 <item>
                   <widget class="QPushButton" name="btnSendText">
                     <property name="text">
@@ -134,6 +114,186 @@
       </item>
 
       <item>
+        <widget class="QFrame" name="deviceCard">
+          <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayoutDeviceCard">
+            <item>
+              <widget class="QLabel" name="labelDeviceCardTitle">
+                <property name="text">
+                  <string>Device Info</string>
+                </property>
+                <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignLeft</set>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QLabel" name="labelDeviceCardText">
+                <property name="text">
+                  <string>No device selected</string>
+                </property>
+                <property name="wordWrap">
+                  <bool>true</bool>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+
+      <item>
+        <widget class="QTabWidget" name="tabOperations">
+          <widget class="QWidget" name="tabHttp">
+            <attribute name="title">
+              <string>HTTP</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayoutHttp">
+              <item>
+                <layout class="QHBoxLayout" name="horizontalLayoutHttpTop">
+                  <item>
+                    <widget class="QLineEdit" name="editHttpUrl">
+                      <property name="placeholderText">
+                        <string>https://example.com/api</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QComboBox" name="comboHttpMethod">
+                      <item>
+                        <property name="text">
+                          <string>GET</string>
+                        </property>
+                      </item>
+                      <item>
+                        <property name="text">
+                          <string>POST</string>
+                        </property>
+                      </item>
+                      <item>
+                        <property name="text">
+                          <string>PUT</string>
+                        </property>
+                      </item>
+                      <item>
+                        <property name="text">
+                          <string>DELETE</string>
+                        </property>
+                      </item>
+                      <item>
+                        <property name="text">
+                          <string>PATCH</string>
+                        </property>
+                      </item>
+                      <item>
+                        <property name="text">
+                          <string>HEAD</string>
+                        </property>
+                      </item>
+                      <item>
+                        <property name="text">
+                          <string>OPTIONS</string>
+                        </property>
+                      </item>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QLineEdit" name="editHttpToken">
+                      <property name="placeholderText">
+                        <string>Bearer token (optional)</string>
+                      </property>
+                      <property name="maximumWidth">
+                        <number>240</number>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QCheckBox" name="chkHttpBearer">
+                      <property name="text">
+                        <string>Auto Bearer</string>
+                      </property>
+                      <property name="checked">
+                        <bool>true</bool>
+                      </property>
+                      <property name="maximumWidth">
+                        <number>120</number>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QPushButton" name="btnHttpSend">
+                      <property name="text">
+                        <string>Send</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QPushButton" name="btnSaveHttpAction">
+                      <property name="text">
+                        <string>Save Action</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item>
+                    <widget class="QPushButton" name="btnLoadHttpAction">
+                      <property name="text">
+                        <string>Load Action</string>
+                      </property>
+                    </widget>
+                  </item>
+                </layout>
+              </item>
+              <item>
+                <widget class="QTextEdit" name="teHttpRequestBody">
+                  <property name="placeholderText">
+                    <string>Request body (for POST)</string>
+                  </property>
+                  <property name="minimumHeight">
+                    <number>100</number>
+                  </property>
+                </widget>
+              </item>
+              <item>
+                <widget class="QTextEdit" name="teHttpResponse">
+                  <property name="readOnly">
+                    <bool>true</bool>
+                  </property>
+                  <property name="placeholderText">
+                    <string>Response will appear here</string>
+                  </property>
+                </widget>
+              </item>
+            </layout>
+          </widget>
+          <widget class="QWidget" name="tabMqtt">
+            <attribute name="title">
+              <string>MQTT</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayoutMqtt">
+              <item>
+                <widget class="QLabel" name="labelMqttPlaceholder">
+                  <property name="text">
+                    <string>MQTT client will be implemented here</string>
+                  </property>
+                </widget>
+              </item>
+            </layout>
+          </widget>
+          <!-- TCP and UDP tabs removed -->
+          <widget class="SerialOpsWidget" name="tabSerial">
+            <attribute name="title">
+              <string>Serial</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayoutSerial"/>
+          </widget>
+        </widget>
+      </item>
+
+      <item>
         <widget class="QLabel" name="labelMonitorFeed">
           <property name="styleSheet">
             <string>background-color: #333; color: white; min-height: 300px;</string>
@@ -156,6 +316,13 @@
       </item>
     </layout>
   </widget>
+  <customwidgets>
+    <customwidget>
+      <class>SerialOpsWidget</class>
+      <extends>QWidget</extends>
+      <header>serialopswidget.h</header>
+    </customwidget>
+  </customwidgets>
   <resources />
   <connections />
 </ui>

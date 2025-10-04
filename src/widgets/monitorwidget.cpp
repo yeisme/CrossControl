@@ -2,47 +2,297 @@
 
 #include <qcoreapplication.h>
 
+#include <QBoxLayout>
+#include <QCheckBox>
+#include <QComboBox>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QFileDialog>
+#include <QFrame>
 #include <QHostAddress>
 #include <QImage>
+#include <QInputDialog>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
 #include <QJsonValue>
+#include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
+#include <QNetworkAccessManager>
+#include <QNetworkDatagram>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QPair>
 #include <QPixmap>
+#include <QPlainTextEdit>
+#include <QPushButton>
 #include <QStandardPaths>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QTextEdit>
 #include <QThread>
 #include <QTimer>
+#include <QUdpSocket>
+#include <QUrl>
+#include <QVector>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 
 #include "modules/Config/config.h"
 #include "modules/Connect/tcp_connect.h"
+#include "modules/DeviceGateway/device_gateway.h"
+#include "modules/Storage/storage.h"
 #include "spdlog/spdlog.h"
 #include "ui_monitorwidget.h"
+// child operation widgets
+#include "httpopswidget.h"
+#include "serialopswidget.h"
+// new operation widgets
+#include "tcpopswidget.h"
+#include "udpopswidget.h"
 
-MonitorWidget::MonitorWidget(QWidget* parent) : QWidget(parent), ui(new Ui::MonitorWidget) {
+MonitorWidget::MonitorWidget(DeviceGateway::DeviceGateway* gateway, QWidget* parent)
+    : QWidget(parent), ui(new Ui::MonitorWidget) {
     ui->setupUi(this);
+    // MonitorWidget no longer creates a global QNetworkAccessManager; HttpOpsWidget
+    // manages its own network manager. Keep include for now for compatibility.
+    // populate device list from registry if gateway provided
+    if (gateway) {
+        gateway_ = gateway;
+        auto devs = gateway_->registry().listDevices();
+        for (const auto& d : devs) {
+            const QString text = d.endpoint.isEmpty() ? d.id : d.endpoint;
+            ui->comboDevices->addItem(text, d.id);
+        }
+    }
     spdlog::debug("MonitorWidget constructed");
     // no-op here; worker created when user clicks Start
     // Note: ui->setupUi calls QMetaObject::connectSlotsByName(this) which
     // auto-connects slots named like on_<object>_<signal>(). Avoid manual
     // connects to prevent duplicate invocations.
 
-    ui->btnStop->setEnabled(false);
+    {
+        auto btnStop = this->findChild<QPushButton*>("btnStop");
+        if (btnStop) btnStop->setEnabled(false);
+    }
 
     // setup server
     m_server = new QTcpServer(this);
     // find optional listen port edit (uic may or may not have created a named member)
     m_listenEdit = this->findChild<QLineEdit*>("editListenPort");
-    // find send edit/button
-    auto sendEdit = this->findChild<QLineEdit*>("editSendText");
+    // find legacy send button (textbox removed)
     auto sendBtn = this->findChild<QPushButton*>("btnSendText");
-    if (sendBtn)
-        connect(sendBtn, &QPushButton::clicked, this, &MonitorWidget::on_btnSendText_clicked);
+
+    // Replace legacy send/textbox with an operations tab widget (runtime-created)
+    // so we don't need to change the .ui immediately. If the UI already contains
+    // an operations/tab widget, prefer to reuse it. If a design-time tab named
+    // "tabHttp" exists but is a plain QWidget (not a HttpOpsWidget), replace
+    // that page with a proper HttpOpsWidget so forwarding logic can find it.
+    bool createTab = true;
+    QTabWidget* tabOpsExisting = this->findChild<QTabWidget*>("tabOperations");
+    if (tabOpsExisting) createTab = false;
+    if (createTab) {
+        // legacy textbox removed from UI; keep send button hidden if present
+        if (sendBtn) sendBtn->setVisible(false);
+
+        QTabWidget* tabOps = new QTabWidget(this);
+        tabOps->setObjectName("tabOperations");
+
+        // ---- HTTP tab ----
+        HttpOpsWidget* httpOps = new HttpOpsWidget(tabOps);
+        httpOps->setObjectName("tabHttp");
+        tabOps->addTab(httpOps, QCoreApplication::translate("MonitorWidget", "HTTP"));
+
+        // ---- MQTT tab (placeholder) ----
+        QWidget* mqttTab = new QWidget(tabOps);
+        mqttTab->setObjectName("tabMqtt");
+        QVBoxLayout* mqttLayout = new QVBoxLayout(mqttTab);
+        mqttLayout->addWidget(new QLabel(QStringLiteral("MQTT client (TBD)"), mqttTab));
+        tabOps->addTab(mqttTab, QCoreApplication::translate("MonitorWidget", "MQTT"));
+
+
+    // ---- TCP tab ----
+    if (!this->findChild<TcpOpsWidget*>()) {
+        TcpOpsWidget* tcpOps = new TcpOpsWidget(tabOps);
+        tcpOps->setObjectName("tabTcp");
+        tabOps->addTab(tcpOps, QCoreApplication::translate("MonitorWidget", "TCP"));
+    }
+
+    // ---- UDP tab ----
+    if (!this->findChild<UdpOpsWidget*>()) {
+        UdpOpsWidget* udpOps = new UdpOpsWidget(tabOps);
+        udpOps->setObjectName("tabUdp");
+        tabOps->addTab(udpOps, QCoreApplication::translate("MonitorWidget", "UDP"));
+    }
+
+    // ---- Serial tab ----
+    SerialOpsWidget* serialOps = new SerialOpsWidget(tabOps);
+    serialOps->setObjectName("tabSerial");
+    tabOps->addTab(serialOps, QCoreApplication::translate("MonitorWidget", "Serial"));
+
+        // Insert tabOps into the UI near the legacy send controls when possible
+        QWidget* parentWidget = nullptr;
+        if (sendBtn) parentWidget = sendBtn->parentWidget();
+        if (parentWidget) {
+            if (auto lay = parentWidget->layout()) {
+                int pos = -1;
+                if (sendBtn) pos = lay->indexOf(sendBtn);
+                if (pos >= 0) {
+                    if (auto bx = qobject_cast<QBoxLayout*>(lay))
+                        bx->insertWidget(pos, tabOps);
+                    else
+                        lay->addWidget(tabOps);
+                } else
+                    lay->addWidget(tabOps);
+            } else {
+                tabOps->setParent(parentWidget);
+            }
+        } else {
+            // fallback place it under this widget
+            if (auto topLay = this->layout())
+                topLay->addWidget(tabOps);
+            else
+                tabOps->setParent(this);
+        }
+
+        // child widgets manage their own send connections
+    }
+
+    // If UI already contains a tabOperations widget, check whether its HTTP page
+    // is a plain QWidget named "tabHttp" (from .ui). If so, replace that page
+    // with a HttpOpsWidget instance so MonitorWidget can find it by type/name.
+    if (tabOpsExisting) {
+        // look for an existing page named tabHttp
+        for (int i = 0; i < tabOpsExisting->count(); ++i) {
+            QWidget* page = tabOpsExisting->widget(i);
+            if (!page) continue;
+                if (page->objectName() == QLatin1String("tabHttp")) {
+                // If it's already the correct type, nothing to do
+                if (qobject_cast<HttpOpsWidget*>(page)) break;
+                // create new HttpOpsWidget and replace the page
+                HttpOpsWidget* httpOps = new HttpOpsWidget(tabOpsExisting);
+                httpOps->setObjectName("tabHttp");
+                // preserve tab text
+                QString title = tabOpsExisting->tabText(i);
+                tabOpsExisting->removeTab(i);
+                tabOpsExisting->insertTab(i, httpOps, title);
+                break;
+            }
+        }
+    }
+
+    // Ensure TCP and UDP pages exist or replace placeholders if present
+    if (tabOpsExisting) {
+        bool foundTcp = false;
+        bool foundUdp = false;
+        // If a child widget of these types already exists anywhere in the
+        // MonitorWidget hierarchy, treat them as present to avoid duplicating
+        // the same functional widget (prevents duplicate input fields).
+        if (this->findChild<TcpOpsWidget*>()) foundTcp = true;
+        if (this->findChild<UdpOpsWidget*>()) foundUdp = true;
+        for (int i = 0; i < tabOpsExisting->count(); ++i) {
+            QWidget* page = tabOpsExisting->widget(i);
+            if (!page) continue;
+            if (page->objectName() == QLatin1String("tabTcp")) {
+                foundTcp = true;
+                if (!qobject_cast<TcpOpsWidget*>(page)) {
+                    TcpOpsWidget* tcpOps = new TcpOpsWidget(tabOpsExisting);
+                    tcpOps->setObjectName("tabTcp");
+                    QString title = tabOpsExisting->tabText(i);
+                    tabOpsExisting->removeTab(i);
+                    tabOpsExisting->insertTab(i, tcpOps, title);
+                    // Delete the old page widget to avoid orphaned duplicate UI
+                    page->deleteLater();
+                }
+            } else if (page->objectName() == QLatin1String("tabUdp")) {
+                foundUdp = true;
+                if (!qobject_cast<UdpOpsWidget*>(page)) {
+                    UdpOpsWidget* udpOps = new UdpOpsWidget(tabOpsExisting);
+                    udpOps->setObjectName("tabUdp");
+                    QString title = tabOpsExisting->tabText(i);
+                    tabOpsExisting->removeTab(i);
+                    tabOpsExisting->insertTab(i, udpOps, title);
+                    // Delete the old page widget to avoid orphaned duplicate UI
+                    page->deleteLater();
+                }
+            }
+        }
+        // append if missing (place before Serial if present)
+        int insertIndex = tabOpsExisting->count();
+        for (int i = 0; i < tabOpsExisting->count(); ++i) {
+            if (tabOpsExisting->widget(i) && tabOpsExisting->widget(i)->objectName() == QLatin1String("tabSerial")) {
+                insertIndex = i; // insert before serial
+                break;
+            }
+        }
+        if (!foundTcp) {
+            TcpOpsWidget* tcpOps = new TcpOpsWidget(tabOpsExisting);
+            tcpOps->setObjectName("tabTcp");
+            tabOpsExisting->insertTab(insertIndex++, tcpOps, QCoreApplication::translate("MonitorWidget", "TCP"));
+        }
+        if (!foundUdp) {
+            UdpOpsWidget* udpOps = new UdpOpsWidget(tabOpsExisting);
+            udpOps->setObjectName("tabUdp");
+            tabOpsExisting->insertTab(insertIndex++, udpOps, QCoreApplication::translate("MonitorWidget", "UDP"));
+        }
+        // Debug: list tabs and their widget types
+        for (int j = 0; j < tabOpsExisting->count(); ++j) {
+            QWidget* w = tabOpsExisting->widget(j);
+            QString name = w ? w->objectName() : QStringLiteral("(null)");
+            spdlog::info("Monitor tab[{}] = {} ({})", j, name.toStdString(), w ? w->metaObject()->className() : "(no widget)");
+        }
+    }
+
+    // If UI already contains a promoted SerialOpsWidget (design-time promotion),
+    // bind it to the DeviceGateway so we can preselect serial ports based on
+    // device metadata or endpoint and update selection when device changes.
+    if (gateway_) {
+        SerialOpsWidget* serialWidget =
+            this->findChild<SerialOpsWidget*>(QStringLiteral("tabSerial"));
+        if (serialWidget) {
+            auto trySelectFromDevice = [this, serialWidget](const DeviceGateway::DeviceInfo& d) {
+                QString selPort;
+                if (d.metadata.contains("serial_port"))
+                    selPort = d.metadata.value("serial_port").toString();
+                else if (!d.endpoint.isEmpty()) {
+                    QString ep = d.endpoint.trimmed();
+                    if (ep.startsWith("COM", Qt::CaseInsensitive) || ep.contains("/dev/"))
+                        selPort = ep;
+                }
+                if (!selPort.isEmpty()) {
+                    if (auto combo =
+                            serialWidget->findChild<QComboBox*>(QStringLiteral("comboPort"))) {
+                        int idx = combo->findText(selPort);
+                        if (idx >= 0) combo->setCurrentIndex(idx);
+                    }
+                }
+            };
+
+            // Preselect from first device if present
+            auto devs = gateway_->registry().listDevices();
+            if (!devs.isEmpty()) trySelectFromDevice(devs.first());
+
+            // Update when user changes selected device in UI
+            if (ui->comboDevices) {
+                connect(ui->comboDevices,
+                        QOverload<int>::of(&QComboBox::currentIndexChanged),
+                        this,
+                        [this, serialWidget, trySelectFromDevice](int) {
+                            QString id;
+                            if (ui->comboDevices->currentData().isValid())
+                                id = ui->comboDevices->currentData().toString();
+                            else
+                                id = ui->comboDevices->currentText();
+                            if (id.isEmpty()) return;
+                            auto opt = gateway_->registry().getDevice(id);
+                            if (opt.has_value()) trySelectFromDevice(opt.value());
+                        });
+            }
+        }
+    }
     connect(m_server, &QTcpServer::newConnection, this, [this]() {
         while (m_server->hasPendingConnections()) {
             QTcpSocket* s = m_server->nextPendingConnection();
@@ -68,38 +318,94 @@ MonitorWidget::MonitorWidget(QWidget* parent) : QWidget(parent), ui(new Ui::Moni
         }
     });
 
-    // listen button
-    connect(ui->btnListen, &QPushButton::clicked, this, [this]() {
-        if (m_server && m_server->isListening())
-            stopListening();
-        else
-            startListening();
-    });
+    // The MonitorWidget no longer manages connections/listening/saving directly when integrated
+    // with DeviceRegistry. Hide controls that belong to device provisioning and keep only display.
+    if (auto w = this->findChild<QWidget*>("btnListen")) w->setVisible(false);
+    if (auto w = this->findChild<QWidget*>("btnStop")) w->setVisible(false);
+    if (auto w = this->findChild<QWidget*>("btnConnect")) w->setVisible(false);
+    if (auto w = this->findChild<QWidget*>("btnSaveDevice")) w->setVisible(false);
+    if (auto w = this->findChild<QWidget*>("editHost")) w->setVisible(false);
+    if (auto w = this->findChild<QWidget*>("editPort")) w->setVisible(false);
+    if (auto w = this->findChild<QWidget*>("btnSendText")) w->setVisible(false);
 
-    // load devices from config
-    auto& cfg = config::ConfigManager::instance();
-    QVariant devs = cfg.getOrDefault("Connect/devices", QVariant());
-    if (devs.isValid()) {
-        // devices may be stored as JSON string or QStringList
-        if (devs.typeId() == QMetaType::QString) {
-            // try parse as json array
-            QJsonDocument doc = QJsonDocument::fromJson(devs.toString().toUtf8());
-            if (doc.isArray()) {
-                for (auto v : doc.array()) ui->comboDevices->addItem(v.toString());
-            } else if (!devs.toString().isEmpty()) {
-                ui->comboDevices->addItem(devs.toString());
+    // legacy: previously the device list could be loaded from config. When a DeviceGateway is
+    // present we prefer its registry. We keep this fallback for compatibility.
+    if (ui->comboDevices->count() == 0) {
+        auto& cfg = config::ConfigManager::instance();
+        QVariant devs = cfg.getOrDefault("Connect/devices", QVariant());
+        if (devs.isValid()) {
+            // devices may be stored as JSON string or QStringList
+            if (devs.typeId() == QMetaType::QString) {
+                // try parse as json array
+                QJsonDocument doc = QJsonDocument::fromJson(devs.toString().toUtf8());
+                if (doc.isArray()) {
+                    for (auto v : doc.array()) ui->comboDevices->addItem(v.toString());
+                } else if (!devs.toString().isEmpty()) {
+                    ui->comboDevices->addItem(devs.toString());
+                }
+            } else if (devs.canConvert<QVariantList>()) {
+                for (auto v : devs.toList()) ui->comboDevices->addItem(v.toString());
             }
-        } else if (devs.canConvert<QVariantList>()) {
-            for (auto v : devs.toList()) ui->comboDevices->addItem(v.toString());
         }
     }
 
     // default save path
-    QString def = cfg.getOrDefault("Monitor/savePath", QVariant("./video_data")).toString();
+    auto& cfg2 = config::ConfigManager::instance();
+    QString def = cfg2.getOrDefault("Monitor/savePath", QVariant("./video_data")).toString();
     ui->editSavePath->setText(def);
     QDir d(def);
     if (!d.exists()) d.mkpath(".");
+
+    // Style the device card to look like a subtle card (if present)
+    if (auto deviceCard = this->findChild<QFrame*>("deviceCard")) {
+        deviceCard->setStyleSheet(
+            "QFrame { background: qlineargradient(x1:0,y1:0,x2:0,y2:1, stop:0 #ffffff, stop:1 "
+            "#f6f6f6);"
+            " border: 1px solid #ddd; border-radius: 6px; padding: 8px; }");
+    }
+
+    // ensure the device info label reflects initial state
+    if (auto lbl = this->findChild<QLabel*>("labelDeviceCardText"))
+        lbl->setText(QCoreApplication::translate("MonitorWidget", "No device selected"));
+
+    connect(ui->comboDevices,
+            QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this,
+            &MonitorWidget::on_comboDevices_currentIndexChanged);
+
+    // Refresh button: reload devices from registry
+    if (auto btnRefresh = this->findChild<QPushButton*>("btnRefresh")) {
+        connect(btnRefresh, &QPushButton::clicked, this, [this]() {
+            ui->comboDevices->clear();
+            if (gateway_) {
+                auto devs = gateway_->registry().listDevices();
+                for (const auto& d : devs) {
+                    const QString text = d.endpoint.isEmpty() ? d.name + " (" + d.id + ")"
+                                                              : d.name + " - " + d.endpoint;
+                    ui->comboDevices->addItem(text, d.id);
+                }
+            }
+        });
+    }
+
+    // Child operation widgets manage their own UI signals (HTTP/TCP/UDP)
+    // ensure actions table exists when storage available (child widgets expect it)
+    ensureActionsTable();
+    // create UDP socket lazily when needed
 }
+
+// Simple worker object that will live in the tcp worker thread and own the QTcpSocket
+class TcpWorkerObj : public QObject {
+   public:
+    QTcpSocket* socket = nullptr;
+    ~TcpWorkerObj() override {
+        if (socket) {
+            socket->close();
+            socket->deleteLater();
+            socket = nullptr;
+        }
+    }
+};
 
 MonitorWidget::~MonitorWidget() {
     // ensure worker stopped
@@ -127,15 +433,19 @@ void MonitorWidget::startListening() {
     if (!ok) port = 8086;
     if (m_server->listen(QHostAddress::Any, port)) {
         spdlog::info("listening on port {}", port);
-        ui->btnListen->setText(QCoreApplication::translate("MonitorWidget", "Listening..."));
-        // Use a yellow with black text and subtle border to ensure readability in
-        // light themes (white-on-yellow has poor contrast).
-        ui->btnListen->setStyleSheet(
-            "background-color: #FFD54F; color: black; border: 1px solid #b38f00");
+        if (auto btn = this->findChild<QPushButton*>("btnListen")) {
+            btn->setText(QCoreApplication::translate("MonitorWidget", "Listening..."));
+            // Use a yellow with black text and subtle border to ensure readability in
+            // light themes (white-on-yellow has poor contrast).
+            btn->setStyleSheet(
+                "background-color: #FFD54F; color: black; border: 1px solid #b38f00");
+        }
     } else {
         spdlog::error("failed to listen on port {}", port);
-        ui->btnListen->setText(QCoreApplication::translate("MonitorWidget", "Listen Failed"));
-        ui->btnListen->setStyleSheet("background-color: red; color: white");
+        if (auto btn = this->findChild<QPushButton*>("btnListen")) {
+            btn->setText(QCoreApplication::translate("MonitorWidget", "Listen Failed"));
+            btn->setStyleSheet("background-color: red; color: white");
+        }
     }
 }
 
@@ -149,8 +459,10 @@ void MonitorWidget::stopListening() {
         }
     }
     m_clientBuffers.clear();
-    ui->btnListen->setText(QCoreApplication::translate("MonitorWidget", "Listen"));
-    ui->btnListen->setStyleSheet("");
+    if (auto btn = this->findChild<QPushButton*>("btnListen")) {
+        btn->setText(QCoreApplication::translate("MonitorWidget", "Listen"));
+        btn->setStyleSheet("");
+    }
 }
 
 void MonitorWidget::handleIncomingData(QTcpSocket* sock, const QByteArray& data) {
@@ -204,40 +516,16 @@ void MonitorWidget::handleIncomingData(QTcpSocket* sock, const QByteArray& data)
     }
 }
 
-void MonitorWidget::on_btnSendText_clicked() {
-    QLineEdit* edit = this->findChild<QLineEdit*>("editSendText");
-    if (!edit) return;
-    QString txt = edit->text();
-    if (txt.isEmpty()) return;
-    QByteArray bytes = txt.toUtf8();
-    // append newline if not present
-    if (!bytes.endsWith('\n')) bytes.append('\n');
-    int written = broadcastToClients(bytes);
-    if (written > 0) {
-        spdlog::info("Broadcasted {} bytes to {} clients", bytes.size(), written);
-        // temporary UI feedback on the send button
-        auto sendBtn = this->findChild<QPushButton*>("btnSendText");
-        if (sendBtn) {
-            QString old = sendBtn->text();
-            sendBtn->setText(QCoreApplication::translate("MonitorWidget", "Sent"));
-            QTimer::singleShot(1000, this, [sendBtn, old]() { sendBtn->setText(old); });
-        }
+// legacy send textbox removed; old broadcast handler removed.
+
+void MonitorWidget::on_btnHttpSend_clicked() {
+    // Forward to HttpOpsWidget (if present) to avoid duplicated HTTP implementation
+    auto http = this->findChild<HttpOpsWidget*>(QStringLiteral("tabHttp"));
+    if (!http) http = this->findChild<HttpOpsWidget*>();
+    if (http) {
+        QMetaObject::invokeMethod(http, "on_btnSend_clicked", Qt::QueuedConnection);
     } else {
-        spdlog::warn("Broadcast: no connected clients to send to");
-        // Provide explicit Chinese UI feedback: temporarily change button text and style
-        auto sendBtn = this->findChild<QPushButton*>("btnSendText");
-        if (sendBtn) {
-            QString old = sendBtn->text();
-            sendBtn->setText(QStringLiteral("未连接设备"));
-            // red background to indicate error
-            sendBtn->setStyleSheet(
-                "background-color: #e57373; color: white; border: 1px solid #b00020");
-            QTimer::singleShot(1000, this, [sendBtn, old]() {
-                sendBtn->setText(old);
-                sendBtn->setStyleSheet("");
-            });
-            sendBtn->setToolTip(QStringLiteral("未连接任何客户端，请先建立连接"));
-        }
+        spdlog::warn("Monitor: HttpOpsWidget not found to forward HTTP send");
     }
 }
 
@@ -262,6 +550,130 @@ int MonitorWidget::broadcastToClients(const QByteArray& data) {
     }
     return cnt;
 }
+
+void MonitorWidget::ensureActionsTable() {
+    using namespace storage;
+    try {
+        if (!Storage::db().isOpen()) return;
+        QSqlQuery q(Storage::db());
+        // Create per-type actions tables so different action types can be stored separately
+        q.exec(
+            "CREATE TABLE IF NOT EXISTS http_actions (name TEXT PRIMARY KEY, payload BLOB, "
+            "created_at TEXT)");
+        q.exec(
+            "CREATE TABLE IF NOT EXISTS tcp_actions (name TEXT PRIMARY KEY, payload BLOB, "
+            "created_at TEXT)");
+        q.exec(
+            "CREATE TABLE IF NOT EXISTS udp_actions (name TEXT PRIMARY KEY, payload BLOB, "
+            "created_at TEXT)");
+        q.exec(
+            "CREATE TABLE IF NOT EXISTS serial_actions (name TEXT PRIMARY KEY, payload BLOB, "
+            "created_at TEXT)");
+    } catch (...) { spdlog::warn("ensureActionsTable: storage not available or failed"); }
+}
+
+int MonitorWidget::saveActionToDb(const QString& name,
+                                  const QString& type,
+                                  const QByteArray& payload) {
+    using namespace storage;
+    try {
+        if (!Storage::db().isOpen()) return -1;
+        QSqlQuery q(Storage::db());
+        q.prepare(
+            "INSERT INTO actions (name, type, payload, created_at) VALUES (?, ?, ?, "
+            "datetime('now'))");
+        q.addBindValue(name);
+        q.addBindValue(type);
+        q.addBindValue(payload);
+        if (!q.exec()) {
+            spdlog::error("Failed to insert action: {}", q.lastError().text().toStdString());
+            return -1;
+        }
+        return q.lastInsertId().toInt();
+    } catch (const std::exception& e) {
+        spdlog::warn("saveActionToDb exception: {}", e.what());
+    } catch (...) { spdlog::warn("saveActionToDb unknown exception"); }
+    return -1;
+}
+
+QVector<QPair<int, QString>> MonitorWidget::loadActionsFromDb(const QString& type) {
+    using namespace storage;
+    QVector<QPair<int, QString>> out;
+    try {
+        if (!Storage::db().isOpen()) return out;
+        QSqlQuery q(Storage::db());
+        if (type.isEmpty())
+            q.exec("SELECT id, name FROM actions ORDER BY id DESC LIMIT 100");
+        else {
+            q.prepare("SELECT id, name FROM actions WHERE type = ? ORDER BY id DESC LIMIT 100");
+            q.addBindValue(type);
+            q.exec();
+        }
+        while (q.next()) {
+            int id = q.value(0).toInt();
+            QString name = q.value(1).toString();
+            out.append(qMakePair(id, name));
+        }
+    } catch (...) { spdlog::warn("loadActionsFromDb failed"); }
+    return out;
+}
+
+// TCP operations removed
+
+QByteArray MonitorWidget::serializeHttpAction(const QString& url,
+                                              const QString& method,
+                                              const QString& token,
+                                              bool autoBearer,
+                                              const QByteArray& body) {
+    // Deprecated: HttpOpsWidget handles serialization. Return empty to indicate not used.
+    Q_UNUSED(url)
+    Q_UNUSED(method)
+    Q_UNUSED(token)
+    Q_UNUSED(autoBearer)
+    Q_UNUSED(body)
+    spdlog::warn("Monitor::serializeHttpAction called: use HttpOpsWidget instead");
+    return QByteArray();
+}
+
+bool MonitorWidget::deserializeHttpAction(const QByteArray& payload,
+                                          QString& url,
+                                          QString& method,
+                                          QString& token,
+                                          bool& autoBearer,
+                                          QByteArray& body) {
+    Q_UNUSED(payload)
+    Q_UNUSED(url)
+    Q_UNUSED(method)
+    Q_UNUSED(token)
+    Q_UNUSED(autoBearer)
+    Q_UNUSED(body)
+    spdlog::warn("Monitor::deserializeHttpAction called: use HttpOpsWidget instead");
+    return false;
+}
+
+void MonitorWidget::on_btnSaveHttpAction_clicked() {
+    auto http = this->findChild<HttpOpsWidget*>(QStringLiteral("tabHttp"));
+    if (!http) http = this->findChild<HttpOpsWidget*>();
+    if (http) {
+        QMetaObject::invokeMethod(http, "on_btnSaveAction_clicked", Qt::QueuedConnection);
+    } else {
+        spdlog::warn("Monitor: HttpOpsWidget not found to forward save http action");
+    }
+}
+
+void MonitorWidget::on_btnLoadHttpAction_clicked() {
+    auto http = this->findChild<HttpOpsWidget*>(QStringLiteral("tabHttp"));
+    if (!http) http = this->findChild<HttpOpsWidget*>();
+    if (http) {
+        QMetaObject::invokeMethod(http, "on_btnLoadAction_clicked", Qt::QueuedConnection);
+    } else {
+        spdlog::warn("Monitor: HttpOpsWidget not found to forward load http action");
+    }
+}
+
+// TCP load action removed
+
+// UDP action forwarding removed
 
 void MonitorWidget::on_btnBackFromMonitor_clicked() {
     emit backToMain();
@@ -378,6 +790,31 @@ void MonitorWidget::on_btnSaveDevice_clicked() {
 
 void MonitorWidget::on_comboDevices_currentIndexChanged(int index) {
     if (index < 0) return;
+    // If we have a DeviceGateway, use stored registry entries (itemData contains device id)
+    QVariant idData = ui->comboDevices->itemData(index);
+    if (gateway_ && idData.isValid()) {
+        const QString id = idData.toString();
+        auto opt = gateway_->registry().getDevice(id);
+        if (opt) {
+            const auto d = *opt;
+            QString info =
+                QCoreApplication::translate("MonitorWidget", "Name: %1\nType: %2\nLast seen: %3")
+                    .arg(d.name)
+                    .arg(d.type)
+                    .arg(d.lastSeen.isValid()
+                             ? d.lastSeen.toString()
+                             : QCoreApplication::translate("MonitorWidget", "N/A"));
+            lblDeviceInfo_->setText(info);
+            // also populate host/port edit fields if endpoint looks like host:port
+            const auto p = d.endpoint.split(':');
+            if (p.size() == 2) {
+                ui->editHost->setText(p[0]);
+                ui->editPort->setText(p[1]);
+            }
+            return;
+        }
+    }
+    // fallback: previous behavior parsing host:port from plain text
     const QString cur = ui->comboDevices->itemText(index);
     const auto p = cur.split(':');
     if (p.size() == 2) {
@@ -464,4 +901,20 @@ uint16_t MonitorWidget::crc16_ccitt(const uint8_t* buf, uint32_t len) {
         }
     }
     return crc;
+}
+
+void MonitorWidget::setTcpConnected(bool connected) {
+    // Update status label
+    if (auto lbl = this->findChild<QLabel*>("labelTcpStatus")) {
+        if (connected) {
+            lbl->setText(QCoreApplication::translate("MonitorWidget", "Connected"));
+            lbl->setStyleSheet("color: #2e7d32; font-weight: bold;");
+        } else {
+            lbl->setText(QCoreApplication::translate("MonitorWidget", "Disconnected"));
+            lbl->setStyleSheet("color: #b00020; font-weight: bold;");
+        }
+    }
+
+    // enable/disable TCP send button
+    if (auto btn = this->findChild<QPushButton*>("btnTcpSend")) btn->setEnabled(connected);
 }

@@ -12,6 +12,12 @@ class QTcpSocket;
 
 class TcpConnect;
 class QThread;
+class QNetworkAccessManager;
+class QNetworkReply;
+class QLineEdit;
+class QTextEdit;
+class QComboBox;
+class QPushButton;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -35,15 +41,18 @@ QT_END_NAMESPACE
  * - CRC 校验失败会丢弃当前包并继续解析后续数据。
  */
 
+namespace DeviceGateway { class DeviceGateway; }
+
 class MonitorWidget : public QWidget {
     Q_OBJECT
 
    public:
     /**
      * @brief 构造函数
+     * @param gateway 指向 DeviceGateway 实例（用于读取已注册设备）
      * @param parent 父 QWidget（可为 nullptr）
      */
-    MonitorWidget(QWidget* parent = nullptr);
+    MonitorWidget(DeviceGateway::DeviceGateway* gateway, QWidget* parent = nullptr);
 
     /**
      * @brief 析构函数，确保后台线程和连接被正确关闭
@@ -90,6 +99,9 @@ class MonitorWidget : public QWidget {
      */
     void on_comboDevices_currentIndexChanged(int index);
 
+    // HTTP operations
+    void on_btnHttpSend_clicked();
+
     /**
      * @brief 当点对点（TcpConnect）工作线程接收到数据时发出的槽
      * @param data 接收到的原始字节流（会追加到内部缓冲解析）
@@ -101,6 +113,12 @@ class MonitorWidget : public QWidget {
      * @brief UI 指针，指向由 uic 生成的 UI 类
      */
     Ui::MonitorWidget* ui;
+
+    // Pointer to DeviceGateway for reading registered devices
+    DeviceGateway::DeviceGateway* gateway_{nullptr};
+
+    // Simple label to show selected device details
+    class QLabel* lblDeviceInfo_ = nullptr;
 
     // ---------------- 点对点（客户端）相关 ----------------
     /**
@@ -161,6 +179,14 @@ class MonitorWidget : public QWidget {
 
     // 设备信息编辑框（在 UI 中存在）：editHost, editPort
 
+    // HTTP and Serial operations are handled via child widgets
+    void on_btnSaveHttpAction_clicked();
+    void on_btnLoadHttpAction_clicked();
+
+    // UI state helper
+    void setTcpConnected(bool connected);
+
+
     /**
      * @brief CRC16-CCITT 计算函数，用于校验收到的 JPEG 数据
      * @param buf 数据缓冲区指针
@@ -172,7 +198,7 @@ class MonitorWidget : public QWidget {
     /**
      * @brief 发送 UI 中编辑框文本到所有已连接客户端（由 btnSendText 触发）
      */
-    void on_btnSendText_clicked();
+    // legacy broadcast button handler removed
 
     /**
      * @brief 将字节数据广播到当前所有已连接客户端
@@ -180,7 +206,19 @@ class MonitorWidget : public QWidget {
      */
     // Returns number of clients the data was written to
     int broadcastToClients(const QByteArray& data);
+        // storage helpers
+        void ensureActionsTable();
+        int saveActionToDb(const QString& name, const QString& type, const QByteArray& payload);
+        QVector<QPair<int, QString>> loadActionsFromDb(const QString& type);
+    // HTTP action helpers
+    QByteArray serializeHttpAction(const QString& url, const QString& method, const QString& token, bool autoBearer, const QByteArray& body);
+    bool deserializeHttpAction(const QByteArray& payload, QString& url, QString& method, QString& token, bool& autoBearer, QByteArray& body);
     // device edit fields live in UI: editHost, editPort
+
+    // Note: protocol-specific operations (HTTP/TCP/UDP/Serial) are handled by
+    // dedicated child widgets (HttpOpsWidget/TcpOpsWidget/UdpOpsWidget/SerialOpsWidget).
+    // Monitor no longer owns network workers or sockets directly to avoid duplicated logic.
+    TcpConnect* m_tcpClient = nullptr;
 };
 
 #endif  // MONITORWIDGET_H
