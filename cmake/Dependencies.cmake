@@ -1,22 +1,23 @@
 # Dependencies.cmake: 管理项目依赖项的查找和基本校验
 
-# Enable Qt auto tools so qt_add_executable / qt_create_translation are available
+# Enable Qt auto tools so qt_add_executable / qt_create_translation are
+# available
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 # Find Qt6 via vcpkg-installed packages. Adjust components as needed.
-find_package(Qt6 CONFIG REQUIRED COMPONENTS
-  Core
-  Gui
-  Widgets
-  Network
-  Sql
-  Multimedia
-  SerialPort
-  LinguistTools
-  Concurrent
-)
+find_package(
+  Qt6 CONFIG REQUIRED
+  COMPONENTS Core
+             Gui
+             Widgets
+             Network
+             Sql
+             Multimedia
+             SerialPort
+             LinguistTools
+             Concurrent)
 
 # 项目使用的核心格式化/日志库
 find_package(fmt CONFIG REQUIRED)
@@ -37,8 +38,3 @@ if(BUILD_MQTT_CLIENT)
     set(BUILD_MQTT_CLIENT OFF) # 没有找到 mqtt 库，直接禁用
   endif()
 endif()
-
-# 人脸识别功能需要 OpenCV。倾向于快速失败并给出有帮助的提示信息。
-find_package(OpenCV CONFIG REQUIRED COMPONENTS core imgproc objdetect)
-message(STATUS "Found OpenCV: ${OpenCV_VERSION}")
-set(PROJECT_HAS_OPENCV ON CACHE BOOL "OpenCV found for project" FORCE)

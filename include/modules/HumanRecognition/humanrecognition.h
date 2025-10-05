@@ -1,170 +1,192 @@
 ﻿/**
  * @file humanrecognition.h
- * @brief HumanRecognition类的头文件，提供人类检测和识别功能。
+ * @brief HumanRecognition 模块接口与数据结构定义
  *
- * 此文件定义了HumanRecognition类，这是一个基于Qt的模块，用于处理
- * 人类检测、人脸识别和模型训练。
+ * 本文件定义了人脸检测与识别模块所需的公共数据结构以及后端抽象接口
+ * `IHumanRecognitionBackend`。上层通过 `HumanRecognition` 包装类持有并调用后端。
  *
- * @author yefun2004@gmail.com
- * @date 2025
- * @version 1.0
+ * 设计目标：
+ *  - 清晰分离后端实现与上层调用（依赖反转）
+ *  - 提供常见的数据结构（检测框、关键点、特征向量、识别结果、人员记录）
+ *  - 提供基本的错误/状态码与可扩展配置
+ *
+ * @author: yefun2004@gmail.com
+ * @date: 2025
  */
 
-#ifndef HUMANRECOGNITION_H
-#define HUMANRECOGNITION_H
+#pragma once
 
 #include <QImage>
-#include <QObject>
+#include <QJsonObject>
+#include <QList>
+#include <QPair>
+#include <QPointF>
 #include <QRect>
 #include <QString>
+#include <QVector>
+#include <filesystem>
 #include <memory>
-#include <vector>
 
-#include "iface_human_recognition.h"
-#include "logging.h"
+#include "factory.h"
+#include "ihumanrecognitionbackend.h"
+#include "types.h"
 
-#ifdef HumanRecognition_EXPORTS
-#define HUMANRECOGNITION_EXPORT Q_DECL_EXPORT
-#else
-#define HUMANRECOGNITION_EXPORT Q_DECL_IMPORT
-#endif
+namespace HumanRecognition {
 
-static constexpr const char* LogModuleName = "HumanRecognition";
-
-/**
- * @brief 日志记录器的引用。
- *
- * 此引用用于记录HumanRecognition模块中的日志消息。这里需要使用 inline 保证
- * 日志记录器在头文件中的唯一性。需要 C++17 支持。
- */
-inline auto MCLog = *logging::LoggerManager::instance().getLogger(LogModuleName);
+using namespace std::filesystem;
 
 /**
  * @class HumanRecognition
- * @brief 人类检测和识别功能的类。
+ * @brief 人脸识别模块的单例外观（Facade）
  *
- * HumanRecognition类提供了在图像中检测人类、从人脸图像识别个人以及训练识别模型的方法。
- * 目前实现为带有模拟功能的占位符。
- *
- * 它继承自QObject以支持Qt的信号-槽机制，可以在多线程环境中使用。
- *
- * @note 这是一个占位符实现。实际的计算机视觉算法应该在未来版本中集成。
+ * 该类封装了后端的选择、模型管理、人脸检测/特征/比对以及人员库管理等常用功能。
+ * 建议通过 HumanRecognition::instance() 全局访问，并在多线程场景中确保正确调用序列。
  */
-class HUMANRECOGNITION_EXPORT HumanRecognition : public QObject {
-    Q_OBJECT
-
+class HumanRecognition {
    public:
     /**
-     * @brief HumanRecognition的构造函数。
-     *
-     * 初始化人类识别模块。目前执行基本设置
-     * 和日志初始化。
-     *
-     * @param parent 父QObject。默认为nullptr。
+     * @brief 获取全局单例（线程安全懒初始化）
+     * @return 模块单例引用
      */
-    explicit HumanRecognition(QObject* parent = nullptr);
+    static HumanRecognition& instance();
 
     /**
-     * @brief 检测给定图像中的人类。
-     *
-     * 此方法分析输入图像以检测人类的存在。
-     * 目前实现为一个模拟检测的占位符。
-     *
-     * @param image 要分析的人类检测输入图像。
-     * @return 如果检测到人类（模拟），则返回true，否则返回false。
-     *
-     * @note 这是一个占位符实现。在真实实现中，
-     *       这将使用计算机视觉算法，如HOG、CNN等。
+     * @brief 构造函数（允许传入初始后端工厂列表）
+     * @param backendFactories 可选的后端工厂列表（name, factory）
      */
-    bool detectHumans(const QImage& image);  // 兼容旧接口（仅返回是否检测到 >=1）
+    HumanRecognition(const QList<QPair<QString, BackendFactory>>& backendFactories = {});
+
+    // 不允许拷贝与赋值
+    HumanRecognition(const HumanRecognition&) = delete;
+    HumanRecognition& operator=(const HumanRecognition&) = delete;
 
     /**
-     * @brief 从人脸图像中识别个人。
-     *
-     * 通过将提供的人脸图像与识别数据库中的已知人脸进行比较，
-     * 尝试识别图像中的个人。
-     *
-     * @param faceImage 包含要识别的人脸的图像。
-     * @return 包含被识别个人姓名的QString，如果未识别则返回“Unknown Person”。
-     *
-     * @note 这是一个占位符实现。真实的识别将涉及
-     *       人脸嵌入提取和数据库匹配。
+     * @brief 加载模型/数据库文件
+     * @param modelPath 要加载的模型文件或目录路径
+     * @return HRCode 操作结果（例如 HRCode::Ok 表示成功）
      */
-    QString recognizePerson(const QImage& faceImage);
-
-    // 一张图片内检测 + 识别所有人脸
-    std::vector<FaceDetectionResult> detectAndRecognize(const QImage& image);
-
-    // 注册(训练) —— 传入人员信息和该人员的人脸图片集合
-    int enroll(const PersonInfo& info, const std::vector<QImage>& faces);
-
-    // 阈值调节 & 视频帧处理封装
-    void setThreshold(float t) {
-        if (m_service) m_service->setThreshold(t);
-    }
-    float threshold() const { return m_service ? m_service->threshold() : 0.f; }
-    std::vector<FaceDetectionResult> processFrame(const QImage& frame, bool recognize = true) {
-        if (!m_isInitialized) return {};
-        return m_service->processFrame(frame, recognize);
-    }
-
-    bool save();
-    bool load();
-
-    // 人员信息管理（UI 使用）
-    std::vector<PersonInfo> listPersons() {
-        return m_service ? m_service->listPersons() : std::vector<PersonInfo>{};
-    }
-    bool updatePersonInfo(const PersonInfo& p) {
-        return m_service ? m_service->updatePersonInfo(p) : false;
-    }
-    bool deletePerson(const QString& id) { return m_service ? m_service->deletePerson(id) : false; }
-    std::vector<FaceEmbedding> getPersonFeatures(const QString& id) {
-        return m_service ? m_service->getPersonFeatures(id) : std::vector<FaceEmbedding>{};
-    }
+    HRCode loadModel(const path& modelPath);
 
     /**
-     * @brief 使用数据集训练识别模型。
-     *
-     * 此方法将使用提供的数据集训练基础机器学习模型。
-     * 目前实现为一个占位符。
-     *
-     * @param datasetPath 文件系统中训练数据集目录的路径。
-     *
-     * @note 这是一个占位符实现。实际训练需要
-     *       大量数据集和显著的计算资源。
+     * @brief 将当前模型/数据库保存到指定路径
+     * @param modelPath 目标路径
+     * @return HRCode 操作结果
      */
-    void trainModel(const QString& datasetPath);
-
-   signals:
-    /**
-     * @brief 检测到图像中的人类时发出的信号。
-     *
-     * 此信号在进行人类检测时发出，以通知监听者
-     * 有关检测到的人类边界框的信息。
-     *
-     * @param boundingBox 包含检测到人类的矩形区域。
-     */
-    void humanDetected(const QRect& boundingBox);
+    HRCode saveModel(const path& modelPath);
 
     /**
-     * @brief 个人识别完成时发出的信号。
-     *
-     * 此信号在尝试从人脸图像识别个人后发出，
-     * 提供结果。
-     *
-     * @param personName 被识别个人的姓名或"Unknown Person"。
+     * @brief 从目录加载模型（尝试按后端约定查找并加载模型文件）
+     * @param modelDir 模型目录路径
+     * @return QPair<HRCode, QString> 返回操作结果和所用后端名称
      */
-    void recognitionCompleted(const QString& personName);
+    QPair<HRCode, QString> loadModelFromDir(const path& modelDir);
+
+    /**
+     * @brief 列出当前注册的可用后端名称
+     * @return QVector<QString> 名称列表（稳定快照）
+     */
+    QVector<QString> availableBackends() const;
+
+    /**
+     * @brief 设置并切换到指定后端
+     * @param backendName 后端名称（必须为已注册的名称）
+     * @return HRCode 操作结果（失败时通常返回 UnknownError）
+     */
+    HRCode setBackend(const QString& backendName);
+
+    /**
+     * @brief 获取当前后端实例指针与名称
+     * @return QPair<IHumanRecognitionBackend*, QString>
+     * 指向当前后端的裸指针与其名称（不转移所有权）
+     */
+    QPair<IHumanRecognitionBackend*, QString> backend();
+
+    /**
+     * @brief 获取当前后端名
+     * @return QString 当前后端名称（如果未设置则为空）
+     */
+    QString currentBackendName() const;
+
+    /**
+     * @brief 检查是否已设置后端
+     * @return true 如果存在后端实例
+     */
+    bool hasBackend() const;
+
+    /**
+     * @brief 重置并关闭当前后端（如果有）
+     * @return HRCode 操作结果
+     */
+    HRCode resetBackend();
+
+    /**
+     * @brief 在图片上执行人脸检测
+     * @param image 输入图像
+     * @param opts 检测参数（是否检测关键点、阈值、缩放等）
+     * @param outBoxes 输出检测到的人脸列表（由调用者提供容器）
+     * @return HRCode 操作结果
+     */
+    HRCode detect(const QImage& image, const DetectOptions& opts, QVector<FaceBox>& outBoxes);
+
+    /**
+     * @brief 提取指定人脸框的特征向量
+     * @param image 原始图像
+     * @param box 要提取特征的人脸框
+     * @param outFeature 输出特征（由调用者提供）
+     * @return HRCode 操作结果
+     */
+    HRCode extractFeature(const QImage& image, const FaceBox& box, FaceFeature& outFeature);
+
+    /**
+     * @brief 比较两个特征向量并返回距离/相似度
+     * @param a 特征 A
+     * @param b 特征 B
+     * @param outDistance 输出距离（语义由后端决定）
+     * @return HRCode 操作结果
+     */
+    HRCode compare(const FaceFeature& a, const FaceFeature& b, float& outDistance);
+
+    /**
+     * @brief 在人员库中查找与给定特征最相近的记录
+     * @param feature 查询特征
+     * @param outMatch 输出匹配信息（id/name/distance/score）
+     * @return HRCode 操作结果
+     */
+    HRCode findNearest(const FaceFeature& feature, RecognitionMatch& outMatch);
+
+    /**
+     * @brief 向人员库注册一条人员记录
+     * @param person 要注册的人员信息（应包含唯一 id）
+     * @return HRCode 操作结果（例如 PersonExists）
+     */
+    HRCode registerPerson(const PersonInfo& person);
+
+    /**
+     * @brief 从人员库移除指定 id 的记录
+     * @param personId 要移除的人员 id
+     * @return HRCode 操作结果
+     */
+    HRCode removePerson(const QString& personId);
+
+    /**
+     * @brief 查询人员信息
+     * @param personId 查询的人员 id
+     * @param outPerson 输出找到的人员信息
+     * @return HRCode 操作结果（未找到时返回 PersonNotFound）
+     */
+    HRCode getPerson(const QString& personId, PersonInfo& outPerson);
+
+    /**
+     * @brief 触发后端的训练流程（如果后端实现了 train）
+     */
+    HRCode train(const QString& datasetPath);
+
+    ~HumanRecognition();
 
    private:
-    /**
-     * @brief 私有成员，指示模块是否已初始化。
-     *
-     * 跟踪识别模块的初始化状态。
-     */
-    bool m_isInitialized;
-    std::unique_ptr<HumanRecognitionService> m_service;  // 后端服务（OpenCV 等）
+    // pimpl 或者内部状态在 .cpp 中实现
+    struct Impl;
+    std::unique_ptr<Impl> m_impl;
 };
 
-#endif  // HUMANRECOGNITION_H
+}  // namespace HumanRecognition

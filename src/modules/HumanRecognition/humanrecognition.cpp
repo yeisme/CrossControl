@@ -1,157 +1,139 @@
-﻿/**
- * @file humanrecognition.cpp
- * @brief HumanRecognition类的实现。
- *
- * 此文件包含HumanRecognition类方法的实现。
- * 所有方法目前都是占位符实现，模拟预期行为而无需实际计算机视觉处理。
- *
- * @author yefun2004@gmail.com
- * @date 2025
- * @version 1.0
- */
+﻿#include "humanrecognition.h"
 
-#include "humanrecognition.h"
+#include <mutex>
 
-#include <QDir>
-#include <QRect>
+#include "factory.h"
 
-#include "opencv_backend.h"
+namespace HumanRecognition {
 
-/**
- * @brief 构造函数实现。
- *
- * 通过设置父QObject和初始化内部状态来初始化HumanRecognition对象。
- * 为调试记录初始化日志。
- *
- * @param parent 指向父QObject的指针，默认为nullptr。
- */
-HumanRecognition::HumanRecognition(QObject* parent) : QObject(parent), m_isInitialized(false) {
-    MCLog.info("HumanRecognition module constructing");
-    // 默认采用 OpenCV 后端（可在未来通过依赖注入切换）
-    m_service = std::make_unique<HumanRecognitionService>(
-        std::make_unique<OpenCVHumanRecognitionBackend>());  // 通过修改这里的
-                                                             // OpenCVHumanRecognitionBackend
-                                                             // 可以切换不同后端
-    if (m_service->init()) {
-        m_isInitialized = true;
-        MCLog.info("HumanRecognition service initialized (OpenCV backend)");
-    } else {
-        MCLog.warn("HumanRecognition service failed to initialize");
+struct HumanRecognition::Impl {
+    std::unique_ptr<IHumanRecognitionBackend> backend;
+    QString backendName;
+    std::mutex mtx;
+};
+
+HumanRecognition& HumanRecognition::instance() {
+    static HumanRecognition g_instance;
+    return g_instance;
+}
+
+HumanRecognition::HumanRecognition(const QList<QPair<QString, BackendFactory>>& backendFactories)
+    : m_impl(std::make_unique<Impl>()) {
+    for (const auto& p : backendFactories) { registerBackendFactory(p.first, p.second); }
+}
+
+HumanRecognition::~HumanRecognition() = default;
+
+HRCode HumanRecognition::loadModel(const path& modelPath) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->loadModel(QString::fromStdWString(modelPath.wstring()));
+}
+
+HRCode HumanRecognition::saveModel(const path& modelPath) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->saveModel(QString::fromStdWString(modelPath.wstring()));
+}
+
+QPair<HRCode, QString> HumanRecognition::loadModelFromDir(const path& modelDir) {
+    // 简单实现：尝试使用当前后端加载目录下的模型文件名
+    if (!hasBackend()) return {HRCode::UnknownError, QString()};
+    // 这里只调用 loadModel 并返回当前后端名
+    auto code = loadModel(modelDir);
+    return qMakePair(code, currentBackendName());
+}
+
+QVector<QString> HumanRecognition::availableBackends() const {
+    return listRegisteredBackends();
+}
+
+HRCode HumanRecognition::setBackend(const QString& backendName) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    auto b = createBackendInstance(backendName);
+    if (!b) return HRCode::UnknownError;
+    // 关闭旧后端
+    if (m_impl->backend) m_impl->backend->shutdown();
+    m_impl->backend = std::move(b);
+    m_impl->backendName = backendName;
+    return HRCode::Ok;
+}
+
+QPair<IHumanRecognitionBackend*, QString> HumanRecognition::backend() {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    return qMakePair(m_impl->backend.get(), m_impl->backendName);
+}
+
+QString HumanRecognition::currentBackendName() const {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    return m_impl->backendName;
+}
+
+bool HumanRecognition::hasBackend() const {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    return static_cast<bool>(m_impl->backend);
+}
+
+HRCode HumanRecognition::resetBackend() {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (m_impl->backend) {
+        m_impl->backend->shutdown();
+        m_impl->backend.reset();
+        m_impl->backendName.clear();
     }
+    return HRCode::Ok;
 }
 
-/**
- * @brief 检测提供的图像中的人类。
- *
- * 此方法对输入图像执行模拟的人类检测。
- * 在真实实现中，这将使用计算机视觉算法
- * 如Haar级联、HOG特征或深度学习模型来
- * 识别图像中的人类图形。
- *
- * 目前，它发出带有硬编码边界框的信号并
- * 返回true以模拟成功检测。
- *
- * @param image 包含要分析图像的QImage对象。
- * @return bool 在此占位符实现中始终返回true，
- *         表示模拟成功检测。
- *
- * @note 未来实现应处理各种图像格式、
- *       照明条件和场景中的多个人类。
- * @see humanDetected() signal
- */
-bool HumanRecognition::detectHumans(const QImage& image) {
-    if (!m_isInitialized) return false;
-    auto dets = m_service->detect(image);
-    for (auto& d : dets) emit humanDetected(d.box);
-    return !dets.empty();
+HRCode HumanRecognition::detect(const QImage& image,
+                                const DetectOptions& opts,
+                                QVector<FaceBox>& outBoxes) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->detect(image, opts, outBoxes);
 }
 
-/**
- * @brief 识别来自人脸图像的个人。
- *
- * 此方法尝试识别提供的人脸图像中显示的个人。
- * 在真实实现中，这将提取面部特征，计算
- * 嵌入，并将其与已知个体的数据库进行比较。
- *
- * 目前，它通过返回占位符名称和
- * 发出recognitionCompleted信号来模拟识别。
- *
- * @param faceImage 包含要识别的人脸的QImage。
- * @return QString 表示被识别者姓名的字符串。
- *         目前始终返回"Unknown Person"作为占位符。
- *
- * @note 真实的人脸识别需要一个训练好的模型和人脸数据库。
- *       考虑实施面部对齐和标准化以获得更好的结果。
- * @see recognitionCompleted() signal
- */
-QString HumanRecognition::recognizePerson(const QImage& faceImage) {
-    if (!m_isInitialized) return {};
-    // 复用 detectAndRecognize 流程：将整张 faceImage 看做只有一个人脸
-    auto res = detectAndRecognize(faceImage);
-    QString name = res.empty() ? QStringLiteral("Unknown Person") : res.front().matchedPersonName;
-    emit recognitionCompleted(name);
-    return name;
+HRCode HumanRecognition::extractFeature(const QImage& image,
+                                        const FaceBox& box,
+                                        FaceFeature& outFeature) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->extractFeature(image, box, outFeature);
 }
 
-/**
- * @brief 使用数据集训练识别模型。
- *
- * 此方法将使用指定数据集目录中的图像训练基础机器学习模型。
- * 训练通常涉及特征提取、模型拟合和验证。
- *
- * 目前，这只是一个占位符，仅记录数据集路径。
- *
- * @param datasetPath QString，包含训练数据集的路径
- *        目录。该目录应包含每个用户的子目录，里面有
- *        他们面部图像的图像。
- *
- * @note 实际训练需要大量计算资源和
- *       结构正确的数据集。考虑使用像
- *       OpenCV、TensorFlow或PyTorch这样的框架进行真实实现。
- * @warning 此占位符不执行任何实际训练。
- */
-void HumanRecognition::trainModel(const QString& datasetPath) {
-    MCLog.info("Training( enrolling ) from dataset path: {}", datasetPath.toStdString());
-    // 简化：遍历 datasetPath 下子目录，每个子目录名视为 personId/name，图片文件注册。
-    QDir root(datasetPath);
-    if (!root.exists()) {
-        MCLog.warn("Dataset path not exists: {}", datasetPath.toStdString());
-        return;
-    }
-    QStringList subdirs = root.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-    int total = 0;
-    for (const auto& sd : subdirs) {
-        QDir pd(root.filePath(sd));
-        QStringList imgs = pd.entryList(QStringList() << "*.jpg"
-                                                      << "*.png"
-                                                      << "*.jpeg",
-                                        QDir::Files);
-        std::vector<QImage> faceImgs;
-        for (const auto& f : imgs) {
-            QImage img(pd.filePath(f));
-            if (!img.isNull()) faceImgs.push_back(img);
-        }
-        PersonInfo p{sd, sd, {}};  // personId=name=目录名
-        total += enroll(p, faceImgs);
-    }
-    MCLog.info("Enroll finished, total embeddings added: {}", total);
+HRCode HumanRecognition::compare(const FaceFeature& a, const FaceFeature& b, float& outDistance) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->compare(a, b, outDistance);
 }
 
-std::vector<FaceDetectionResult> HumanRecognition::detectAndRecognize(const QImage& image) {
-    if (!m_isInitialized) return {};
-    return m_service->detectAndRecognize(image);
+HRCode HumanRecognition::findNearest(const FaceFeature& feature, RecognitionMatch& outMatch) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->findNearest(feature, outMatch);
 }
 
-int HumanRecognition::enroll(const PersonInfo& info, const std::vector<QImage>& faces) {
-    if (!m_isInitialized) return 0;
-    return m_service->enroll(info, faces);
+HRCode HumanRecognition::registerPerson(const PersonInfo& person) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->registerPerson(person);
 }
 
-bool HumanRecognition::save() {
-    return m_isInitialized && m_service->save();
-}
-bool HumanRecognition::load() {
-    return m_isInitialized && m_service->load();
+HRCode HumanRecognition::removePerson(const QString& personId) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->removePerson(personId);
 }
 
-// Person management wrappers are inlined in header (delegating to service)
+HRCode HumanRecognition::getPerson(const QString& personId, PersonInfo& outPerson) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->getPerson(personId, outPerson);
+}
+
+HRCode HumanRecognition::train(const QString& datasetPath) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->train(datasetPath);
+}
+
+}  // namespace HumanRecognition

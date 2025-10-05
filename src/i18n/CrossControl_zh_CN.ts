@@ -136,7 +136,7 @@
     <message>
         <location filename="../widgets/crosscontrolwidget.cpp" line="86"/>
         <source>Visit Records</source>
-        <translation type="unfinished">来访记录</translation>
+        <translation>来访记录</translation>
     </message>
     <message>
         <location filename="../widgets/crosscontrolwidget.cpp" line="89"/>
@@ -185,82 +185,82 @@
         <translation type="vanished">名称</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="19"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="20"/>
         <source>Generate UUID</source>
         <translation>生成 UUID</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="36"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="38"/>
         <source>ID &lt;span style=&quot;color:red&quot;&gt;*&lt;/span&gt;</source>
         <translation>ID &lt;span style=&quot;color:red&quot;&gt;*&lt;/span&gt;</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="44"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="48"/>
         <source>Name &lt;span style=&quot;color:red&quot;&gt;*&lt;/span&gt;</source>
         <translation>名称 &lt;span style=&quot;color:red&quot;&gt;*&lt;/span&gt;</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="47"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="52"/>
         <source>Status</source>
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="48"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="53"/>
         <source>Endpoint</source>
         <translation>端点</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="49"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="54"/>
         <source>Type</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="50"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="55"/>
         <source>HW Info</source>
         <translation>硬件信息</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="51"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="56"/>
         <source>Firmware</source>
         <translation>固件版本</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="52"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="57"/>
         <source>Owner</source>
         <translation>拥有者</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="53"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="58"/>
         <source>Group</source>
         <translation>设备组</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="54"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="59"/>
         <source>Auth User</source>
         <translation>认证用户</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="55"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="60"/>
         <source>Auth Password</source>
         <translation>认证密码</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="56"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="61"/>
         <source>Auth Token</source>
         <translation>认证令牌</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="57"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="62"/>
         <source>Metadata (JSON)</source>
         <translation>元数据 (JSON)</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="60"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="65"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="61"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="66"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -270,12 +270,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="69"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="76"/>
         <source>Missing fields</source>
         <translation>缺少必填字段</translation>
     </message>
     <message>
-        <location filename="../widgets/deviceeditdialog.cpp" line="70"/>
+        <location filename="../widgets/deviceeditdialog.cpp" line="77"/>
         <source>Please fill required fields: ID and Name.</source>
         <translation>请填写必填字段：ID 和 名称。</translation>
     </message>
@@ -722,7 +722,7 @@
     <message>
         <location filename="../widgets/devicemanagementwidget.cpp" line="330"/>
         <source>Devices: %1  Success: %2  Fail: %3</source>
-        <translation type="unfinished"></translation>
+        <translation>设备数量: %1  成功: %2  失败: %3</translation>
     </message>
     <message>
         <location filename="../widgets/devicemanagementwidget.cpp" line="455"/>
@@ -779,255 +779,196 @@
 <context>
     <name>FaceRecognitionWidget</name>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="34"/>
         <source>Load Image</source>
-        <translation>加载图像</translation>
+        <translation type="vanished">加载图像</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="36"/>
         <source>Load Image for Enroll</source>
-        <translation>加载图像以进行注册</translation>
+        <translation type="vanished">加载图像以进行注册</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="38"/>
         <source>Capture</source>
-        <translation>捕获</translation>
+        <translation type="vanished">捕获</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="40"/>
         <source>Enroll</source>
-        <translation>注册</translation>
+        <translation type="vanished">注册</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="42"/>
         <source>Match</source>
-        <translation>匹配</translation>
+        <translation type="vanished">匹配</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="44"/>
         <source>Refresh</source>
-        <translation>刷新</translation>
+        <translation type="vanished">刷新</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="46"/>
         <source>Delete</source>
-        <translation>删除</translation>
+        <translation type="vanished">删除</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="48"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="375"/>
         <source>Enable Camera</source>
-        <translation>启用相机</translation>
+        <translation type="vanished">启用相机</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="50"/>
         <source>Capture Test</source>
-        <translation>拍照测试</translation>
+        <translation type="vanished">拍照测试</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="52"/>
         <source>Capture &amp; Enroll</source>
-        <translation>捕获并注册</translation>
+        <translation type="vanished">捕获并注册</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="60"/>
         <source>Frequent</source>
-        <translation>频繁</translation>
+        <translation type="vanished">频繁</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="61"/>
         <source>Occasional</source>
-        <translation>偶尔</translation>
+        <translation type="vanished">偶尔</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="88"/>
         <source>Name:</source>
-        <translation>姓名：</translation>
+        <translation type="vanished">姓名：</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="91"/>
         <source>Type:</source>
-        <translation>类型：</translation>
+        <translation type="vanished">类型：</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="97"/>
         <source>Phone:</source>
-        <translation>电话：</translation>
+        <translation type="vanished">电话：</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="100"/>
         <source>Note:</source>
-        <translation>备注：</translation>
+        <translation type="vanished">备注：</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="109"/>
         <source>Registered Persons:</source>
-        <translation>已注册人员：</translation>
+        <translation type="vanished">已注册人员：</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="117"/>
         <source>Person Details:</source>
-        <translation>人员详细信息：</translation>
+        <translation type="vanished">人员详细信息：</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="160"/>
         <source>(No camera found)</source>
-        <translation>(找不到相机)</translation>
+        <translation type="vanished">(找不到相机)</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="177"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="196"/>
         <source>Select image</source>
-        <translation>选择图像</translation>
+        <translation type="vanished">选择图像</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="179"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="198"/>
         <source>Images (*.png *.jpg *.jpeg)</source>
-        <translation>图像 (*.png *.jpg *.jpeg)</translation>
+        <translation type="vanished">图像 (*.png *.jpg *.jpeg)</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="183"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="202"/>
         <source>Failed to load image</source>
-        <translation>加载图像失败</translation>
+        <translation type="vanished">加载图像失败</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="189"/>
         <source>Image loaded: %1</source>
-        <translation>图像加载成功：%1</translation>
+        <translation type="vanished">图像加载成功：%1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="265"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="298"/>
         <source>No image loaded</source>
-        <translation>未加载图像</translation>
+        <translation type="vanished">未加载图像</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="208"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="239"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="270"/>
         <source>Please input name</source>
-        <translation>请输入姓名</translation>
+        <translation type="vanished">请输入姓名</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="222"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="253"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="286"/>
         <source>Enrolled %1 embeddings for %2</source>
-        <translation>为 %2 注册了 %1 个嵌入</translation>
+        <translation type="vanished">为 %2 注册了 %1 个嵌入</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="226"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="257"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="290"/>
         <source>Enroll failed or no embeddings extracted</source>
-        <translation>注册失败或未提取到嵌入</translation>
+        <translation type="vanished">注册失败或未提取到嵌入</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="303"/>
         <source>No faces detected</source>
-        <translation>未检测到人脸</translation>
+        <translation type="vanished">未检测到人脸</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="308"/>
         <source>Matched: %1 (dist=%2)</source>
-        <translation>匹配成功：%1 (距离=%2)</translation>
+        <translation type="vanished">匹配成功：%1 (距离=%2)</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="312"/>
         <source>Face not matched</source>
-        <translation>人脸未匹配</translation>
+        <translation type="vanished">人脸未匹配</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="325"/>
         <source>Refreshed person list: %1 entries</source>
-        <translation>已刷新人员列表：%1 条目</translation>
+        <translation type="vanished">已刷新人员列表：%1 条目</translation>
     </message>
     <message>
         <source>Selected person: %1</source>
         <translation type="vanished">选择个人</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="337"/>
         <source>Name: %1</source>
-        <translation>姓名：%1</translation>
+        <translation type="vanished">姓名：%1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="354"/>
         <source>Phone: %1</source>
-        <translation>电话：%1</translation>
+        <translation type="vanished">电话：%1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="356"/>
         <source>Type: %1</source>
-        <translation>类型：%1</translation>
+        <translation type="vanished">类型：%1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="358"/>
         <source>Note: %1</source>
-        <translation>备注：%1</translation>
+        <translation type="vanished">备注：%1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="376"/>
         <source>Camera disabled</source>
-        <translation>关闭相机</translation>
+        <translation type="vanished">关闭相机</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="380"/>
         <source>No camera found</source>
-        <translation>找不到相机</translation>
+        <translation type="vanished">找不到相机</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="386"/>
         <source>Invalid camera selection</source>
-        <translation>无效的相机选择</translation>
+        <translation type="vanished">无效的相机选择</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="407"/>
         <source>Camera enabled (Qt Multimedia)</source>
-        <translation>相机已启用（Qt 多媒体）</translation>
+        <translation type="vanished">相机已启用（Qt 多媒体）</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="405"/>
         <source>Disable Camera</source>
-        <translation>禁用相机</translation>
+        <translation type="vanished">禁用相机</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="234"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="417"/>
         <source>No camera frame available</source>
-        <translation>无可用的相机帧</translation>
+        <translation type="vanished">无可用的相机帧</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="421"/>
         <source>Please select a registered person to test against</source>
-        <translation>请选择要测试的已注册人员</translation>
+        <translation type="vanished">请选择要测试的已注册人员</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="428"/>
         <source>No faces detected in capture</source>
-        <translation>拍照未检测到人脸</translation>
+        <translation type="vanished">拍照未检测到人脸</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="435"/>
         <source>Capture matched selected person: %1 (dist=%2)</source>
-        <translation>拍照匹配到所选人员：%1（距离=%2）</translation>
+        <translation type="vanished">拍照匹配到所选人员：%1（距离=%2）</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="442"/>
         <source>Capture did not match selected person</source>
-        <translation>拍照未匹配所选人员</translation>
+        <translation type="vanished">拍照未匹配所选人员</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="453"/>
         <source>Deleted person: %1</source>
-        <translation>已删除人员：%1</translation>
+        <translation type="vanished">已删除人员：%1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="456"/>
         <source>Delete failed for %1</source>
-        <translation>删除失败：%1</translation>
+        <translation type="vanished">删除失败：%1</translation>
     </message>
 </context>
 <context>
@@ -1379,7 +1320,7 @@
         <location filename="../widgets/loginwidget.ui" line="70"/>
         <source>QFrame#frameRight { background: #ffffff; } QLineEdit { padding: 8px; }
                      QPushButton { padding: 8px 12px; }</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/loginwidget.ui" line="87"/>
@@ -1552,31 +1493,31 @@
         <location filename="../widgets/mainwidget.ui" line="64"/>
         <source>background: #ffffff; border: 1px solid
                                                       #e0e0e0; border-radius: 8px; padding: 12px;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="39"/>
         <source>font-size: 14px; color:
                                                                         #555;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="43"/>
         <source>29℃~34℃ Sunny Air quality:
                                                                         Good</source>
-        <translation type="unfinished"></translation>
+        <translation>29℃~34℃ 晴 空气质量: 良好</translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="73"/>
         <source>background: transparent;
                                                                         padding: 8px;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="128"/>
         <source>background: #ffffff; border: 1px solid #e0e0e0;
                                           border-radius: 8px; padding: 12px;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/mainwidget.ui" line="141"/>
@@ -1747,7 +1688,8 @@
         <location filename="../widgets/messagewidget.cpp" line="256"/>
         <source>Failed to save message to database:
 %1</source>
-        <translation type="unfinished"></translation>
+        <translation>保存留言到数据库失败：
+%1</translation>
     </message>
     <message>
         <source>Failed to save message to database:
@@ -1802,7 +1744,7 @@
         <translation type="vanished">监听端口</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="519"/>
+        <location filename="../widgets/monitorwidget.cpp" line="527"/>
         <source>Listen</source>
         <translation>监听</translation>
     </message>
@@ -1819,7 +1761,7 @@
     <message>
         <location filename="../widgets/monitorwidget.ui" line="9"/>
         <source>Operations / 操作</source>
-        <translation type="unfinished"></translation>
+        <translation>Operations / 操作</translation>
     </message>
     <message>
         <location filename="../widgets/monitorwidget.ui" line="34"/>
@@ -1934,7 +1876,7 @@
         <translation>MQTT客户端将在此实现</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="1010"/>
+        <location filename="../widgets/monitorwidget.cpp" line="1039"/>
         <source>Disconnected</source>
         <translation>未连接</translation>
     </message>
@@ -1962,7 +1904,7 @@
     </message>
     <message>
         <location filename="../widgets/monitorwidget.ui" line="138"/>
-        <location filename="../widgets/monitorwidget.cpp" line="369"/>
+        <location filename="../widgets/monitorwidget.cpp" line="374"/>
         <source>No device selected</source>
         <translation>未选择设备</translation>
     </message>
@@ -1972,41 +1914,43 @@
     </message>
     <message>
         <location filename="../widgets/monitorwidget.ui" line="289"/>
-        <location filename="../widgets/monitorwidget.cpp" line="134"/>
+        <location filename="../widgets/monitorwidget.cpp" line="133"/>
         <source>Serial</source>
         <translation>串口</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="376"/>
+        <location filename="../widgets/monitorwidget.cpp" line="382"/>
         <source>Play</source>
-        <translation type="unfinished"></translation>
+        <translation>播放</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="378"/>
+        <location filename="../widgets/monitorwidget.cpp" line="385"/>
         <source>Pause</source>
-        <translation type="unfinished"></translation>
+        <translation>暂停</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="380"/>
+        <location filename="../widgets/monitorwidget.cpp" line="388"/>
         <source>Snapshot</source>
-        <translation type="unfinished"></translation>
+        <translation>快照</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="493"/>
+        <location filename="../widgets/monitorwidget.cpp" line="501"/>
         <source>Listening...</source>
         <translation>正在监听...</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="502"/>
+        <location filename="../widgets/monitorwidget.cpp" line="510"/>
         <source>Listen Failed</source>
         <translation>监听失败</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="857"/>
+        <location filename="../widgets/monitorwidget.cpp" line="865"/>
         <source>Name: %1
 Type: %2
 Last seen: %3</source>
-        <translation type="unfinished"></translation>
+        <translation>名称: %1
+类型: %2
+最后一次出现: %3</translation>
     </message>
     <message>
         <source>Sent</source>
@@ -2017,14 +1961,14 @@ Last seen: %3</source>
         <translation type="obsolete">已保存</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="121"/>
-        <location filename="../widgets/monitorwidget.cpp" line="234"/>
+        <location filename="../widgets/monitorwidget.cpp" line="120"/>
+        <location filename="../widgets/monitorwidget.cpp" line="235"/>
         <source>TCP</source>
         <translation>TCP</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="128"/>
-        <location filename="../widgets/monitorwidget.cpp" line="239"/>
+        <location filename="../widgets/monitorwidget.cpp" line="127"/>
+        <location filename="../widgets/monitorwidget.cpp" line="241"/>
         <source>UDP</source>
         <translation>UDP</translation>
     </message>
@@ -2037,12 +1981,12 @@ Last seen: %3</source>
                 最后一次出现: %3</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="862"/>
+        <location filename="../widgets/monitorwidget.cpp" line="870"/>
         <source>N/A</source>
         <translation>无</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="1007"/>
+        <location filename="../widgets/monitorwidget.cpp" line="1036"/>
         <source>Connected</source>
         <translation>已连接</translation>
     </message>
@@ -2051,7 +1995,7 @@ Last seen: %3</source>
         <translation type="vanished">没有连接的客户端</translation>
     </message>
     <message>
-        <location filename="../widgets/monitorwidget.cpp" line="741"/>
+        <location filename="../widgets/monitorwidget.cpp" line="749"/>
         <source>Choose save path</source>
         <translation>选择保存路径</translation>
     </message>
@@ -2414,13 +2358,13 @@ Last seen: %3</source>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="44"/>
-        <location filename="../widgets/settingwidget.cpp" line="325"/>
+        <location filename="../widgets/settingwidget.cpp" line="326"/>
         <source>Manage Accounts</source>
         <translation>管理账户</translation>
     </message>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="46"/>
-        <location filename="../widgets/settingwidget.cpp" line="318"/>
+        <location filename="../widgets/settingwidget.cpp" line="319"/>
         <source>Accounts</source>
         <translation>账户</translation>
     </message>
@@ -2437,8 +2381,8 @@ Last seen: %3</source>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="173"/>
         <location filename="../widgets/settingwidget.cpp" line="234"/>
-        <location filename="../widgets/settingwidget.cpp" line="263"/>
-        <location filename="../widgets/settingwidget.cpp" line="280"/>
+        <location filename="../widgets/settingwidget.cpp" line="264"/>
+        <location filename="../widgets/settingwidget.cpp" line="281"/>
         <source>Start REST</source>
         <translation>启动远程控制</translation>
     </message>
@@ -2455,7 +2399,7 @@ Last seen: %3</source>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="197"/>
         <location filename="../widgets/settingwidget.cpp" line="251"/>
-        <location filename="../widgets/settingwidget.cpp" line="278"/>
+        <location filename="../widgets/settingwidget.cpp" line="279"/>
         <source>Stop REST</source>
         <translation>停止远程控制</translation>
     </message>
@@ -2477,7 +2421,7 @@ Last seen: %3</source>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="210"/>
         <location filename="../widgets/settingwidget.cpp" line="256"/>
-        <location filename="../widgets/settingwidget.cpp" line="297"/>
+        <location filename="../widgets/settingwidget.cpp" line="298"/>
         <source>REST</source>
         <translation>REST</translation>
     </message>
@@ -2499,80 +2443,80 @@ Last seen: %3</source>
     <message>
         <location filename="../widgets/settingwidget.cpp" line="257"/>
         <source>Failed to start REST server. If the embedded REST server was already started in this process it cannot be restarted; please restart the application.</source>
-        <translation type="unfinished"></translation>
+        <translation>无法启动 REST 服务器。如果嵌入式 REST 服务器已经在此进程中启动，则无法重新启动；请重新启动应用程序。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="298"/>
+        <location filename="../widgets/settingwidget.cpp" line="299"/>
         <source>Failed to auto-start REST server on saved port</source>
         <translation>无法在保存的端口上自动启动 REST 服务器</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="319"/>
+        <location filename="../widgets/settingwidget.cpp" line="320"/>
         <source>No saved accounts found.</source>
         <translation>未找到保存的账户。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="335"/>
+        <location filename="../widgets/settingwidget.cpp" line="336"/>
         <source>Remove Selected</source>
         <translation>移除选中项</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="337"/>
+        <location filename="../widgets/settingwidget.cpp" line="338"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="364"/>
+        <location filename="../widgets/settingwidget.cpp" line="365"/>
         <source>Edit Configuration JSON</source>
         <translation>编辑配置 JSON</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="371"/>
+        <location filename="../widgets/settingwidget.cpp" line="372"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="373"/>
+        <location filename="../widgets/settingwidget.cpp" line="374"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="385"/>
+        <location filename="../widgets/settingwidget.cpp" line="386"/>
         <source>JSON Error</source>
         <translation>JSON 错误</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="386"/>
+        <location filename="../widgets/settingwidget.cpp" line="387"/>
         <source>Failed to parse provided JSON. No changes applied.</source>
         <translation>无法解析提供的 JSON。未应用任何更改。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="397"/>
+        <location filename="../widgets/settingwidget.cpp" line="398"/>
         <source>JSON</source>
         <translation>JSON</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="398"/>
+        <location filename="../widgets/settingwidget.cpp" line="399"/>
         <source>Configuration updated from JSON.</source>
         <translation>配置已从 JSON 更新。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="443"/>
+        <location filename="../widgets/settingwidget.cpp" line="444"/>
         <source>Save Failed</source>
         <translation>保存失败</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="444"/>
+        <location filename="../widgets/settingwidget.cpp" line="445"/>
         <source>Failed to save some configuration keys. Check permissions or file locks.</source>
         <translation>无法保存某些配置键。请检查权限或文件锁。</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="450"/>
+        <location filename="../widgets/settingwidget.cpp" line="451"/>
         <source>Saved</source>
         <translation>已保存</translation>
     </message>
     <message>
-        <location filename="../widgets/settingwidget.cpp" line="451"/>
+        <location filename="../widgets/settingwidget.cpp" line="452"/>
         <source>Settings saved successfully.</source>
         <translation>设置已成功保存。</translation>
     </message>
@@ -2780,7 +2724,7 @@ Last seen: %3</source>
 QPushButton{min-width:84px;padding:6px;border-radius:4px;background:#1976d2;color:white}
 QPushButton:disabled{background:#9e9e9e}
 QLineEdit,QTextEdit{font:9pt &quot;Segoe UI&quot;}</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../widgets/udpopswidget.ui" line="52"/>
