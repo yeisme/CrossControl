@@ -100,3 +100,4 @@ third_party/
 *.rar
 *.gz
 *.xz
+.bat

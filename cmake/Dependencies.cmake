@@ -32,6 +32,24 @@ message(STATUS "Found OpenCV with imported targets")
 find_package(dlib CONFIG)
 message(STATUS "Found dlib for HumanRecognition backend")
 
+if(NOT dlib_FOUND)
+  # If dlib wasn't found via vcpkg/system, try local third_party/dlib installs created
+  # by the provided CMakePresets under third_party/dlib/install/dlib/*.
+  file(GLOB DLIB_INSTALL_DIRS "${CMAKE_SOURCE_DIR}/third_party/dlib/install/dlib/*")
+  foreach(_d ${DLIB_INSTALL_DIRS})
+    if(EXISTS "${_d}/lib/cmake/dlib" OR EXISTS "${_d}/share/dlib/cmake")
+      list(APPEND CMAKE_PREFIX_PATH "${_d}")
+    endif()
+  endforeach()
+  if(NOT CMAKE_PREFIX_PATH STREQUAL "")
+    # Try to find again with the augmented CMAKE_PREFIX_PATH
+    find_package(dlib CONFIG REQUIRED)
+    message(STATUS "Found dlib in local third_party installs")
+  else()
+    message(STATUS "dlib not found via vcpkg/system or local third_party installs. Continuing without dlib (HumanRecognition backend may be disabled).")
+  endif()
+endif()
+
 if(BUILD_MQTT_CLIENT)
   find_package(PahoMqttCpp CONFIG)
   if(PahoMqttCpp_FOUND)
