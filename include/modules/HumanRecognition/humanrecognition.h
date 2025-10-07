@@ -79,7 +79,7 @@ class HumanRecognition {
      * @param modelDir 模型目录路径
      * @return QPair<HRCode, QString> 返回操作结果和所用后端名称
      */
-    QPair<HRCode, QString> loadModelFromDir(const path& modelDir);
+    QPair<HRCode, QString> loadModelFromDir(const path& modelDir, const QString& ext = QString());
 
     /**
      * @brief 列出当前注册的可用后端名称

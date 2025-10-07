@@ -36,12 +36,47 @@ HRCode HumanRecognition::saveModel(const path& modelPath) {
     return m_impl->backend->saveModel(QString::fromStdWString(modelPath.wstring()));
 }
 
-QPair<HRCode, QString> HumanRecognition::loadModelFromDir(const path& modelDir) {
-    // 简单实现：尝试使用当前后端加载目录下的模型文件名
-    if (!hasBackend()) return {HRCode::UnknownError, QString()};
-    // 这里只调用 loadModel 并返回当前后端名
-    auto code = loadModel(modelDir);
-    return qMakePair(code, currentBackendName());
+QPair<HRCode, QString> HumanRecognition::loadModelFromDir(const path& modelDir,
+                                                          const QString& ext) {
+    // 检查后端
+    if (!hasBackend()) return qMakePair(HRCode::UnknownError, QString());
+
+    // 验证路径
+    try {
+        if (!exists(modelDir) || !is_directory(modelDir)) {
+            return qMakePair(HRCode::ModelLoadFailed, QString());
+        }
+    } catch (...) { return qMakePair(HRCode::ModelLoadFailed, QString()); }
+
+    // 规范化扩展名（去掉前导点并小写）
+    QString wantedExt;
+    if (!ext.isEmpty()) {
+        wantedExt = ext;
+        if (wantedExt.startsWith('.')) wantedExt.remove(0, 1);
+        wantedExt = wantedExt.toLower();
+    }
+
+    // 遍历目录，尝试用当前后端逐个加载符合扩展名的文件，遇到成功则返回
+    for (const auto& entry : std::filesystem::directory_iterator(modelDir)) {
+        try {
+            if (!entry.is_regular_file()) continue;
+            const path p = entry.path();
+            // 如果指定了扩展名，跳过不匹配的文件
+            if (!wantedExt.isEmpty()) {
+                QString fileExt = QString::fromStdWString(p.extension().wstring());
+                if (fileExt.startsWith('.')) fileExt.remove(0, 1);
+                if (fileExt.toLower() != wantedExt) continue;
+            }
+
+            auto code = loadModel(p);
+            if (code == HRCode::Ok) { return qMakePair(code, currentBackendName()); }
+        } catch (...) {
+            // 忽略单个文件的异常，继续尝试下一个
+            continue;
+        }
+    }
+
+    return qMakePair(HRCode::ModelLoadFailed, QString());
 }
 
 QVector<QString> HumanRecognition::availableBackends() const {

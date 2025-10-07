@@ -12,3 +12,8 @@ include(cmake/Output.cmake)
 include(cmake/Packaging.cmake)
 include(cmake/ProjectConfig.cmake)
 include(cmake/Targets.cmake)
+
+include(CTest)
+if(BUILD_TESTING)
+  add_subdirectory(tests)
+endif()

@@ -90,3 +90,13 @@ CMakeUserPresets.json
 
 vcpkg_installed/
 third_party/
+
+*.bz2
+*.zip
+*.7z
+*.tar.gz
+*.tar.xz
+*.tar.bz2
+*.rar
+*.gz
+*.xz

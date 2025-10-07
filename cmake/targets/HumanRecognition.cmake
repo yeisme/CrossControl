@@ -4,8 +4,12 @@ set(HUMAN_RECOGNITION_SOURCES
     include/modules/HumanRecognition/factory.h
     include/modules/HumanRecognition/ihumanrecognitionbackend.h
     include/modules/HumanRecognition/types.h
+  include/modules/HumanRecognition/impl/opencv_dlib/backend.h
     src/modules/HumanRecognition/humanrecognition.cpp
-    src/modules/HumanRecognition/factory.cpp)
+  src/modules/HumanRecognition/factory.cpp
+  src/modules/HumanRecognition/impl/opencv_dlib/backend.cpp
+  src/modules/HumanRecognition/impl/opencv_dlib/backend_impl_core.cpp
+  src/modules/HumanRecognition/impl/opencv_dlib/backend_impl_recognition.cpp)
 if(BUILD_SHARED_MODULES)
   add_library(HumanRecognition SHARED ${HUMAN_RECOGNITION_SOURCES})
   # Ensure exported symbols on MSVC builds when no explicit export macro
@@ -30,6 +34,28 @@ target_include_directories(
 target_link_libraries(HumanRecognition PRIVATE Qt6::Widgets Qt6::Network
                                                Qt6::Sql)
 target_link_libraries(HumanRecognition PRIVATE Storage config logging)
+
+if(TARGET dlib::dlib)
+  target_link_libraries(HumanRecognition PRIVATE dlib::dlib)
+  target_compile_definitions(HumanRecognition PRIVATE HAS_DLIB=1)
+else()
+  message(FATAL_ERROR "dlib::dlib target not found. Ensure dlib is available via your package manager")
+endif()
+
+if(TARGET opencv_world)
+  target_link_libraries(HumanRecognition PRIVATE opencv_world)
+  target_compile_definitions(HumanRecognition PRIVATE HAS_OPENCV=1)
+elseif(TARGET opencv::opencv)
+  target_link_libraries(HumanRecognition PRIVATE opencv::opencv)
+  target_compile_definitions(HumanRecognition PRIVATE HAS_OPENCV=1)
+elseif(TARGET opencv_core)
+  target_link_libraries(HumanRecognition PRIVATE opencv_core opencv_imgproc opencv_imgcodecs)
+  target_compile_definitions(HumanRecognition PRIVATE HAS_OPENCV=1)
+else()
+  message(
+    FATAL_ERROR
+      "OpenCV targets not found. Expected opencv_world / opencv::opencv / opencv_core. Ensure OpenCV is available")
+endif()
 target_link_libraries(CrossControl PRIVATE HumanRecognition)
 
 # Register installation as part of the Core component so the module is installed

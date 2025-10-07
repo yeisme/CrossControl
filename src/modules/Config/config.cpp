@@ -19,6 +19,11 @@ const char* ConfigManager::kEmbeddedDefaultJson = R"json({
         "database": "crosscontrol.db",
         "foreignKeys": true
     },
+    "HumanRecognition": {
+        "PersonsTable": "hr_persons",
+        "MatchThreshold": 0.6,
+        "AutoCreateTable": true
+    },
     "Connect": {
         "endpoint": "127.0.0.1:9000"
     },

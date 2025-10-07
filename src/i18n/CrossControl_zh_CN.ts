@@ -779,8 +779,142 @@
 <context>
     <name>FaceRecognitionWidget</name>
     <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="27"/>
+        <source>Ok</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="29"/>
+        <source>Invalid image</source>
+        <translation>无效图像</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="31"/>
+        <source>Model load failed</source>
+        <translation>模型加载失败</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="33"/>
+        <source>Model save failed</source>
+        <translation>模型保存失败</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="35"/>
+        <source>Detection failed</source>
+        <translation>检测失败</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="37"/>
+        <source>Feature extraction failed</source>
+        <translation>特征提取失败</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="40"/>
+        <source>Compare failed</source>
+        <translation>比较失败</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="42"/>
+        <source>Train failed</source>
+        <translation>训练失败</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="44"/>
+        <source>Person already exists</source>
+        <translation>人员已存在</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="46"/>
+        <source>Person not found</source>
+        <translation>人员未找到</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="49"/>
+        <source>Unknown error</source>
+        <translation>未知错误</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="61"/>
+        <source>Back</source>
+        <translation>返回</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="67"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="295"/>
+        <source>Face Recognition</source>
+        <translation>人脸识别</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="77"/>
         <source>Load Image</source>
-        <translation type="vanished">加载图像</translation>
+        <translation>加载图像</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="79"/>
+        <source>Detect Faces</source>
+        <translation>检测人脸</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="82"/>
+        <source>Clear Results</source>
+            <translation>清除结果</translation>
+        </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="126"/>
+        <source>Failed to activate backend &apos;%1&apos;: %2</source>
+        <translation>激活后端 &apos;%1&apos; 失败: %2</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="139"/>
+        <source>Select Image</source>
+        <translation>选择图像</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="141"/>
+        <source>Images (*.png *.jpg *.jpeg *.bmp *.webp)</source>
+        <translation>图像 (*.png *.jpg *.jpeg *.bmp *.webp)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="148"/>
+        <source>Unable to load image: %1</source>
+        <translation>无法加载图像: %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="165"/>
+        <source>Please load an image first.</source>
+        <translation>请先加载图像。</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="182"/>
+        <source>No faces detected: %1</source>
+        <translation>未检测到人脸: %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="263"/>
+        <source>Face: (%1,%2) %3x%4 | score=%5</source>
+        <translation>人脸: (%1,%2) %3x%4 | 分数=%5</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="270"/>
+        <source>
+Feature length: %1</source>
+        <translation>特征长度: %1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="273"/>
+        <source> | norm=%1</source>
+        <translation> | 范数=%1</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="278"/>
+        <source>
+Match: %1 (%2) | distance=%3 | score=%4</source>
+        <translation>匹配: %1 (%2) | 距离=%3 | 分数=%4</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="281"/>
+        <source>Unnamed</source>
+        <translation>未命名</translation>
     </message>
     <message>
         <source>Load Image for Enroll</source>
@@ -871,8 +1005,10 @@
         <translation type="vanished">图像加载成功：%1</translation>
     </message>
     <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="93"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="231"/>
         <source>No image loaded</source>
-        <translation type="vanished">未加载图像</translation>
+        <translation>未加载图像</translation>
     </message>
     <message>
         <source>Please input name</source>

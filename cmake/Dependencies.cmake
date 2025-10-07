@@ -26,6 +26,12 @@ find_package(spdlog CONFIG REQUIRED) # 使用 spdlog 作为日志库，比 QDebu
 find_package(Drogon CONFIG REQUIRED)
 message(STATUS "Found Drogon: enabling drogon HTTP support")
 
+find_package(OpenCV CONFIG REQUIRED)
+message(STATUS "Found OpenCV with imported targets")
+
+find_package(dlib CONFIG REQUIRED)
+message(STATUS "Found dlib for HumanRecognition backend")
+
 if(BUILD_MQTT_CLIENT)
   find_package(PahoMqttCpp CONFIG)
   if(PahoMqttCpp_FOUND)
