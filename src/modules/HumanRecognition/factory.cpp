@@ -22,8 +22,8 @@ void registerBackendFactory(const QString& name, BackendFactoryWithConfig factor
 
 bool unregisterBackendFactory(const QString& name) {
     std::lock_guard<std::mutex> lock(g_backendFactoriesMutex);
-    bool removed = g_backendFactories.remove(name) > 0;
-    removed = g_backendFactoriesWithConfig.remove(name) > 0 || removed;
+    bool removed = static_cast<bool>(g_backendFactories.remove(name));
+    removed = static_cast<bool>(g_backendFactoriesWithConfig.remove(name)) || removed;
     return removed;
 }
 

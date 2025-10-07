@@ -857,8 +857,8 @@
     <message>
         <location filename="../widgets/facerecognitionwidget.cpp" line="82"/>
         <source>Clear Results</source>
-            <translation>清除结果</translation>
-        </message>
+        <translation>清除结果</translation>
+    </message>
     <message>
         <location filename="../widgets/facerecognitionwidget.cpp" line="126"/>
         <source>Failed to activate backend &apos;%1&apos;: %2</source>
