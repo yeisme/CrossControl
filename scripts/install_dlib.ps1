@@ -1,7 +1,8 @@
 ﻿param(
-    [string]$Version = 'v19.24.9',
+    [string]$Version = 'v19.24.8',
     [string]$Dest = "$(Split-Path -Path $PSScriptRoot -Parent)\third_party\dlib",
-    [string]$Preset = 'msvc-vcpkg-cuda-release'
+    [string]$Preset = 'msvc-cpu-release',
+    [switch]$NoBuild = $false
 )
 
 Write-Host "Cloning dlib $Version into $Dest"
@@ -54,6 +55,21 @@ try {
         git fetch --depth 1 origin $Version
         git checkout -q FETCH_HEAD
     }
+    # Copy the local presets file into the dlib source dir so cmake --preset will find it.
+    $localPresetFile = Join-Path $PSScriptRoot 'install_dlib.json'
+    $destPresetFile = Join-Path $Dest 'CMakePresets.json'
+    if (Test-Path $localPresetFile) {
+        Write-Host "Copying presets file '$localPresetFile' -> '$destPresetFile'"
+        Copy-Item -Path $localPresetFile -Destination $destPresetFile -Force
+    } else {
+        Write-Host "Warning: presets file not found at '$localPresetFile' — continuing without copying"
+    }
+
+    if ($NoBuild) {
+        Write-Host "-NoBuild specified; skipping cmake configure/build/install steps."
+        return
+    }
+
     Write-Host "Configuring and building dlib with CMake preset: $Preset"
     cmake --preset $Preset
     cmake --build --preset $Preset

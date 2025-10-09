@@ -107,9 +107,7 @@ int main(int argc, char** argv) {
         // fallback candidates
         const std::filesystem::path root = std::filesystem::path(".");
         const std::vector<std::string> candidates = {
-            "resources/models/dlib_face_recognition_resnet_model_v1.dat",
-            "resources/models/resnet34_stable_imagenet_1k.dat",
-            "resources/models/vit-s-16_stable_imagenet_1k.dat",
+            "resources/models/taguchi_face_recognition_resnet_model_v1.dat",
         };
         for (const auto& rel : candidates) {
             std::filesystem::path p = root / rel;

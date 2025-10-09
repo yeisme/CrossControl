@@ -7,7 +7,7 @@
 set -euo pipefail
 VERBOSE=${VERBOSE-0}
 EXTENSIONS=".h .hpp .c .cpp .cc .cxx"
-EXCLUDE_PATTERN="/build/|/.git/|/.vscode/"
+EXCLUDE_PATTERN="/build/|/.git/|/.vscode/|/third_party/"
 
 CLANG_FMT=$(command -v clang-format || true)
 if [ -z "$CLANG_FMT" ]; then

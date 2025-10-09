@@ -315,6 +315,12 @@ QString OpenCVDlibBackend::Impl::backendName() const {
 
 /**
  * @brief 根据输入路径推断关键模型文件路径。
+ *
+ * 支持以下场景：
+ * 1. 直接指定 .dat 模型文件
+ * 2. 指定包含模型文件的目录
+ * 3. 自动查找 .dat 或 .bz2 压缩格式的模型文件
+ * 4. 指定 people.json 人员数据库文件
  */
 OpenCVDlibBackend::Impl::ModelFiles OpenCVDlibBackend::Impl::resolveModelFiles(
     const QFileInfo& info) const {
@@ -322,38 +328,81 @@ OpenCVDlibBackend::Impl::ModelFiles OpenCVDlibBackend::Impl::resolveModelFiles(
     QDir dir(info.isDir() ? info.absoluteFilePath() : info.absolutePath());
     files.baseDirectory = dir.absolutePath();
 
-    const auto pickExisting = [&dir](const QStringList& candidates) -> QString {
+    // 优先选择已解压的 .dat 文件,其次尝试 .bz2 压缩文件
+    const auto pickExisting = [this, &dir](const QStringList& candidates) -> QString {
         for (const auto& name : candidates) {
             const QString path = dir.filePath(name);
             if (QFileInfo::exists(path)) return path;
         }
-        return QString();
-    };
-
-    if (info.isFile() && info.suffix().compare("dat", Qt::CaseInsensitive) == 0) {
-        const QString lowerName = info.fileName().toLower();
-        if (lowerName.contains("shape") && files.shapePredictor.isEmpty()) {
-            files.shapePredictor = info.absoluteFilePath();
-        } else if ((lowerName.contains("recognition") || lowerName.contains("resnet")) &&
-                   files.recognition.isEmpty()) {
-            files.recognition = info.absoluteFilePath();
+        // 如果没找到 .dat 文件,尝试查找对应的 .bz2 压缩文件
+        for (const auto& name : candidates) {
+            const QString bzPath = dir.filePath(name + QStringLiteral(".bz2"));
+            if (QFileInfo::exists(bzPath)) {
+                // 找到压缩文件,记录警告信息
+                if (logger) {
+                    logger->warn(
+                        "Found compressed model file: {}. Please decompress it first using the "
+                        "download script.",
+                        bzPath.toStdString());
+                }
+                return QString();  // 返回空,强制用户先解压
+            }
         }
-    } else if (info.isFile() && info.suffix().compare("json", Qt::CaseInsensitive) == 0) {
-        files.personDatabase = info.absoluteFilePath();
+        return QString();
+    };  // 如果用户直接指定了模型文件，根据文件名推断其类型
+    if (info.isFile()) {
+        const QString suffix = info.suffix().toLower();
+        const QString lowerName = info.fileName().toLower();
+
+        if (suffix == QLatin1String("dat")) {
+            // 已解压的 .dat 模型文件
+            if (lowerName.contains("shape") && files.shapePredictor.isEmpty()) {
+                files.shapePredictor = info.absoluteFilePath();
+            } else if ((lowerName.contains("recognition") || lowerName.contains("resnet")) &&
+                       files.recognition.isEmpty()) {
+                files.recognition = info.absoluteFilePath();
+            }
+        } else if (suffix == QLatin1String("bz2")) {
+            // 压缩的 .bz2 文件，提示用户先解压
+            if (logger) {
+                logger->error(
+                    "Model file is compressed: {}. Please run the download script to decompress "
+                    "it first: scripts/download_dlib_model.ps1 or scripts/download_dlib_model.sh",
+                    info.absoluteFilePath().toStdString());
+            }
+            return files;  // 返回空的 ModelFiles
+        } else if (suffix == QLatin1String("json")) {
+            files.personDatabase = info.absoluteFilePath();
+        }
     }
 
+    // 自动查找标准模型文件（优先 .dat，其次警告 .bz2）
     if (files.shapePredictor.isEmpty()) {
         files.shapePredictor =
-            pickExisting({QStringLiteral("shape_predictor_68_face_landmarks.dat"),
-                          QStringLiteral("shape_predictor_5_face_landmarks.dat")});
+            pickExisting({QStringLiteral("shape_predictor_5_face_landmarks.dat")});
     }
     if (files.recognition.isEmpty()) {
         files.recognition =
-            pickExisting({QStringLiteral("dlib_face_recognition_resnet_model_v1.dat")});
+            pickExisting({QStringLiteral("taguchi_face_recognition_resnet_model_v1.dat"),
+                          QStringLiteral("dlib_face_recognition_resnet_model_v1.dat")});
     }
     if (files.personDatabase.isEmpty()) {
         files.personDatabase = dir.filePath(QStringLiteral("people.json"));
     }
+
+    // 验证关键模型文件是否存在
+    if (files.shapePredictor.isEmpty() || files.recognition.isEmpty()) {
+        if (logger) {
+            logger->error(
+                "Missing required model files in directory: {}. "
+                "Expected files: shape_predictor_5_face_landmarks.dat and "
+                "taguchi_face_recognition_resnet_model_v1.dat. "
+                "Please run: scripts/download_dlib_model.ps1 (Windows) or "
+                "scripts/download_dlib_model.sh (Linux/macOS)",
+                files.baseDirectory.toStdString());
+        }
+    }
+
     return files;
 }
 

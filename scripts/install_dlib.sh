@@ -1,10 +1,10 @@
 ﻿#!/usr/bin/env bash
 set -euo pipefail
 
-VERSION=${1:-v19.24.9}
+VERSION=${1:-v19.24.8}
 ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
 DEST="$ROOT_DIR/third_party/dlib"
-PRESET=${2:-gcc-cuda-release}
+PRESET=${2:-gcc-cpu-release}
 
 echo "Cloning dlib $VERSION into $DEST"
 mkdir -p "$DEST"

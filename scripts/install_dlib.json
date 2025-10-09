@@ -1,0 +1,190 @@
+{
+    "version": 4,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 24,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "msvc-cuda-base",
+            "hidden": true,
+            "displayName": "MSVC + vcpkg + CUDA (base)",
+            "description": "Shared settings for MSVC builds that use vcpkg integration and CUDA acceleration.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_TARGET_TRIPLET": "x64-windows",
+                "DLIB_USE_CUDA": "ON",
+                "CMAKE_CUDA_STANDARD": "17",
+                "CMAKE_CUDA_ARCHITECTURES": "native",
+                "DLIB_USE_LAPACK": "ON",
+                "DLIB_USE_BLAS": "ON",
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/dlib/${presetName}"
+            }
+        },
+        {
+            "name": "msvc-cuda-debug",
+            "displayName": "MSVC + vcpkg + CUDA :: Debug",
+            "inherits": "msvc-cuda-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "msvc-cuda-release",
+            "displayName": "MSVC + vcpkg + CUDA :: Release",
+            "inherits": "msvc-cuda-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON"
+            }
+        },
+        {
+            "name": "msvc-cpu-base",
+            "hidden": true,
+            "displayName": "MSVC + vcpkg + CPU (base)",
+            "description": "Shared settings for MSVC builds that use vcpkg integration without CUDA.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+                "VCPKG_TARGET_TRIPLET": "x64-windows",
+                "DLIB_USE_CUDA": "OFF",
+                "DLIB_USE_LAPACK": "ON",
+                "DLIB_USE_BLAS": "ON",
+                "CMAKE_C_COMPILER": "cl.exe",
+                "CMAKE_CXX_COMPILER": "cl.exe",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/dlib/${presetName}"
+            }
+        },
+        {
+            "name": "msvc-cpu-debug",
+            "displayName": "MSVC + vcpkg + CPU :: Debug",
+            "inherits": "msvc-cpu-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "msvc-cpu-release",
+            "displayName": "MSVC + vcpkg + CPU :: Release",
+            "inherits": "msvc-cpu-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON"
+            }
+        },
+        {
+            "name": "gcc-cpu-base",
+            "hidden": true,
+            "displayName": "GCC (CPU) (base)",
+            "description": "Shared settings for GCC CPU-only builds.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "DLIB_USE_CUDA": "OFF",
+                "DLIB_USE_LAPACK": "ON",
+                "DLIB_USE_BLAS": "ON",
+                "CMAKE_C_COMPILER": "gcc",
+                "CMAKE_CXX_COMPILER": "g++",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/dlib/${presetName}"
+            }
+        },
+        {
+            "name": "gcc-cpu-debug",
+            "displayName": "GCC (CPU) :: Debug",
+            "inherits": "gcc-cpu-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "gcc-cpu-release",
+            "displayName": "GCC (CPU) :: Release",
+            "inherits": "gcc-cpu-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON"
+            }
+        },
+        {
+            "name": "clang-cpu-base",
+            "hidden": true,
+            "displayName": "Clang (CPU) (base)",
+            "description": "Shared settings for Clang CPU-only builds.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "DLIB_USE_CUDA": "OFF",
+                "DLIB_USE_LAPACK": "ON",
+                "DLIB_USE_BLAS": "ON",
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/dlib/${presetName}"
+            }
+        },
+        {
+            "name": "clang-cpu-debug",
+            "displayName": "Clang (CPU) :: Debug",
+            "inherits": "clang-cpu-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "clang-cpu-release",
+            "displayName": "Clang (CPU) :: Release",
+            "inherits": "clang-cpu-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "msvc-cuda-debug",
+            "displayName": "Build (Debug)",
+            "configurePreset": "msvc-cuda-debug"
+        },
+        {
+            "name": "msvc-cuda-release",
+            "displayName": "Build (Release)",
+            "configurePreset": "msvc-cuda-release"
+        },
+        {
+            "name": "msvc-cpu-debug",
+            "displayName": "Build MSVC CPU (Debug)",
+            "configurePreset": "msvc-cpu-debug"
+        },
+        {
+            "name": "msvc-cpu-release",
+            "displayName": "Build MSVC CPU (Release)",
+            "configurePreset": "msvc-cpu-release"
+        },
+        {
+            "name": "gcc-cpu-debug",
+            "displayName": "Build GCC CPU (Debug)",
+            "configurePreset": "gcc-cpu-debug"
+        },
+        {
+            "name": "gcc-cpu-release",
+            "displayName": "Build GCC CPU (Release)",
+            "configurePreset": "gcc-cpu-release"
+        },
+        {
+            "name": "clang-cpu-debug",
+            "displayName": "Build Clang CPU (Debug)",
+            "configurePreset": "clang-cpu-debug"
+        },
+        {
+            "name": "clang-cpu-release",
+            "displayName": "Build Clang CPU (Release)",
+            "configurePreset": "clang-cpu-release"
+        }
+    ]
+}

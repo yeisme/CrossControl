@@ -8,7 +8,7 @@
 #   .\scripts\format.ps1 -Verbose  # 详细输出（显示每个文件的处理状态）
 
 $extensions = @('.h', '.hpp', '.c', '.cpp', '.cc', '.cxx')
-$excludePattern = '\\build\\|\\.git\\|/build/|/\\.git/|\\.vscode\\|/\\.vscode/'
+$excludePattern = '\\build\\|\\.git\\|/build/|/\\.git/|\\.vscode\\|/\\.vscode/|\\third_party\\'
 
 # 查找 clang-format
 $clang = Get-Command clang-format -ErrorAction SilentlyContinue
