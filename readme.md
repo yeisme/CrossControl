@@ -1,7 +1,5 @@
 ﻿# CrossControl
 
-、
-
 ## 简介
 
 CrossControl 是一个跨平台的桌面应用，旨在提供多功能的设备管理与控制界面。它集成了人脸识别技术，支持通过摄像头进行用户身份验证和交互。此外，应用还具备网络通信能力，能够通过 TCP/UDP/HTTP 协议与其他设备进行数据交换。日志系统确保所有操作都有迹可循，而导入/导出功能则方便用户备份和恢复设置。整体设计注重用户体验，界面友好且易于操作。
@@ -28,10 +26,15 @@ CrossControl 是一个跨平台的桌面应用，旨在提供多功能的设备�
 ## 依赖
 
 - CMake 3.25+（推荐使用与预置匹配的版本）
-- Qt 6（建议 6.8+，项目使用 Qt Multimedia 等模块；参见 `CMakeLists.txt` 中的具体模块）
 - 需要使用支持 C++20 的编译器
 - （可选）dlib 与其依赖（若启用人脸识别模块）
 - Bash / PowerShell（用于运行仓库内的辅助脚本，例如模型下载）
+- 依赖库(详见 Dependencies.cmake):
+  - Qt 6（建议 6.8+，项目使用 Qt Multimedia 等模块；参见 `CMakeLists.txt` 中的具体模块）
+  - spdlog（用于日志记录）
+  - fmt（用于字符串格式化）
+  - Drogon（用于 HTTP 客户端/服务器功能）
+  - OpenCV（用于图像处理与摄像头操作）
 
 仓库内包含 `CMakePresets.json` 和 `CMakeUserPresets.json`，已配置常用的构建预置（例如 `msvc-debug`、`msvc-release`）。
 
