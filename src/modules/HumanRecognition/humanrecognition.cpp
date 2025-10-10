@@ -165,6 +165,12 @@ HRCode HumanRecognition::getPerson(const QString& personId, PersonInfo& outPerso
     return m_impl->backend->getPerson(personId, outPerson);
 }
 
+HRCode HumanRecognition::listPersons(QVector<PersonInfo>& outPersons) {
+    std::lock_guard<std::mutex> lock(m_impl->mtx);
+    if (!m_impl->backend) return HRCode::UnknownError;
+    return m_impl->backend->listPersons(outPersons);
+}
+
 HRCode HumanRecognition::train(const QString& datasetPath) {
     std::lock_guard<std::mutex> lock(m_impl->mtx);
     if (!m_impl->backend) return HRCode::UnknownError;

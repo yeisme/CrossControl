@@ -113,6 +113,10 @@ class OpenCVDlibBackend::Impl {
      * @brief 从缓存读取人员信息。
      */
     HRCode getPerson(const QString& personId, PersonInfo& outPerson);
+    /**
+     * @brief 列出所有已缓存的人员。
+     */
+    HRCode listPersons(QVector<PersonInfo>& outPersons);
 
     /**
      * @brief 训练接口（预留）。

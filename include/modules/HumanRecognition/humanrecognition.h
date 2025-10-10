@@ -177,6 +177,13 @@ class HumanRecognition {
     HRCode getPerson(const QString& personId, PersonInfo& outPerson);
 
     /**
+     * @brief 列出当前人员库全部记录
+     * @param outPersons 输出人员列表
+     * @return HRCode 操作结果
+     */
+    HRCode listPersons(QVector<PersonInfo>& outPersons);
+
+    /**
      * @brief 触发后端的训练流程（如果后端实现了 train）
      */
     HRCode train(const QString& datasetPath);

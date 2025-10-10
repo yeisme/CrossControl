@@ -101,3 +101,17 @@ third_party/
 *.gz
 *.xz
 *.dat
+
+# Media files
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.gif
+*.tiff
+*.mp3
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.flv

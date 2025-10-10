@@ -301,6 +301,17 @@ HRCode OpenCVDlibBackend::Impl::getPerson(const QString& personId, PersonInfo& o
     return HRCode::Ok;
 }
 
+HRCode OpenCVDlibBackend::Impl::listPersons(QVector<PersonInfo>& outPersons) {
+    if (!storageReady && !ensureStorageReady()) return HRCode::ModelLoadFailed;
+
+    std::scoped_lock lock(mutex);
+    outPersons.clear();
+    outPersons.reserve(persons.size());
+    for (auto it = persons.cbegin(); it != persons.cend(); ++it) { outPersons.append(it.value()); }
+    if (logger) { logger->debug("ListPersons: returning {} cached entries", outPersons.size()); }
+    return HRCode::Ok;
+}
+
 /**
  * @brief 训练接口暂未实现，直接返回 UnknownError。
  */

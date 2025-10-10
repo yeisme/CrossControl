@@ -67,6 +67,10 @@ HRCode OpenCVDlibBackend::getPerson(const QString& personId, PersonInfo& outPers
     return d->getPerson(personId, outPerson);
 }
 
+HRCode OpenCVDlibBackend::listPersons(QVector<PersonInfo>& outPersons) {
+    return d->listPersons(outPersons);
+}
+
 HRCode OpenCVDlibBackend::train(const QString& datasetPath) {
     return d->train(datasetPath);
 }
@@ -193,6 +197,14 @@ HRCode OpenCVDlibBackend::getPerson(const QString&, PersonInfo&) {
         logger->warn("OpenCVDlibBackend getPerson invoked without backend availability");
     }
     return HRCode::PersonNotFound;
+}
+
+HRCode OpenCVDlibBackend::listPersons(QVector<PersonInfo>& outPersons) {
+    outPersons.clear();
+    if (auto logger = backendLogger()) {
+        logger->warn("OpenCVDlibBackend listPersons invoked without backend availability");
+    }
+    return HRCode::UnknownError;
 }
 
 HRCode OpenCVDlibBackend::train(const QString&) {

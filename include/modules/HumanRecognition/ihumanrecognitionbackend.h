@@ -107,6 +107,13 @@ class IHumanRecognitionBackend {
      */
     virtual HRCode getPerson(const QString& personId, PersonInfo& outPerson) = 0;
 
+    /**
+     * @brief 列出当前数据库中的所有人员记录。
+     * @param outPersons 输出参数，填充为完整的人员信息列表。
+     * @return HRCode 表示操作结果。
+     */
+    virtual HRCode listPersons(QVector<PersonInfo>& outPersons) = 0;
+
     // 训练（可选实现）
 
     /**

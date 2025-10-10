@@ -779,140 +779,480 @@
 <context>
     <name>FaceRecognitionWidget</name>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="27"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="54"/>
         <source>Ok</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="29"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="56"/>
         <source>Invalid image</source>
         <translation>无效图像</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="31"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="58"/>
         <source>Model load failed</source>
         <translation>模型加载失败</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="33"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="60"/>
         <source>Model save failed</source>
         <translation>模型保存失败</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="35"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="62"/>
         <source>Detection failed</source>
         <translation>检测失败</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="37"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="64"/>
         <source>Feature extraction failed</source>
         <translation>特征提取失败</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="40"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="67"/>
         <source>Compare failed</source>
         <translation>比较失败</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="42"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="69"/>
         <source>Train failed</source>
         <translation>训练失败</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="44"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="71"/>
         <source>Person already exists</source>
         <translation>人员已存在</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="46"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="73"/>
         <source>Person not found</source>
         <translation>人员未找到</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="49"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="76"/>
         <source>Unknown error</source>
         <translation>未知错误</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="61"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="165"/>
         <source>Back</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="67"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="295"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="171"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="925"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="930"/>
         <source>Face Recognition</source>
         <translation>人脸识别</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="77"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="180"/>
+        <source>No source active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="189"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1351"/>
+        <source>Model: not loaded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="192"/>
+        <source>Load Model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="201"/>
         <source>Load Image</source>
         <translation>加载图像</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="79"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="203"/>
+        <source>Load Animated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="205"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="833"/>
+        <source>Start Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="210"/>
         <source>Detect Faces</source>
         <translation>检测人脸</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="82"/>
-        <source>Clear Results</source>
-        <translation>清除结果</translation>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="245"/>
+        <source>Detections</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="126"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="250"/>
+        <source>Auto-match</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="281"/>
+        <source>Face Database</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="291"/>
+        <source>Generate UUID</source>
+        <translation type="unfinished">生成 UUID</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="311"/>
+        <source>Person ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="417"/>
+        <source>Source: Image (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="429"/>
+        <source>Select Animated Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="431"/>
+        <source>Animated (*.gif *.apng)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="436"/>
+        <source>Unable to load animated image: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="450"/>
+        <source>Source: Animation (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="474"/>
+        <source>Unable to resolve destination directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="492"/>
+        <source>Unable to prepare model directory: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="465"/>
+        <source>Select Model File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="467"/>
+        <source>Dlib model (*.dat)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="503"/>
+        <source>Failed to prepare model files:
+%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="515"/>
+        <source>Camera stopped</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="524"/>
+        <source>Live Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="525"/>
+        <source>Source: Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="533"/>
+        <source>No camera frame available. Wait for camera to initialize.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="541"/>
+        <source>Source: Camera snapshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="550"/>
+        <source>Please provide an image first.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="566"/>
+        <source>Detection failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="572"/>
+        <source>No faces detected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="614"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="662"/>
+        <source>Select a detection first.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1078"/>
+        <source>Person ID is required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="627"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="670"/>
+        <source>Failed to extract feature.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="647"/>
+        <source>Register failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="653"/>
+        <source>Person registered successfully.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="679"/>
+        <source>Match failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="715"/>
+        <source>Failed to remove %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="816"/>
+        <source>Face recognition model is not loaded. Please use &apos;Load Model&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="832"/>
+        <source>Stop Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="876"/>
+        <source>Face %1: (%2,%3) %4x%5 | score=%6</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="939"/>
+        <source>No camera device available.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="956"/>
+        <source>Failed to start camera.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1007"/>
+        <source>Load database failed: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1107"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1114"/>
+        <source>Failed to update %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1040"/>
+        <source>ID</source>
+        <translation type="unfinished">ID</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1042"/>
+        <source>Feature</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1053"/>
+        <source>%1 values</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1119"/>
+        <source>Failed to save %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1163"/>
+        <source>Source path does not exist: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1171"/>
+        <source>Unable to create destination directory: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1184"/>
+        <source>No .dat model files found in %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1205"/>
+        <source>Missing shape predictor model file (e.g. shape_predictor_5_face_landmarks.dat).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1211"/>
+        <source>Missing face recognition model file (e.g. dlib_face_recognition_resnet_model_v1.dat).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1234"/>
+        <source>Compressed model file detected: %1. Please decompress it using the provided download script before loading.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1258"/>
+        <source>Required file missing: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1292"/>
+        <source>Model path does not exist: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="93"/>
+        <source>Source directory does not exist: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="105"/>
+        <source>Unable to create directory: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="115"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1265"/>
+        <source>Unable to overwrite file: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="121"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1271"/>
+        <source>Failed to copy &apos;%1&apos; to &apos;%2&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1308"/>
+        <source>Failed to load model from %1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1325"/>
+        <source>Model loaded successfully from %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1346"/>
+        <source>Model: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1348"/>
+        <source>Model: %1 (unavailable)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Results</source>
+        <translation type="vanished">清除结果</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="775"/>
         <source>Failed to activate backend &apos;%1&apos;: %2</source>
         <translation>激活后端 &apos;%1&apos; 失败: %2</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="139"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="399"/>
         <source>Select Image</source>
         <translation>选择图像</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="141"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="213"/>
+        <source>Clear</source>
+        <translation type="unfinished">清空</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="261"/>
+        <source>Register</source>
+        <translation type="unfinished">注册</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="288"/>
+        <source>Remove Selected</source>
+        <translation type="unfinished">移除选中项</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="319"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="1041"/>
+        <source>Name</source>
+        <translation type="unfinished">名称</translation>
+    </message>
+    <message>
+        <source>Metadata (JSON)</source>
+        <translation type="obsolete">元数据 (JSON)</translation>
+    </message>
+    <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="401"/>
         <source>Images (*.png *.jpg *.jpeg *.bmp *.webp)</source>
         <translation>图像 (*.png *.jpg *.jpeg *.bmp *.webp)</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="148"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="408"/>
         <source>Unable to load image: %1</source>
         <translation>无法加载图像: %1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="165"/>
         <source>Please load an image first.</source>
-        <translation>请先加载图像。</translation>
+        <translation type="vanished">请先加载图像。</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="182"/>
         <source>No faces detected: %1</source>
-        <translation>未检测到人脸: %1</translation>
+        <translation type="vanished">未检测到人脸: %1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="263"/>
         <source>Face: (%1,%2) %3x%4 | score=%5</source>
-        <translation>人脸: (%1,%2) %3x%4 | 分数=%5</translation>
+        <translation type="vanished">人脸: (%1,%2) %3x%4 | 分数=%5</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="270"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="885"/>
         <source>
 Feature length: %1</source>
         <translation>特征长度: %1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="273"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="888"/>
         <source> | norm=%1</source>
         <translation> | 范数=%1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="278"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="894"/>
         <source>
 Match: %1 (%2) | distance=%3 | score=%4</source>
         <translation>匹配: %1 (%2) | 距离=%3 | 分数=%4</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="281"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="897"/>
         <source>Unnamed</source>
         <translation>未命名</translation>
     </message>
@@ -921,20 +1261,23 @@ Match: %1 (%2) | distance=%3 | score=%4</source>
         <translation type="vanished">加载图像以进行注册</translation>
     </message>
     <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="207"/>
         <source>Capture</source>
-        <translation type="vanished">捕获</translation>
+        <translation>捕获</translation>
     </message>
     <message>
         <source>Enroll</source>
         <translation type="vanished">注册</translation>
     </message>
     <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="265"/>
         <source>Match</source>
-        <translation type="vanished">匹配</translation>
+        <translation>匹配</translation>
     </message>
     <message>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="285"/>
         <source>Refresh</source>
-        <translation type="vanished">刷新</translation>
+        <translation>刷新</translation>
     </message>
     <message>
         <source>Delete</source>
@@ -1005,8 +1348,8 @@ Match: %1 (%2) | distance=%3 | score=%4</source>
         <translation type="vanished">图像加载成功：%1</translation>
     </message>
     <message>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="93"/>
-        <location filename="../widgets/facerecognitionwidget.cpp" line="231"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="235"/>
+        <location filename="../widgets/facerecognitionwidget.cpp" line="847"/>
         <source>No image loaded</source>
         <translation>未加载图像</translation>
     </message>

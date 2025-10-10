@@ -101,6 +101,11 @@ class OpenCVDlibBackend : public IHumanRecognitionBackend {
     HRCode getPerson(const QString& personId, PersonInfo& outPerson) override;
 
     /**
+     * @brief 列出当前缓存中的所有人员记录。
+     */
+    HRCode listPersons(QVector<PersonInfo>& outPersons) override;
+
+    /**
      * @brief 预留的训练接口，目前未实现。
      */
     HRCode train(const QString& datasetPath) override;
